@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Libmemo.AddPage"
+             xmlns:local="clr-namespace:Libmemo"
+             NavigationPage.HasNavigationBar="False">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:NullableDateConverter x:Key="NullableDateConverter"/>
+            <local:NullableDoubleConverter x:Key="NullableDoubleConverter"/>
+            <local:IsNullToColorConverter x:Key="IsNullToColorConverter"/>
+            <x:Double x:Key="titleWidth">100</x:Double>
+            <Color x:Key="invalidLatLngColor">Red</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <StackLayout>
+        <StackLayout Orientation="Horizontal" Padding="10" HorizontalOptions="FillAndExpand">
+            <Button Text="Отправить"
+                    Command="{Binding SendCommand}"
+                    HorizontalOptions="FillAndExpand"
+                    />
+            <Button Text="Сбросить"
+                    Command="{Binding ResetCommand}"
+                    HorizontalOptions="FillAndExpand"
+                    />
+        </StackLayout>
+        <ScrollView>
+            <StackLayout Spacing="50" Padding="10">
+                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10">
+                    <Label Text="Координаты" HorizontalOptions="CenterAndExpand"/>
+                    <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="FillAndExpand">
+                        <Entry Keyboard="Numeric"
+                           Text="{Binding Path=Latitude, Converter={StaticResource NullableDoubleConverter}}"
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="FillAndExpand"
+                           Placeholder="Обязательное поле"
+                           PlaceholderColor="#ff0000"
+                           HorizontalTextAlignment="Center"
+                           />
+                        <Entry Keyboard="Numeric"
+                           Text="{Binding Path=Longitude, Converter={StaticResource NullableDoubleConverter}}"
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="FillAndExpand"
+                           Placeholder="Обязательное поле"
+                           PlaceholderColor="Red"
+                           HorizontalTextAlignment="Center"
+                           />
+                    </StackLayout>
+                </StackLayout>
+
+                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10">
+                    <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
+                        <Label Text="Имя: "
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="Start"
+                           WidthRequest="{StaticResource titleWidth}"
+                           />
+                        <Entry Keyboard="Text"
+                           Text="{Binding FirstName}"
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="FillAndExpand"
+                           HorizontalTextAlignment="Center"
+                           Placeholder="Обязательное поле"
+                           PlaceholderColor="Red"
+                           />
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
+                        <Label Text="Фамилия: "
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="Start"
+                           WidthRequest="{StaticResource titleWidth}"
+                           />
+                        <Entry Keyboard="Text"
+                           Text="{Binding LastName}"
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="FillAndExpand"
+                           HorizontalTextAlignment="Center"
+                           />
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
+                        <Label Text="Отчество: "
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="Start"
+                           WidthRequest="{StaticResource titleWidth}"
+                           />
+                        <Entry Keyboard="Text"
+                           Text="{Binding SecondName}"
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="FillAndExpand"
+                           HorizontalTextAlignment="Center"
+                           />
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
+                        <Label Text="Дата рождения: "
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="Start"
+                           WidthRequest="{StaticResource titleWidth}"
+                           />
+                        <DatePicker Date="{Binding Path=DateBirth, Converter={StaticResource NullableDateConverter}}"
+                                VerticalOptions="CenterAndExpand"
+                                HorizontalOptions="EndAndExpand"
+                                />
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
+                        <Label Text="Дата смерти: "
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="Start"
+                           WidthRequest="{StaticResource titleWidth}"
+                           />
+                        <DatePicker Date="{Binding Path=DateDeath, Converter={StaticResource NullableDateConverter}}"
+                                VerticalOptions="CenterAndExpand"
+                                HorizontalOptions="EndAndExpand"
+                                />
+                    </StackLayout>
+                </StackLayout>
+
+                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" Padding="10">
+                    <StackLayout Orientation="Horizontal">
+                        <Button Text="Выбрать фото"
+                            Command="{Binding PickPhotoCommand}"
+                            HorizontalOptions="FillAndExpand"
+                            />
+                        <Button Text="Сделать фото"
+                            Command="{Binding MakePhotoCommand}"
+                            HorizontalOptions="FillAndExpand"
+                            />
+                    </StackLayout>
+                    <Image Source="{Binding PhotoSource}"/>
+                </StackLayout>
+
+                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10">
+                    <Label Text="Биография" FontSize="Large" HorizontalOptions="CenterAndExpand"/>
+                    <Editor Text="{Binding Text}"
+                        HeightRequest="400"
+                        HorizontalOptions="FillAndExpand"
+                        BackgroundColor="#D8D8D8"
+                        />
+                </StackLayout>
+
+            </StackLayout>
+        </ScrollView>
+    </StackLayout>
+
+</ContentPage>

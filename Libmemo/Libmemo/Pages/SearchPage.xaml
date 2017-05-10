@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Libmemo"
+             x:Class="Libmemo.SearchPage"
+             NavigationPage.HasNavigationBar="False">
+    <StackLayout>
+
+        <StackLayout Orientation="Horizontal" Padding="10,0,10,0" Spacing="1" VerticalOptions="Start">
+            <Entry Text="{Binding Search}"
+                   VerticalOptions="Center"
+                   HorizontalOptions="FillAndExpand">
+                <Entry.Behaviors>
+                    <local:EntrySelectedBehavior SelectedCommand="{Binding SearhCommand}"/>
+                </Entry.Behaviors>
+            </Entry>
+            <Button x:Name="searchButton"
+                    Text="&#x1F50D;"
+                    FontSize="Default"
+                    Command="{Binding SearhCommand}"
+                    VerticalOptions="FillAndExpand"
+                    WidthRequest="{Binding Source={x:Reference Name=searchButton}, Path=Height}"
+                    />
+        </StackLayout>
+
+        <local:ListView x:Name="ShowList" 
+                  ItemsSource="{Binding SearchList}"
+                  ItemClickCommand="{Binding ItemSelectedCommand}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Text="{Binding Name}"
+                              Detail="{Binding Text}"
+                              Height="70"
+                              />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </local:ListView>
+    </StackLayout>
+
+</ContentPage>
