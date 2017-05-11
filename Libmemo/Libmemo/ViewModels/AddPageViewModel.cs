@@ -3,9 +3,6 @@ using Plugin.Media.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
@@ -13,13 +10,19 @@ using Xamarin.Forms.Maps;
 namespace Libmemo {
     class AddPageViewModel : INotifyPropertyChanged {
 
-        public AddPageViewModel(Position userPosition, EventHandler OnItemAdded = null) {
+        public AddPageViewModel(Position userPosition, EventHandler OnItemAddedCb = null) {
             this.Latitude = userPosition.Latitude;
             this.Longitude = userPosition.Longitude;
-            this.OnSuccess = OnItemAdded;
+            this.OnSuccess = OnItemAddedCb;
         }
 
+        #region Callbacks
+
         private EventHandler OnSuccess;
+
+        #endregion
+
+        #region Properties
 
         private double? _latitude;
         public double? Latitude {
@@ -76,8 +79,6 @@ namespace Libmemo {
             }
         }
 
-
-
         private DateTime? _dateBirth = null;
         public DateTime? DateBirth {
             get { return _dateBirth; }
@@ -111,8 +112,6 @@ namespace Libmemo {
             }
         }
 
-
-
         private ImageSource _photoSource;
         public ImageSource PhotoSource {
             get { return _photoSource; }
@@ -123,6 +122,9 @@ namespace Libmemo {
                 }
             }
         }
+        #endregion
+
+        #region Commands
 
         public ICommand PickPhotoCommand {
             get {
@@ -176,7 +178,7 @@ namespace Libmemo {
             }
         }
 
-
+        #region SendCommand
 
         public ICommand SendCommand {
             get {
@@ -193,35 +195,35 @@ namespace Libmemo {
                         return;
                     }
 
-                    PersonDataSender sender = new PersonDataSender();
-                    sender.Params.Add("latitude", this.Latitude.ToString());
-                    sender.Params.Add("longitude", this.Longitude.ToString());
-                    sender.Params.Add("first_name", this.FirstName.ToString());
+                    PersonDataUploader uploader = new PersonDataUploader();
+                    uploader.Params.Add("latitude", this.Latitude.ToString());
+                    uploader.Params.Add("longitude", this.Longitude.ToString());
+                    uploader.Params.Add("first_name", this.FirstName.ToString());
 
                     if (!String.IsNullOrWhiteSpace(this.SecondName)) {
-                        sender.Params.Add("second_name", this.SecondName.ToString());
+                        uploader.Params.Add("second_name", this.SecondName.ToString());
                     }
                     if (!String.IsNullOrWhiteSpace(this.LastName)) {
-                        sender.Params.Add("last_name", this.LastName.ToString());
+                        uploader.Params.Add("last_name", this.LastName.ToString());
                     }
 
                     if (this.DateBirth.HasValue) {
-                        sender.Params.Add("date_birth", this.DateBirth.Value.ToString("yyyy-MM-dd"));
+                        uploader.Params.Add("date_birth", this.DateBirth.Value.ToString("yyyy-MM-dd"));
                     }
                     if (this.DateDeath.HasValue) {
-                        sender.Params.Add("date_death", this.DateDeath.Value.ToString("yyyy-MM-dd"));
+                        uploader.Params.Add("date_death", this.DateDeath.Value.ToString("yyyy-MM-dd"));
                     }
                     if (!String.IsNullOrWhiteSpace(this.Text)) {
-                        sender.Params.Add("text", this.Text.ToString());
+                        uploader.Params.Add("text", this.Text.ToString());
                     }
                     if (this.PhotoSource != null) {
-                        await sender.SetFile(this.PhotoSource);
+                        await uploader.SetFile(this.PhotoSource);
                     }
 
                     App.ToastNotificator.Show("Отправка на сервер");
-                    var success = await sender.Upload();
+                    var success = await uploader.Upload();
                     if (success) {
-                        Success();
+                        UploadSucceeded();
                     } else {
                         Device.BeginInvokeOnMainThread(async () => {
                             await App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка отправки данных", "ОК");
@@ -231,64 +233,19 @@ namespace Libmemo {
             }
         }
 
-
-        private async void Success() {
+        private async void UploadSucceeded() {
             await Application.Current.MainPage.Navigation.PopAsync();
             this.OnSuccess.Invoke(this, null);
         }
 
+        #endregion
+
+        #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
         void OnPropertyChanged(string propertyName = "") =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
     }
-
-
-
-    class PersonDataSender {
-
-        private readonly string url = Settings.AddPersonUrl;
-
-        public PersonDataSender() { }
-
-        private Dictionary<string, string> _params = new Dictionary<string, string>();
-        public Dictionary<string, string> Params {
-            get { return _params; }
-        }
-
-        private byte[] _fileData = null;
-        public async Task SetFile(ImageSource source) {
-            this._fileData = await DependencyService.Get<IImageFileToByteArrayConverter>().Get(source);
-        }
-
-
-        public async Task<bool> Upload() {
-            using (var client = new HttpClient()) {
-                client.Timeout = new TimeSpan(0, 0, 30);
-                using (var content = new MultipartFormDataContent(String.Format("----------{0:N}", Guid.NewGuid()))) {
-
-                    foreach (var item in this.Params) {
-                        content.Add(new StringContent(item.Value), item.Key);
-                    }
-
-                    if (this._fileData != null) {
-                        content.Add(new StreamContent(new MemoryStream(this._fileData)), "photo", "photo.jpg");
-                    }
-
-                    try {
-                        using (var message = await client.PostAsync(url, content)) {
-                            message.EnsureSuccessStatusCode();
-                            return true;
-                        }
-                    } catch (Exception e) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-    }
-
 
 }

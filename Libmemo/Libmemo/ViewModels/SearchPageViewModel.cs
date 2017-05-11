@@ -11,30 +11,32 @@ using Xamarin.Forms;
 namespace Libmemo {
     public class SearchPageViewModel : INotifyPropertyChanged {
 
-        #region Constructor
         public SearchPageViewModel(string search, EventHandler<Person> OnItemSelected = null, EventHandler<string> OnSearchChanged = null) {
             this.search = search;
             this.OnItemSelected = OnItemSelected;
             this.OnSearchChanged = OnSearchChanged;
             GetItems(search);
         }
-        #endregion
 
         #region Utils
+
         private void GetItems(string search) {
             Task.Factory.StartNew(async () => {
                 SearchList = await App.Database.GetItems(search);
             });
         }
+
         #endregion
 
         #region Callbacks
+
         public EventHandler<string> OnSearchChanged = null;
         public EventHandler<Person> OnItemSelected = null;
+
         #endregion
 
         #region Properties
-        #region Search
+
         private string search;
         public string Search {
             get { return search; }
@@ -46,8 +48,7 @@ namespace Libmemo {
                 }
             }
         }
-        #endregion
-        #region SearchList
+
         private IEnumerable<Person> searchList;
         public IEnumerable<Person> SearchList {
             get { return searchList; }
@@ -58,10 +59,11 @@ namespace Libmemo {
                 }
             }
         }
-        #endregion
+
         #endregion
 
         #region Commands
+
         public ICommand SearhCommand {
             get {
                 return new Command(() => {
@@ -79,6 +81,7 @@ namespace Libmemo {
                 });
             }
         }
+
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;

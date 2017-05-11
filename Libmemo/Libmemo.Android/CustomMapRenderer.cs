@@ -4,11 +4,7 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
 
 using Android.Gms.Maps;
@@ -26,6 +22,7 @@ namespace Libmemo.Droid {
     class CustomMapRenderer : MapRenderer, INativeMapFunction, GoogleMap.IInfoWindowAdapter, IOnMapReadyCallback {
 
         #region INativeMapFunction
+
         void INativeMapFunction.SetLinearRoute(Position from, Position to) {
             DeleteExistingRoute();
             AddLinearRoute(from, to);
@@ -39,9 +36,8 @@ namespace Libmemo.Droid {
         void INativeMapFunction.DeleteRoute() {
             DeleteExistingRoute();
         }
+
         #endregion
-
-
 
         #region Aliases
         private CustomMap FormsMap { get { return this.Element as CustomMap; } }
@@ -52,6 +48,7 @@ namespace Libmemo.Droid {
         LatLng _userLocation = null;
 
         #region FormMap properties
+
         Position _mapCenter;
         float _zoom;
         bool _isCameraAnimated;
@@ -71,11 +68,11 @@ namespace Libmemo.Droid {
         Position? _routeTo = null;
 
         bool _myLocationEnabled = false;
+
         #endregion
 
         #region Engine functions
 
-        #region Element changing
         protected override void OnElementChanged(ElementChangedEventArgs<Map> e) {
             base.OnElementChanged(e);
 
@@ -105,11 +102,8 @@ namespace Libmemo.Droid {
 
             _googleMap.SetInfoWindowAdapter(this);
         }
-        #endregion
 
-        #region Element drawing
         bool isDrawn;
-
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e) {
             base.OnElementPropertyChanged(sender, e);
 
@@ -129,9 +123,11 @@ namespace Libmemo.Droid {
                 isDrawn = false;
             }
         }
+
         #endregion
 
         #region Listen/stop to custom pin collection changing
+
         private void RegisterCustomPinsChangingEvent() {
             if (this.FormsMap?.CustomPins is System.Collections.ObjectModel.ObservableCollection<CustomPin>) {
                 (this.FormsMap?.CustomPins as System.Collections.ObjectModel.ObservableCollection<CustomPin>).CollectionChanged += CustomPinsCollectionChanged;
@@ -143,9 +139,11 @@ namespace Libmemo.Droid {
                 (oldMap?.CustomPins as System.Collections.ObjectModel.ObservableCollection<CustomPin>).CollectionChanged -= CustomPinsCollectionChanged;
             }
         }
+
         #endregion
 
         #region Binding listeners on custom pins collection changed
+
         private void CustomPinsCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
             if (e.OldItems != null) {
                 foreach (var i in e.OldItems) {
@@ -165,21 +163,22 @@ namespace Libmemo.Droid {
                 }
             }
         }
-        #endregion
 
         #endregion
+
+
 
         #region Utils
-        #region Set form properties without event
+
         private void SetFormProperties(Action action) {
             if (this.FormsMap == null) return;
             this.FormsMap.PropertyChanged -= FormsMapPropertyChanged;
             action.Invoke();
             this.FormsMap.PropertyChanged += FormsMapPropertyChanged;
         }
-        #endregion
 
-        #region Pin manager
+
+
         private void AddPin(CustomPin pin) {
             var marker = new MarkerOptions();
 
@@ -222,9 +221,9 @@ namespace Libmemo.Droid {
                 throw new NotImplementedException();
             }
         }
-        #endregion
 
-        #region Camera functions
+
+
         private void ChangeCamera(Position? position = null, float? zoom = null) {
             double newLat = position.HasValue ? position.Value.Latitude : _googleMap.CameraPosition.Target.Latitude;
             double newLon = position.HasValue ? position.Value.Longitude : _googleMap.CameraPosition.Target.Longitude;
@@ -242,9 +241,18 @@ namespace Libmemo.Droid {
         private void MoveCamera() {
             ChangeCamera(_mapCenter, _zoom);
         }
-        #endregion
 
-        #region Routes functions
+
+
+        private PolylineOptions GetPolylineOptions() {
+            var line = new PolylineOptions();
+            line.Clickable(false);
+            line.Visible(true);
+            line.InvokeColor(Color.Red.ToAndroid());
+            line.InvokeWidth(5);
+            return line;
+        }
+
         private void DeleteExistingRoute() {
             if (this._route != null) {
                 this._route.Remove();
@@ -254,13 +262,25 @@ namespace Libmemo.Droid {
             }
         }
 
-        private PolylineOptions GetPolylineOptions() {
-            var line = new PolylineOptions();
-            line.Clickable(false);
-            line.Visible(true);
-            line.InvokeColor(Color.Red.ToAndroid());
-            line.InvokeWidth(5);
-            return line;
+        private void AddLinearRoute(Position from, Position to) {
+            this._route = DrawLinearRoute(from, to);
+            if (this._route == null) {
+                this.MapFunctions.RaiseRouteInitializingFailed();
+            } else {
+                this._routeFrom = from;
+                this._routeTo = to;
+                this.MapFunctions.RaiseRouteInitializingSucceed();
+            }
+        }
+        private async void AddCalculatedRoute(Position from, Position to) {
+            this._route = await DrawCalculatedRoute(from, to);
+            if (this._route == null) {
+                this.MapFunctions.RaiseRouteInitializingFailed();
+            } else {
+                this._routeFrom = from;
+                this._routeTo = to;
+                this.MapFunctions.RaiseRouteInitializingSucceed();
+            }
         }
 
         private Polyline DrawLinearRoute(Position from, Position to) {
@@ -286,33 +306,10 @@ namespace Libmemo.Droid {
             return null;
         }
 
-        private void AddLinearRoute(Position from, Position to) {
-            this._route = DrawLinearRoute(from, to);
-            if (this._route == null) {
-                this.MapFunctions.RaiseRouteInitializingFailed();
-            } else {
-                this._routeFrom = from;
-                this._routeTo = to;
-                this.MapFunctions.RaiseRouteInitializingSucceed();
-            }
-        }
-        private async void AddCalculatedRoute(Position from, Position to) {
-            this._route = await DrawCalculatedRoute(from, to);
-            if (this._route == null) {
-                this.MapFunctions.RaiseRouteInitializingFailed();
-            } else {
-                this._routeFrom = from;
-                this._routeTo = to;
-                this.MapFunctions.RaiseRouteInitializingSucceed();
-            }
-        }
-
-        #endregion
         #endregion
 
         #region Engine function helpers
 
-        #region Local fields init from FormMap
         private void SetFormsMapProperties(CustomMap map) {
             this._mapCenter = map.MapCenter;
             this._zoom = map.Zoom;
@@ -325,9 +322,7 @@ namespace Libmemo.Droid {
 
             this._customPins = map.CustomPins;
         }
-        #endregion
 
-        #region Map events
         private void AddEventHandlers() {
             _googleMap.CameraChange += _googleMap_CameraChange;
 
@@ -347,29 +342,21 @@ namespace Libmemo.Droid {
 
             _googleMap.MyLocationChange -= _googleMap_MyLocationChange;
         }
-        #endregion
 
-        #region MapDrawing
         private void FullDrawMap() {
-            #region Default setting       
             _googleMap.UiSettings.MyLocationButtonEnabled = false;
             _googleMap.UiSettings.MapToolbarEnabled = false;
             _googleMap.UiSettings.CompassEnabled = false;
-            #endregion
+            _googleMap.UiSettings.ZoomControlsEnabled = false;// this._isZoomGesturesEnabled;
 
-            #region Camera
+
             MoveCamera();
-            #endregion
 
-            #region Gestures
             _googleMap.UiSettings.RotateGesturesEnabled = this._isRotateGesturesEnabled;
             _googleMap.UiSettings.ScrollGesturesEnabled = this._isScrollGesturesEnabled;
             _googleMap.UiSettings.TiltGesturesEnabled = this._isTiltGesturesEnabled;
-            _googleMap.UiSettings.ZoomGesturesEnabled = false;// this._isZoomGesturesEnabled;
-            _googleMap.UiSettings.ZoomControlsEnabled = this._isZoomGesturesEnabled;
-            #endregion
+            _googleMap.UiSettings.ZoomGesturesEnabled = this._isZoomGesturesEnabled;
 
-            #region Custom pins
             _customPinsBindings = new Dictionary<CustomPin, Marker>();
             if (_customPins != null) {
                 foreach (var pin in _customPins) {
@@ -377,17 +364,14 @@ namespace Libmemo.Droid {
                     AddPin(pin);
                 }
             }
-            #endregion
 
             _googleMap.MyLocationEnabled = this.FormsMap?.MyLocationEnabled ?? false;
         }
-        #endregion
 
         #endregion
 
         #region Event handlers
 
-        #region Custom pin changed
         private void CustomPin_PropertyChanged(object sender, PropertyChangedEventArgs e) {
             var bind = _customPinsBindings.FirstOrDefault(i => i.Key == sender);
             Marker m = bind.Value;
@@ -395,9 +379,7 @@ namespace Libmemo.Droid {
 
             UpdatePin(pin, ref m, e.PropertyName);
         }
-        #endregion
 
-        #region Camera changed
         private void _googleMap_CameraChange(object sender, GoogleMap.CameraChangeEventArgs e) {
             if (this.FormsMap == null) return;
 
@@ -410,10 +392,7 @@ namespace Libmemo.Droid {
             });
             this.MapFunctions.RaiseCameraPositionChange(newPosition, newZoom);
         }
-        #endregion
 
-        #region Selected pin events
-        #region Marker clicked
         private void _googleMap_MarkerClick(object sender, GoogleMap.MarkerClickEventArgs e) {
             var binding = _customPinsBindings.FirstOrDefault(i => i.Value.Id == e.Marker.Id);
             this._selectedPin = binding.Key;
@@ -424,25 +403,20 @@ namespace Libmemo.Droid {
 
             binding.Value.ShowInfoWindow();
         }
-        #endregion
-        #region InfoWindow closed
+
         private void _googleMap_InfoWindowClose(object sender, GoogleMap.InfoWindowCloseEventArgs e) {
             this._selectedPin = null;
             SetFormProperties(() => {
                 this.FormsMap.SelectedPin = null;
             });
         }
-        #endregion
-        #region InfoWindow clicked
+
         private void _googleMap_InfoWindowClick(object sender, GoogleMap.InfoWindowClickEventArgs e) {
             var binding = _customPinsBindings.FirstOrDefault(i => i.Value.Id == e.Marker.Id);
 
             MapFunctions.RaiseInfoWindowClick(binding.Key);
         }
-        #endregion
-        #endregion
 
-        #region Location changed
         private void _googleMap_MyLocationChange(object sender, GoogleMap.MyLocationChangeEventArgs e) {
             this._userLocation = new LatLng(e.Location.Latitude, e.Location.Longitude);
 
@@ -451,8 +425,6 @@ namespace Libmemo.Droid {
             var newPosition = new Position(e.Location.Latitude, e.Location.Longitude);
             this.MapFunctions.RaiseUserLocationChange(newPosition);
         }
-        #endregion
-
 
         #endregion
 
@@ -509,9 +481,8 @@ namespace Libmemo.Droid {
 
         #endregion
 
-
-
         #region FormMap property changed
+
         private void FormsMapPropertyChanged(object sender, PropertyChangedEventArgs e) {
             if (this._googleMap == null) return;
 
@@ -550,7 +521,7 @@ namespace Libmemo.Droid {
                     }
                 }
             } else if (e.PropertyName == CustomMap.CustomPinsProperty.PropertyName) { //CustomPins
-                #region Deleting old collection of pins, unsubscribing from events
+                //Deleting old collection of pins, unsubscribing from events
                 if (this._customPins != null) {
                     this._customPins.CollectionChanged -= CustomPinsCollectionChanged;
                     foreach (var pin in this._customPins) {
@@ -558,8 +529,7 @@ namespace Libmemo.Droid {
                         DeletePin(pin);
                     }
                 }
-                #endregion
-                #region Addind new collection of pins, subscribing to events
+                //Addind new collection of pins, subscribing to events
                 this._customPins = this.FormsMap.CustomPins;
                 this._customPinsBindings = new Dictionary<CustomPin, Marker>();
                 if (this._customPins != null) {
@@ -569,7 +539,6 @@ namespace Libmemo.Droid {
                         AddPin(pin);
                     }
                 }
-                #endregion
             } else if (e.PropertyName == CustomMap.MyLocationEnabledProperty.PropertyName) {
                 this._myLocationEnabled = ((CustomMap)sender).MyLocationEnabled;
                 _googleMap.MyLocationEnabled = this._myLocationEnabled;
@@ -578,5 +547,6 @@ namespace Libmemo.Droid {
         }
 
         #endregion
+
     }
 }

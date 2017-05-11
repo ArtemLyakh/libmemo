@@ -7,10 +7,11 @@
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Color x:Key="folowUserColor">#808080</Color>
+            <Color x:Key="folowUserColorText">#0000FF</Color>
+            <Color x:Key="folowUserColorBG">LightBlue</Color>
             <local:FollowUserMapButtonColorConverter x:Key="followUserConverter"/>
             <local:IsPropertyNullConverter x:Key="IsPropertyNullConverter"/>
-            <local:IsPinSpeakable x:Key="IsPinSpeakable"/>
+            <local:IsPinSpeakableConverter x:Key="IsPinSpeakable"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -79,6 +80,7 @@
                                  MyLocationEnabled="{Binding MyLocationEnabled}"
                                  />
 
+            
                 <StackLayout x:Name="leftStackLayout"
                              Orientation="Vertical"
                              VerticalOptions="FillAndExpand"
@@ -96,9 +98,9 @@
                                  HorizontalOptions="FillAndExpand"
                                  Spacing="0"
                                  >
-                        <Button x:Name="addnewPersonButton"
+                        <Button x:Name="addnewPersonButton"                                                    
                             Text="&#x2795;"
-                            FontSize="Medium"
+                            FontSize="Medium"                         
                             WidthRequest="50"
                             HeightRequest="50"
                             IsVisible="True"
@@ -149,12 +151,13 @@
                                  Spacing="0"
                                  >
                         <Button x:Name="geoFixButton"
-                            Text="&#x2316;"
+                            Text="&#x2295;"
+                            TextColor="{Binding Path=FollowUser, Mode=OneWay, Converter={StaticResource followUserConverter}, ConverterParameter={StaticResource folowUserColorText}}"
+                            BackgroundColor="{Binding Path=FollowUser, Mode=OneWay, Converter={StaticResource followUserConverter}, ConverterParameter={StaticResource folowUserColorBG}}"
                             FontSize="Large"
                             WidthRequest="50"
                             HeightRequest="50"
                             Command="{Binding FollowUserToogleCommand}"
-                            BackgroundColor="{Binding Path=FollowUser, Mode=OneWay, Converter={StaticResource followUserConverter}, ConverterParameter={StaticResource folowUserColor}}"
                             />
                     </StackLayout>
 

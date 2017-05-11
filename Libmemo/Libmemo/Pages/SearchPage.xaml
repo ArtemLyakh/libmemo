@@ -23,7 +23,7 @@
                     />
         </StackLayout>
 
-        <local:ListView x:Name="ShowList" 
+        <local:CustomListView x:Name="ShowList" 
                   ItemsSource="{Binding SearchList}"
                   ItemClickCommand="{Binding ItemSelectedCommand}">
             <ListView.ItemTemplate>
@@ -34,7 +34,7 @@
                               />
                 </DataTemplate>
             </ListView.ItemTemplate>
-        </local:ListView>
+        </local:CustomListView>
     </StackLayout>
 
 </ContentPage>
