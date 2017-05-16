@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Libmemo.MapPage"
+             xmlns:local="clr-namespace:Libmemo"
+             NavigationPage.HasNavigationBar="False">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="folowUserColorText">#0000FF</Color>
+            <Color x:Key="folowUserColorBG">LightBlue</Color>
+            <local:FollowUserMapButtonColorConverter x:Key="followUserConverter"/>
+            <local:IsPropertyNullConverter x:Key="IsPropertyNullConverter"/>
+            <local:IsPinSpeakableConverter x:Key="IsPinSpeakable"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <StackLayout VerticalOptions="FillAndExpand">
+        <StackLayout x:Name="searhStackLayout"
+                     Orientation="Horizontal"
+                     Padding="10,0,10,0"
+                     Spacing="1"
+                     VerticalOptions="Start"
+                     >
+            <Entry x:Name="searchEntry"
+                   Text="{Binding SearchText}"
+                   VerticalOptions="Center"
+                   HorizontalOptions="FillAndExpand"
+                   >
+                <Entry.Behaviors>
+                    <local:EntrySelectedBehavior SelectedCommand="{Binding SearchCommand}"/>
+                </Entry.Behaviors>
+            </Entry>
+            <Button x:Name="searchButton"
+                    Text="&#x1F50D;"
+                    FontSize="Default"
+                    Command="{Binding SearchCommand}"
+                    VerticalOptions="FillAndExpand"
+                    WidthRequest="{Binding Source={x:Reference Name=searchButton}, Path=Height}"
+                    />
+            <Button x:Name="resetButton"
+                    Text="&#10060;"
+                    FontSize="Large"
+                    Command="{Binding ResetCommand}"
+                    VerticalOptions="FillAndExpand"
+                    WidthRequest="{Binding Source={x:Reference Name=resetButton}, Path=Height}"
+                    />
+        </StackLayout>
+        <StackLayout x:Name="relativeStackLayout"
+                     VerticalOptions="FillAndExpand"
+                     HorizontalOptions="FillAndExpand"
+                     >
+            <RelativeLayout VerticalOptions="Fill" HorizontalOptions="Fill">
+                <local:CustomMap x:Name="mainMap"
+                                 MapType="Hybrid"
+                                 RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent ,Property=Width,Factor=1,Constant=0}"
+                                 RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent ,Property=Height,Factor=1,Constant=0}"
+                        
+                                 MapFunctions="{Binding MapFunctions}"
+                     
+                                 MapCenter="{Binding MapCenter}"
+                                 Zoom="{Binding Zoom}"
+                                 IsCameraAnimated="{Binding IsCameraAnimated}"
+                     
+                                 IsRotateGesturesEnabled="{Binding Path=IsRotateGesturesEnabled, Mode=OneWay}"
+                                 IsScrollGesturesEnabled="{Binding Path=IsScrollGesturesEnabled, Mode=OneWay}"
+                                 IsTiltGesturesEnabled="{Binding Path=IsTiltGesturesEnabled, Mode=OneWay}"
+                                 IsZoomGesturesEnabled="{Binding Path=IsZoomGesturesEnabled, Mode=OneWay}"
+                     
+                                 SelectedPin="{Binding SelectedPin}"
+                                 CustomPins="{Binding CustomPins}"
+                                 
+                                 InfoWindowClickedCommand="{Binding InfoWindowClickedCommand}"
+                                 UserPositionChangedCommand="{Binding UserPositionChangedCommand}"
+                                 
+                                 RouteTo="{Binding RouteTo}"
+                                 RouteInitializingSucceedCommand="{Binding RouteInitializingSucceedCommand}"
+                                 RouteInitializingFailedCommand="{Binding RouteInitializingFailedCommand}"
+                                 
+                                 MyLocationEnabled="{Binding MyLocationEnabled}"
+                                 />
+
+            
+                <StackLayout x:Name="leftStackLayout"
+                             Orientation="Vertical"
+                             VerticalOptions="FillAndExpand"
+                             HorizontalOptions="FillAndExpand" 
+                             Spacing="0"
+                             
+                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0, Constant=50}"
+                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
+                             RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0,Constant=0}"
+                             RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"                            
+                             >
+
+                    <StackLayout x:Name="addButtonGroup"
+                                 VerticalOptions="StartAndExpand"
+                                 HorizontalOptions="FillAndExpand"
+                                 Spacing="0"
+                                 >
+                        <Button x:Name="addnewPersonButton"                                                    
+                            Text="&#x2795;"
+                            FontSize="Medium"                         
+                            WidthRequest="50"
+                            HeightRequest="50"
+                            IsVisible="True"
+                            Command="{Binding AddNewPersonCommand}"
+                            />
+                    </StackLayout>
+                </StackLayout>
+
+                <StackLayout x:Name="rigthStackLayout"
+                             Orientation="Vertical"
+                             VerticalOptions="FillAndExpand"
+                             HorizontalOptions="FillAndExpand" 
+                             Spacing="0"
+                             
+                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0, Constant=50}"
+                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
+                             RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=1,Constant=-50}"
+                             RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"                            
+                             >
+                    <StackLayout x:Name="ttsButtonsGroup"
+                                 VerticalOptions="StartAndExpand"
+                                 HorizontalOptions="FillAndExpand"
+                                 Spacing="0"
+                                 >
+                        <Button x:Name="stopTTSButton"
+                            Text="&#9632;"
+                            FontSize="Large"
+                            BackgroundColor="Red"
+                            WidthRequest="50"
+                            HeightRequest="50"
+                            IsVisible="{Binding Path=CurrentPlayed, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}"
+                            Command="{Binding StopTTSCommand}"
+                            />
+                        <Button x:Name="startTTSButton"
+                            Text="&#9654;"
+                            BackgroundColor="Green"
+                            FontSize="Large"
+                            WidthRequest="50"
+                            HeightRequest="50"
+                            IsVisible="{Binding Path=SelectedPin, Mode=OneWay, Converter={StaticResource IsPinSpeakable}"
+                            Command="{Binding StartTTSOnSelectedPinCommand}"
+                            />
+                    </StackLayout>
+
+                    <StackLayout x:Name="geoButtonsGroup"
+                                 VerticalOptions="EndAndExpand"
+                                 HorizontalOptions="FillAndExpand"
+                                 Spacing="0"
+                                 >
+                        <Button x:Name="geoFixButton"
+                            Text="&#x2295;"
+                            TextColor="{Binding Path=FollowUser, Mode=OneWay, Converter={StaticResource followUserConverter}, ConverterParameter={StaticResource folowUserColorText}}"
+                            BackgroundColor="{Binding Path=FollowUser, Mode=OneWay, Converter={StaticResource followUserConverter}, ConverterParameter={StaticResource folowUserColorBG}}"
+                            FontSize="Large"
+                            WidthRequest="50"
+                            HeightRequest="50"
+                            Command="{Binding FollowUserToogleCommand}"
+                            />
+                    </StackLayout>
+
+                </StackLayout>
+
+                <StackLayout x:Name="bottomStackLayout"
+                             Orientation="Horizontal"
+                             VerticalOptions="FillAndExpand"
+                             HorizontalOptions="FillAndExpand"
+                             Spacing="0"
+                             
+                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0, Constant=50}"
+                             RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0,Constant=0}"
+                             RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=1,Constant=-50}"                            
+                             >
+                    <StackLayout x:Name="routeButtonGroup"
+                                 VerticalOptions="FillAndExpand"
+                                 HorizontalOptions="CenterAndExpand"
+                                 Orientation="Horizontal"
+                                 Spacing="0"
+                                 >
+                        <Button x:Name="setLinearRouteButton"
+                            Text="&#8600;"
+                            FontSize="Medium"
+                            WidthRequest="50"
+                            HeightRequest="50"
+                            IsVisible="{Binding Path=SelectedPin, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}"
+                            Command="{Binding SetLinearRouteCommand}"
+                            />
+                        <Button x:Name="setCalculatedRouteButton"
+                            Text="&#9736;"
+                            FontSize="Medium"
+                            WidthRequest="50"
+                            HeightRequest="50"
+                            IsVisible="{Binding Path=SelectedPin, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}"
+                            Command="{Binding SetCalculatedRouteCommand}"
+                            />
+                        <Button x:Name="deleteRouteButton"
+                            Text="&#8603;"
+                            FontSize="Large"
+                            WidthRequest="50"
+                            HeightRequest="50"
+                            IsVisible="{Binding IsRouteActive}"
+                            Command="{Binding DeleteRouteCommand}"
+                            />
+                    </StackLayout>
+                </StackLayout>
+
+            </RelativeLayout>
+        </StackLayout>
+    </StackLayout>
+</ContentPage>

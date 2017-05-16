@@ -1,26 +1,28 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace Libmemo {
-
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MainPage : ContentPage {
+    public partial class MainPage : MasterDetailPage {
         public MainPage() {
-
-            BindingContext = new MainPageViewModel(this);
             InitializeComponent();
 
+            this.menuPage.ListView.ItemSelected += OnMenuItemSelected;
         }
 
-        protected override void OnDisappearing() {
-            base.OnDisappearing();
-            ((MainPageViewModel)BindingContext).SetGPSTracking(false);
-        }
-
-        protected override void OnAppearing() {
-            base.OnAppearing();
-            ((MainPageViewModel)BindingContext).SetGPSTracking(true);
+        private void OnMenuItemSelected(object sender, SelectedItemChangedEventArgs e) {
+            var item = e.SelectedItem as MenuPageItem;
+            if (item != null) {
+                Detail = new NavigationPage((Page)Activator.CreateInstance(item.TargetType));
+                this.menuPage.ListView.SelectedItem = null;
+                IsPresented = false;
+            }
         }
     }
-
 }
