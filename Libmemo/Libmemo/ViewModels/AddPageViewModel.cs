@@ -337,6 +337,7 @@ namespace Libmemo {
         private void UploadSucceeded() {
             App.ToastNotificator.Show("Данные успешно отправлены");
             ResetCommand.Execute(null);
+            App.Database.Load();
         }
 
         #endregion

@@ -22,6 +22,13 @@ namespace Libmemo {
             string databasePath = DependencyService.Get<ISQLite>().GetDatabasePath(Settings.DatabaseName);
             database = new SQLiteConnection(databasePath);
             database.CreateTable<Person>();
+
+            this.LoadSuccess += () => {
+                App.ToastNotificator.Show("Получены данные с сервера");
+            };
+            this.LoadFail += () => {
+                App.ToastNotificator.Show("Ошибка загрузки данных с сервера");
+            };
         }
         #endregion
 

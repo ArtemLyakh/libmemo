@@ -80,35 +80,6 @@
                                  MyLocationEnabled="{Binding MyLocationEnabled}"
                                  />
 
-            
-                <StackLayout x:Name="leftStackLayout"
-                             Orientation="Vertical"
-                             VerticalOptions="FillAndExpand"
-                             HorizontalOptions="FillAndExpand" 
-                             Spacing="0"
-                             
-                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0, Constant=50}"
-                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
-                             RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0,Constant=0}"
-                             RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"                            
-                             >
-
-                    <StackLayout x:Name="addButtonGroup"
-                                 VerticalOptions="StartAndExpand"
-                                 HorizontalOptions="FillAndExpand"
-                                 Spacing="0"
-                                 >
-                        <Button x:Name="addnewPersonButton"                                                    
-                            Text="&#x2795;"
-                            FontSize="Medium"                         
-                            WidthRequest="50"
-                            HeightRequest="50"
-                            IsVisible="True"
-                            Command="{Binding AddNewPersonCommand}"
-                            />
-                    </StackLayout>
-                </StackLayout>
-
                 <StackLayout x:Name="rigthStackLayout"
                              Orientation="Vertical"
                              VerticalOptions="FillAndExpand"

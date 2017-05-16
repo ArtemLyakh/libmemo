@@ -17,18 +17,31 @@ namespace Libmemo {
 
         public MapPageViewModel() {
 
-            //Pin load
             InitPinsFromMemory();
-            StartLoadingPinsFromServer();
 
-            //GPS Permissions
             GetGPSPermission();
 
+        }
+
+        public void StartListen() {
             //TTS listeners
             App.TextToSpeech.OnStart += TextToSpeech_OnStart;
             App.TextToSpeech.OnEnd += TextToSpeech_OnEnd;
 
+            //DB listener
+            App.Database.LoadSuccess += Database_LoadSuccess;
         }
+
+        public void StopListen() {
+            //TTS listeners
+            App.TextToSpeech.OnStart -= TextToSpeech_OnStart;
+            App.TextToSpeech.OnEnd -= TextToSpeech_OnEnd;
+
+            //DB listener
+            App.Database.LoadSuccess -= Database_LoadSuccess;
+        }
+
+
 
         #region GPS Permissions
 
@@ -475,38 +488,6 @@ namespace Libmemo {
 
         #endregion
 
-        #region Add Person
-
-        #region Commands
-
-        public ICommand AddNewPersonCommand {
-            get {
-                return new Command(async () => {
-                    if (this.UserPosition == default(Position)) return;
-
-                    throw new NotImplementedException();
-
-                    //var addPage = new AddPage(this.UserPosition, OnItemAdded);
-                    //await Application.Current.MainPage.Navigation.PushAsync(addPage);
-                });
-            }
-        }
-
-        #endregion
-
-        #region Callbacks
-
-        private void OnItemAdded(object sender, object e) {
-            this.MapFunctions.DeleteRoute();
-            this.IsRouteActive = false;
-            this.SelectedPin = null;
-            StartLoadingPinsFromServer();
-        }
-
-        #endregion
-
-        #endregion
-
         #region Database
 
         private async void InitPinsFromMemory() {
@@ -524,32 +505,8 @@ namespace Libmemo {
             }
         }
 
-
-        private void StartLoadingPinsFromServer() {
-            App.Database.LoadSuccess += Database_LoadSuccess;
-            App.Database.LoadFail += Database_LoadFail;
-
-            App.Database.Load();
-        }
-
         private void Database_LoadSuccess() {
-            App.Database.LoadSuccess -= Database_LoadSuccess;
-            App.Database.LoadFail -= Database_LoadFail;
-
             InitPinsFromMemory();
-            App.ToastNotificator.Show("Данные с сервера получены");
-        }
-
-        private void Database_LoadFail() {
-            App.Database.LoadSuccess -= Database_LoadSuccess;
-            App.Database.LoadFail -= Database_LoadFail;
-
-            Device.BeginInvokeOnMainThread(async () => {
-                bool again = await App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка загрузки данных с сервера", "Повторить", "Отмена");
-                if (again) {
-                    StartLoadingPinsFromServer();
-                }
-            });
         }
 
         #endregion

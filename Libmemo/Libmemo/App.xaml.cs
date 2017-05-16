@@ -49,7 +49,7 @@ namespace Libmemo {
         }
 
         protected override void OnStart() {
-
+            App.Database.Load();
         }
 
         protected override void OnSleep() {
