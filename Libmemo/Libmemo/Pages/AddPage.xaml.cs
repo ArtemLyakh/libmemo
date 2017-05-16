@@ -7,9 +7,9 @@ namespace Libmemo {
 
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AddPage : ContentPage {
-        public AddPage(Position userPosition, EventHandler OnItemAdded = null) {
+        public AddPage() {
             InitializeComponent();
-            BindingContext = new AddPageViewModel(userPosition, OnItemAdded);
+            BindingContext = new AddPageViewModel();
         }
     }
 

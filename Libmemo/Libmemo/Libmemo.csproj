@@ -73,6 +73,7 @@
     <Compile Include="Dependencies\IToastNotification.cs" />
     <Compile Include="Helpers\PersonDataUploader.cs" />
     <Compile Include="Helpers\Settings.cs" />
+    <Compile Include="Helpers\UtilsFunctions.cs" />
     <Compile Include="Pages\AddPage.xaml.cs">
       <DependentUpon>AddPage.xaml</DependentUpon>
     </Compile>
@@ -92,7 +93,7 @@
     <Compile Include="TextToSpeech\TextToSpeech.cs" />
     <Compile Include="ToastNotificator\ToastNotificator.cs" />
     <Compile Include="ViewModels\AddPageViewModel.cs" />
-    <Compile Include="ViewModels\MainPageViewModel.cs" />
+    <Compile Include="ViewModels\MapPageViewModel.cs" />
     <Compile Include="ViewModels\SearchPageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

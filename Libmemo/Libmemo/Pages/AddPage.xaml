@@ -27,25 +27,38 @@
         </StackLayout>
         <ScrollView>
             <StackLayout Spacing="50" Padding="10">
+
                 <StackLayout HorizontalOptions="FillAndExpand" Spacing="10">
-                    <Label Text="Координаты" HorizontalOptions="CenterAndExpand"/>
-                    <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="FillAndExpand">
-                        <Entry Keyboard="Numeric"
-                           Text="{Binding Path=Latitude, Converter={StaticResource NullableDoubleConverter}}"
-                           VerticalOptions="CenterAndExpand"
-                           HorizontalOptions="FillAndExpand"
-                           Placeholder="Обязательное поле"
-                           PlaceholderColor="#ff0000"
-                           HorizontalTextAlignment="Center"
-                           />
-                        <Entry Keyboard="Numeric"
-                           Text="{Binding Path=Longitude, Converter={StaticResource NullableDoubleConverter}}"
-                           VerticalOptions="CenterAndExpand"
-                           HorizontalOptions="FillAndExpand"
-                           Placeholder="Обязательное поле"
-                           PlaceholderColor="Red"
-                           HorizontalTextAlignment="Center"
-                           />
+                    <Label Text="Координаты" HorizontalOptions="CenterAndExpand" FontSize="Large" />
+                    <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="FillAndExpand" HeightRequest="200">
+                        <StackLayout Orientation="Vertical" Spacing="10" HorizontalOptions="Start" WidthRequest="{StaticResource titleWidth}" >
+                            <StackLayout Orientation="Vertical" Spacing="0">
+                                <Label Text="Широта:" FontSize="Medium" HorizontalOptions="CenterAndExpand" />
+                                <Label Text="{Binding Latitude}" FontSize="Default" HorizontalOptions="CenterAndExpand" />
+                            </StackLayout>
+                            <StackLayout Orientation="Vertical" Spacing="0">
+                                <Label Text="Долгота:" FontSize="Medium" HorizontalOptions="CenterAndExpand" />
+                                <Label Text="{Binding Longitude}" FontSize="Default" HorizontalOptions="CenterAndExpand" />
+                            </StackLayout>
+                        </StackLayout>
+
+                        <local:CustomMap x:Name="CoorMap"
+                                         MapType="Hybrid"
+                                         HorizontalOptions="FillAndExpand"
+                                         VerticalOptions="FillAndExpand"
+                                         
+                                         MapCenter="{Binding MapCenter}"
+                                         Zoom="{Binding Zoom}"
+                                         IsCameraAnimated="False"
+                                         
+                                         IsRotateGesturesEnabled="True"
+                                         IsScrollGesturesEnabled="False"
+                                         IsTiltGesturesEnabled="False"
+                                         IsZoomGesturesEnabled="True"
+                                         
+                                         UserPositionChangedCommand="{Binding UserPositionChangedCommand}"
+                                         MyLocationEnabled="{Binding MyLocationEnabled}"
+                                         />
                     </StackLayout>
                 </StackLayout>
 

@@ -7,7 +7,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
 namespace Libmemo {
-    public class MainPageViewModel : INotifyPropertyChanged {
+    public class MapPageViewModel : INotifyPropertyChanged {
 
         #region Constants
         private const double DEFAULT_LATITUDE = 47.23135;
@@ -15,7 +15,7 @@ namespace Libmemo {
         private const float DEFAULT_ZOOM = 18;
         #endregion
 
-        public MainPageViewModel(Page page) {
+        public MapPageViewModel() {
 
             //Pin load
             InitPinsFromMemory();
@@ -41,18 +41,7 @@ namespace Libmemo {
         }
 
         private async void GetGPSPermission() {
-            var location = await Plugin.Permissions.CrossPermissions.Current.CheckPermissionStatusAsync(Plugin.Permissions.Abstractions.Permission.Location);
-
-            if (location != Plugin.Permissions.Abstractions.PermissionStatus.Granted) {
-                var results = await Plugin.Permissions.CrossPermissions.Current.RequestPermissionsAsync(new[] { Plugin.Permissions.Abstractions.Permission.Location });
-                var status = results[Plugin.Permissions.Abstractions.Permission.Location];
-                if (status != Plugin.Permissions.Abstractions.PermissionStatus.Granted) {
-                    Device.BeginInvokeOnMainThread(async () => {
-                        await App.Current.MainPage.DisplayAlert("Ошибка", "Приложению требуется доступ к геолокации", "Завершить работу");
-                        DependencyService.Get<ICloseApplication>().CloseApplication();
-                    });
-                }
-            }
+            await UtilsFunctions.GetGPSPermissionOrExit();
 
             this._gpsPermissionsGained = true;
             SetGPSTracking(true);
@@ -495,8 +484,10 @@ namespace Libmemo {
                 return new Command(async () => {
                     if (this.UserPosition == default(Position)) return;
 
-                    var addPage = new AddPage(this.UserPosition, OnItemAdded);
-                    await Application.Current.MainPage.Navigation.PushAsync(addPage);
+                    throw new NotImplementedException();
+
+                    //var addPage = new AddPage(this.UserPosition, OnItemAdded);
+                    //await Application.Current.MainPage.Navigation.PushAsync(addPage);
                 });
             }
         }
