@@ -11,6 +11,16 @@ namespace Libmemo {
             InitializeComponent();
             BindingContext = new AddPageViewModel();
         }
+
+        protected override void OnDisappearing() {
+            base.OnDisappearing();
+            ((AddPageViewModel)BindingContext).SetGPSTracking(false);
+        }
+
+        protected override void OnAppearing() {
+            base.OnAppearing();
+            ((AddPageViewModel)BindingContext).SetGPSTracking(true);
+        }
     }
 
 }

@@ -19,9 +19,16 @@ namespace Libmemo {
         private void OnMenuItemSelected(object sender, SelectedItemChangedEventArgs e) {
             var item = e.SelectedItem as MenuPageItem;
             if (item != null) {
-                Detail = new NavigationPage((Page)Activator.CreateInstance(item.TargetType));
                 this.menuPage.ListView.SelectedItem = null;
                 IsPresented = false;
+
+                if (item.Action != null) {
+                    item.Action.Invoke();
+                }
+
+                if (item.Page != null) {
+                    Detail = new NavigationPage((Page)Activator.CreateInstance(item.Page));
+                }
             }
         }
     }

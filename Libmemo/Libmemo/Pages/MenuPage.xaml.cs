@@ -20,20 +20,29 @@ namespace Libmemo {
                 new MenuPageItem {
                     Title = "Карта",
                     Text = "карта",
-                    TargetType = typeof(MapPage)
+                    Page = typeof(MapPage)
                 },
                 new MenuPageItem {
                     Title = "Добавить",
                     Text = "добавить",
-                    TargetType = typeof(AddPage)
+                    Page = typeof(AddPage)
+                },
+                new MenuPageItem {
+                    Title = "test",
+                    Action = () => {
+                        Device.BeginInvokeOnMainThread(async () => {
+                            await App.Current.MainPage.DisplayAlert("Test", "test", "ОК");
+                        });
+                    }
                 }
             };
         }
     }
 
-    internal class MenuPageItem {
+    public class MenuPageItem {
         public string Title { get; set; }
         public string Text { get; set; }
-        public Type TargetType { get; set; }
+        public Type Page { get; set; }
+        public Action Action { get; set; }
     }
 }
