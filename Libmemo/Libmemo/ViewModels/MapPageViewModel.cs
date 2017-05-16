@@ -388,7 +388,7 @@ namespace Libmemo {
 
                     var searchPage = new SearchPage(this.SearchText, OnSearchItemSelected, OnSearchChanged);
                     this.SelectedPin = null;
-                    await Application.Current.MainPage.Navigation.PushAsync(searchPage);
+                    await ((Application.Current.MainPage as MainPage)?.Detail as NavigationPage)?.Navigation.PushAsync(searchPage);
                 });
             }
         }
