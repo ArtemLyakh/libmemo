@@ -308,8 +308,8 @@ namespace Libmemo {
                     if (this.UserPosition != default(Position) && this.SelectedPin != null) {
                         this.RouteFrom = this.UserPosition;
                         this.RouteTo = this.SelectedPin.Position;
-                        this.MapFunctions.SetLinearRoute(this.UserPosition, this.SelectedPin.Position);
                         this._routeProcessing = true;
+                        this.MapFunctions.SetLinearRoute(this.UserPosition, this.SelectedPin.Position);
                     }
                 });
             }
@@ -322,8 +322,8 @@ namespace Libmemo {
                     if (this.UserPosition != default(Position) && this.SelectedPin != null) {
                         this.RouteFrom = this.UserPosition;
                         this.RouteTo = this.SelectedPin.Position;
-                        this.MapFunctions.SetCalculatedRoute(this.UserPosition, this.SelectedPin.Position);
                         this._routeProcessing = true;
+                        this.MapFunctions.SetCalculatedRoute(this.UserPosition, this.SelectedPin.Position);
                     }
                 });
             }
@@ -334,6 +334,7 @@ namespace Libmemo {
                 return new Command(() => {
                     this.MapFunctions.DeleteRoute();
                     this.IsRouteActive = false;
+                    this._routeProcessing = false; //на всякий случай
                 });
             }
         }
@@ -351,6 +352,7 @@ namespace Libmemo {
             get {
                 return new Command<CustomPin>(pin => {
                     this._routeProcessing = false;
+                    this.IsRouteActive = false;
                     App.ToastNotificator.Show("Ошибка построения маршрута");
                 });
             }

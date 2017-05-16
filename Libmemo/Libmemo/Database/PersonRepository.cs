@@ -15,6 +15,9 @@ using Newtonsoft.Json.Converters;
 
 namespace Libmemo {
     public class PersonRepository {
+        private const int DATA_LOAD_TIMEOUT = 20;
+
+
         private SQLiteConnection database;
 
         #region Constructor
@@ -71,7 +74,7 @@ namespace Libmemo {
         }
         private async Task<JsonData> SendRequest(long? modified = null) {
             HttpClient client = new HttpClient();
-            client.Timeout = new TimeSpan(10 * 1000 * 1000 * 10);
+            client.Timeout = new TimeSpan(0, 0, DATA_LOAD_TIMEOUT);
             string request = Settings.DataUrl;
             if (modified != null) request += "?from=" + modified.ToString();
             try {
