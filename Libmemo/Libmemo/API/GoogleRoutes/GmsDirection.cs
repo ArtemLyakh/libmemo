@@ -67,7 +67,7 @@ namespace TK.CustomMap.Api.Google
                 }
 
                 return null;
-            } catch (Exception e) {
+            } catch (Exception) {
                 return null;
             }
 

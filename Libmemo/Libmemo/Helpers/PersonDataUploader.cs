@@ -41,7 +41,7 @@ namespace Libmemo {
                             message.EnsureSuccessStatusCode();
                             return true;
                         }
-                    } catch (Exception e) {
+                    } catch (Exception) {
                         return false;
                     }
                 }

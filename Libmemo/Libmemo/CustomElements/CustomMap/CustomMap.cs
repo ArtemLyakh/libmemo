@@ -110,7 +110,6 @@ namespace Libmemo {
         public event EventHandler RouteInitializingFailed;
 
         void IMapFunctions.RaiseRouteInitializingFailed() {
-            throw new NotImplementedException();
             RouteInitializingFailed?.Invoke(this, null);
 
             if (RouteInitializingFailedCommand != null && RouteInitializingFailedCommand.CanExecute(null)) {
