@@ -513,6 +513,20 @@ namespace Libmemo {
 
         #endregion
 
+        #region SideMenu
+
+        public ICommand OpenMenuCommand {
+            get {
+                return new Command(() => {
+                    if (Application.Current.MainPage is MainPage) {
+                        (Application.Current.MainPage as MainPage).IsPresented = true;
+                    }
+                });
+            }
+        }
+
+        #endregion
+
         public event PropertyChangedEventHandler PropertyChanged;
         void OnPropertyChanged(string propertyName = "") =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

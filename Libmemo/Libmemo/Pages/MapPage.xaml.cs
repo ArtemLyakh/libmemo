@@ -24,6 +24,7 @@ namespace Libmemo {
             ((MapPageViewModel)BindingContext).SetGPSTracking(true);
             ((MapPageViewModel)BindingContext).StartListen();
         }
+
     }
 
 }

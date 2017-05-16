@@ -15,40 +15,55 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <StackLayout VerticalOptions="FillAndExpand">
-        <StackLayout x:Name="searhStackLayout"
+    <StackLayout VerticalOptions="FillAndExpand" Padding="0,0,0,0" Spacing="0" BackgroundColor="LightGray">
+        <StackLayout x:Name="TopLayout"
+                     Padding="0,0,0,0"
                      Orientation="Horizontal"
-                     Padding="10,0,10,0"
-                     Spacing="1"
-                     VerticalOptions="Start"
+                     Spacing="0"
                      >
-            <Entry x:Name="searchEntry"
-                   Text="{Binding SearchText}"
+            <Image Source="{local:ImageResource Libmemo.Images.side-menu.png}"
                    VerticalOptions="Center"
-                   HorizontalOptions="FillAndExpand"
+                   WidthRequest="50" 
+                   HeightRequest="50" 
+                   Aspect="AspectFill"
                    >
-                <Entry.Behaviors>
-                    <local:EntrySelectedBehavior SelectedCommand="{Binding SearchCommand}"/>
-                </Entry.Behaviors>
-            </Entry>
-            <Button x:Name="searchButton"
-                    Text="&#x1F50D;"
-                    FontSize="Default"
-                    Command="{Binding SearchCommand}"
-                    VerticalOptions="FillAndExpand"
-                    WidthRequest="{Binding Source={x:Reference Name=searchButton}, Path=Height}"
-                    />
-            <Button x:Name="resetButton"
-                    Text="&#10060;"
-                    FontSize="Large"
-                    Command="{Binding ResetCommand}"
-                    VerticalOptions="FillAndExpand"
-                    WidthRequest="{Binding Source={x:Reference Name=resetButton}, Path=Height}"
-                    />
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding OpenMenuCommand}" />
+                </Image.GestureRecognizers>
+            </Image>
+
+
+            <StackLayout x:Name="searhStackLayout"
+                         Orientation="Horizontal"
+                         Padding="10,0,0,0"
+                         Spacing="1"
+                         HorizontalOptions="FillAndExpand"
+                         >
+
+                <Entry x:Name="searchEntry"
+                       Text="{Binding SearchText}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="FillAndExpand"
+                       >
+                    <Entry.Behaviors>
+                        <local:EntrySelectedBehavior SelectedCommand="{Binding SearchCommand}"/>
+                    </Entry.Behaviors>
+                </Entry>
+                <Button x:Name="resetButton"
+                        Text="&#10060;"
+                        FontSize="Large"
+                        Command="{Binding ResetCommand}"
+                        VerticalOptions="FillAndExpand"
+                        WidthRequest="{Binding Source={x:Reference Name=resetButton}, Path=Height}"
+                        />
+            </StackLayout>
         </StackLayout>
+
+
         <StackLayout x:Name="relativeStackLayout"
                      VerticalOptions="FillAndExpand"
                      HorizontalOptions="FillAndExpand"
+                     Padding="0,0,0,0"
                      >
             <RelativeLayout VerticalOptions="Fill" HorizontalOptions="Fill">
                 <local:CustomMap x:Name="mainMap"
