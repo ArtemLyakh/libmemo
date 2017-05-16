@@ -52,7 +52,7 @@
                      >
             <RelativeLayout VerticalOptions="Fill" HorizontalOptions="Fill">
                 <local:CustomMap x:Name="mainMap"
-                                 MapType="Hybrid"
+                                 MapType="Street"
                                  RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent ,Property=Width,Factor=1,Constant=0}"
                                  RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent ,Property=Height,Factor=1,Constant=0}"
                         

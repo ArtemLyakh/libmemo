@@ -43,7 +43,7 @@
                         </StackLayout>
 
                         <local:CustomMap x:Name="CoorMap"
-                                         MapType="Hybrid"
+                                         MapType="Street"
                                          HorizontalOptions="FillAndExpand"
                                          VerticalOptions="FillAndExpand"
                                          
