@@ -67,11 +67,7 @@ namespace Libmemo {
                     ?? database.Table<Person>().OrderByDescending(o => o.LastModified).FirstOrDefault()?.LastModified;
             });
         }
-        private void test() {
-            var q = GetLastModified();
-            q.Start();
 
-        }
         private async Task<JsonData> SendRequest(long? modified = null) {
             HttpClient client = new HttpClient();
             client.Timeout = new TimeSpan(0, 0, DATA_LOAD_TIMEOUT);
