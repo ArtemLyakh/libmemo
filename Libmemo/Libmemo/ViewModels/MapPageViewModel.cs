@@ -388,7 +388,7 @@ namespace Libmemo {
 
                     var searchPage = new SearchPage(this.SearchText, OnSearchItemSelected, OnSearchChanged);
                     this.SelectedPin = null;
-                    await ((Application.Current.MainPage as MainPage)?.Detail as NavigationPage)?.Navigation.PushAsync(searchPage);
+                    await App.CurrentNavPage.Navigation.PushAsync(searchPage);
                 });
             }
         }
@@ -519,7 +519,7 @@ namespace Libmemo {
             get {
                 return new Command(() => {
                     if (Application.Current.MainPage is MainPage) {
-                        (Application.Current.MainPage as MainPage).IsPresented = true;
+                        App.SetShowMenu(true);
                     }
                 });
             }
