@@ -7,7 +7,7 @@
              >
     <ContentPage.Content>
         <StackLayout VerticalOptions="FillAndExpand">
-            <ListView x:Name="listView" VerticalOptions="FillAndExpand" SeparatorVisibility="Default">
+            <ListView x:Name="listView" VerticalOptions="FillAndExpand" SeparatorVisibility="Default" ItemsSource="{Binding MenuList}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <TextCell Text="{Binding Title}" Detail="{Binding Text}" />
