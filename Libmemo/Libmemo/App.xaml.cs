@@ -40,16 +40,32 @@ namespace Libmemo {
         }
         #endregion
 
+        #region Pages
+
+        public static void SetShowMenu(bool show) {
+            (Application.Current.MainPage as MainPage).IsPresented = true;
+        }
+
+        public static NavigationPage CurrentNavPage {
+            get { return (NavigationPage)((MasterDetailPage)Application.Current.MainPage).Detail; }
+        }
+        public static MenuPage MenuPage {
+            get { return (MenuPage)((MasterDetailPage)Application.Current.MainPage).Master; }
+        }
+
+        #endregion
+
         public App() {
             InitializeComponent();
             TK.CustomMap.Api.Google.GmsDirection.Init("AIzaSyCFwd7VMckhN6zZdbmCfGO0WXvJyyqh1OA");
 
 
-            MainPage = new NavigationPage(new MainPage());
+            MainPage = new MainPage();
+
         }
 
         protected override void OnStart() {
-
+            App.Database.Load();
         }
 
         protected override void OnSleep() {

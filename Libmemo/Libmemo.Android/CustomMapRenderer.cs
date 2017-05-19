@@ -49,7 +49,10 @@ namespace Libmemo.Droid {
 
         #region FormMap properties
 
+        MapType _mapType;
+
         Position _mapCenter;
+
         float _zoom;
         bool _isCameraAnimated;
 
@@ -265,21 +268,21 @@ namespace Libmemo.Droid {
         private void AddLinearRoute(Position from, Position to) {
             this._route = DrawLinearRoute(from, to);
             if (this._route == null) {
-                this.MapFunctions.RaiseRouteInitializingFailed();
+                this.MapFunctions?.RaiseRouteInitializingFailed();
             } else {
                 this._routeFrom = from;
                 this._routeTo = to;
-                this.MapFunctions.RaiseRouteInitializingSucceed();
+                this.MapFunctions?.RaiseRouteInitializingSucceed();
             }
         }
         private async void AddCalculatedRoute(Position from, Position to) {
             this._route = await DrawCalculatedRoute(from, to);
             if (this._route == null) {
-                this.MapFunctions.RaiseRouteInitializingFailed();
+                this.MapFunctions?.RaiseRouteInitializingFailed();
             } else {
                 this._routeFrom = from;
                 this._routeTo = to;
-                this.MapFunctions.RaiseRouteInitializingSucceed();
+                this.MapFunctions?.RaiseRouteInitializingSucceed();
             }
         }
 
@@ -320,6 +323,8 @@ namespace Libmemo.Droid {
             this._isTiltGesturesEnabled = map.IsTiltGesturesEnabled;
             this._isZoomGesturesEnabled = map.IsZoomGesturesEnabled;
 
+            this._mapType = map.MapType;
+
             this._customPins = map.CustomPins;
         }
 
@@ -349,6 +354,17 @@ namespace Libmemo.Droid {
             _googleMap.UiSettings.CompassEnabled = false;
             _googleMap.UiSettings.ZoomControlsEnabled = false;// this._isZoomGesturesEnabled;
 
+            switch(this._mapType) {
+                case MapType.Street: default:
+                    _googleMap.MapType = GoogleMap.MapTypeNormal;
+                    break;
+                case MapType.Satellite:
+                    _googleMap.MapType = GoogleMap.MapTypeSatellite;
+                    break;
+                case MapType.Hybrid:
+                    _googleMap.MapType = GoogleMap.MapTypeHybrid;
+                    break;
+            }
 
             MoveCamera();
 
@@ -390,7 +406,7 @@ namespace Libmemo.Droid {
                 this.FormsMap.MapCenter = newPosition;
                 this.FormsMap.Zoom = newZoom;
             });
-            this.MapFunctions.RaiseCameraPositionChange(newPosition, newZoom);
+            this.MapFunctions?.RaiseCameraPositionChange(newPosition, newZoom);
         }
 
         private void _googleMap_MarkerClick(object sender, GoogleMap.MarkerClickEventArgs e) {
@@ -414,7 +430,7 @@ namespace Libmemo.Droid {
         private void _googleMap_InfoWindowClick(object sender, GoogleMap.InfoWindowClickEventArgs e) {
             var binding = _customPinsBindings.FirstOrDefault(i => i.Value.Id == e.Marker.Id);
 
-            MapFunctions.RaiseInfoWindowClick(binding.Key);
+            MapFunctions?.RaiseInfoWindowClick(binding.Key);
         }
 
         private void _googleMap_MyLocationChange(object sender, GoogleMap.MyLocationChangeEventArgs e) {
@@ -423,7 +439,7 @@ namespace Libmemo.Droid {
             if (this.FormsMap == null) return;
 
             var newPosition = new Position(e.Location.Latitude, e.Location.Longitude);
-            this.MapFunctions.RaiseUserLocationChange(newPosition);
+            this.MapFunctions?.RaiseUserLocationChange(newPosition);
         }
 
         #endregion
@@ -530,13 +546,15 @@ namespace Libmemo.Droid {
                     }
                 }
                 //Addind new collection of pins, subscribing to events
-                this._customPins = this.FormsMap.CustomPins;
-                this._customPinsBindings = new Dictionary<CustomPin, Marker>();
-                if (this._customPins != null) {
-                    this._customPins.CollectionChanged += CustomPinsCollectionChanged;
-                    foreach (var pin in this._customPins) {
-                        pin.PropertyChanged += CustomPin_PropertyChanged;
-                        AddPin(pin);
+                if (this.FormsMap != null) {
+                    this._customPins = this.FormsMap.CustomPins;
+                    this._customPinsBindings = new Dictionary<CustomPin, Marker>();
+                    if (this._customPins != null) {
+                        this._customPins.CollectionChanged += CustomPinsCollectionChanged;
+                        foreach (var pin in this._customPins) {
+                            pin.PropertyChanged += CustomPin_PropertyChanged;
+                            AddPin(pin);
+                        }
                     }
                 }
             } else if (e.PropertyName == CustomMap.MyLocationEnabledProperty.PropertyName) {

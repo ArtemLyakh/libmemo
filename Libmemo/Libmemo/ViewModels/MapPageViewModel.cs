@@ -7,7 +7,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
 namespace Libmemo {
-    public class MainPageViewModel : INotifyPropertyChanged {
+    public class MapPageViewModel : INotifyPropertyChanged {
 
         #region Constants
         private const double DEFAULT_LATITUDE = 47.23135;
@@ -15,20 +15,33 @@ namespace Libmemo {
         private const float DEFAULT_ZOOM = 18;
         #endregion
 
-        public MainPageViewModel(Page page) {
+        public MapPageViewModel() {
 
-            //Pin load
             InitPinsFromMemory();
-            StartLoadingPinsFromServer();
 
-            //GPS Permissions
             GetGPSPermission();
 
+        }
+
+        public void StartListen() {
             //TTS listeners
             App.TextToSpeech.OnStart += TextToSpeech_OnStart;
             App.TextToSpeech.OnEnd += TextToSpeech_OnEnd;
 
+            //DB listener
+            App.Database.LoadSuccess += Database_LoadSuccess;
         }
+
+        public void StopListen() {
+            //TTS listeners
+            App.TextToSpeech.OnStart -= TextToSpeech_OnStart;
+            App.TextToSpeech.OnEnd -= TextToSpeech_OnEnd;
+
+            //DB listener
+            App.Database.LoadSuccess -= Database_LoadSuccess;
+        }
+
+
 
         #region GPS Permissions
 
@@ -41,18 +54,7 @@ namespace Libmemo {
         }
 
         private async void GetGPSPermission() {
-            var location = await Plugin.Permissions.CrossPermissions.Current.CheckPermissionStatusAsync(Plugin.Permissions.Abstractions.Permission.Location);
-
-            if (location != Plugin.Permissions.Abstractions.PermissionStatus.Granted) {
-                var results = await Plugin.Permissions.CrossPermissions.Current.RequestPermissionsAsync(new[] { Plugin.Permissions.Abstractions.Permission.Location });
-                var status = results[Plugin.Permissions.Abstractions.Permission.Location];
-                if (status != Plugin.Permissions.Abstractions.PermissionStatus.Granted) {
-                    Device.BeginInvokeOnMainThread(async () => {
-                        await App.Current.MainPage.DisplayAlert("Ошибка", "Приложению требуется доступ к геолокации", "Завершить работу");
-                        DependencyService.Get<ICloseApplication>().CloseApplication();
-                    });
-                }
-            }
+            await UtilsFunctions.GetGPSPermissionOrExit();
 
             this._gpsPermissionsGained = true;
             SetGPSTracking(true);
@@ -306,8 +308,8 @@ namespace Libmemo {
                     if (this.UserPosition != default(Position) && this.SelectedPin != null) {
                         this.RouteFrom = this.UserPosition;
                         this.RouteTo = this.SelectedPin.Position;
-                        this.MapFunctions.SetLinearRoute(this.UserPosition, this.SelectedPin.Position);
                         this._routeProcessing = true;
+                        this.MapFunctions.SetLinearRoute(this.UserPosition, this.SelectedPin.Position);
                     }
                 });
             }
@@ -320,8 +322,8 @@ namespace Libmemo {
                     if (this.UserPosition != default(Position) && this.SelectedPin != null) {
                         this.RouteFrom = this.UserPosition;
                         this.RouteTo = this.SelectedPin.Position;
-                        this.MapFunctions.SetCalculatedRoute(this.UserPosition, this.SelectedPin.Position);
                         this._routeProcessing = true;
+                        this.MapFunctions.SetCalculatedRoute(this.UserPosition, this.SelectedPin.Position);
                     }
                 });
             }
@@ -332,6 +334,7 @@ namespace Libmemo {
                 return new Command(() => {
                     this.MapFunctions.DeleteRoute();
                     this.IsRouteActive = false;
+                    this._routeProcessing = false; //на всякий случай
                 });
             }
         }
@@ -349,6 +352,7 @@ namespace Libmemo {
             get {
                 return new Command<CustomPin>(pin => {
                     this._routeProcessing = false;
+                    this.IsRouteActive = false;
                     App.ToastNotificator.Show("Ошибка построения маршрута");
                 });
             }
@@ -384,7 +388,7 @@ namespace Libmemo {
 
                     var searchPage = new SearchPage(this.SearchText, OnSearchItemSelected, OnSearchChanged);
                     this.SelectedPin = null;
-                    await Application.Current.MainPage.Navigation.PushAsync(searchPage);
+                    await App.CurrentNavPage.Navigation.PushAsync(searchPage);
                 });
             }
         }
@@ -486,36 +490,6 @@ namespace Libmemo {
 
         #endregion
 
-        #region Add Person
-
-        #region Commands
-
-        public ICommand AddNewPersonCommand {
-            get {
-                return new Command(async () => {
-                    if (this.UserPosition == default(Position)) return;
-
-                    var addPage = new AddPage(this.UserPosition, OnItemAdded);
-                    await Application.Current.MainPage.Navigation.PushAsync(addPage);
-                });
-            }
-        }
-
-        #endregion
-
-        #region Callbacks
-
-        private void OnItemAdded(object sender, object e) {
-            this.MapFunctions.DeleteRoute();
-            this.IsRouteActive = false;
-            this.SelectedPin = null;
-            StartLoadingPinsFromServer();
-        }
-
-        #endregion
-
-        #endregion
-
         #region Database
 
         private async void InitPinsFromMemory() {
@@ -533,32 +507,22 @@ namespace Libmemo {
             }
         }
 
-
-        private void StartLoadingPinsFromServer() {
-            App.Database.LoadSuccess += Database_LoadSuccess;
-            App.Database.LoadFail += Database_LoadFail;
-
-            App.Database.Load();
-        }
-
         private void Database_LoadSuccess() {
-            App.Database.LoadSuccess -= Database_LoadSuccess;
-            App.Database.LoadFail -= Database_LoadFail;
-
             InitPinsFromMemory();
-            App.ToastNotificator.Show("Данные с сервера получены");
         }
 
-        private void Database_LoadFail() {
-            App.Database.LoadSuccess -= Database_LoadSuccess;
-            App.Database.LoadFail -= Database_LoadFail;
+        #endregion
 
-            Device.BeginInvokeOnMainThread(async () => {
-                bool again = await App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка загрузки данных с сервера", "Повторить", "Отмена");
-                if (again) {
-                    StartLoadingPinsFromServer();
-                }
-            });
+        #region SideMenu
+
+        public ICommand OpenMenuCommand {
+            get {
+                return new Command(() => {
+                    if (Application.Current.MainPage is MainPage) {
+                        App.SetShowMenu(true);
+                    }
+                });
+            }
         }
 
         #endregion

@@ -77,7 +77,7 @@ namespace Libmemo {
             get {
                 return new Command(async (object item) => {
                     OnItemSelected?.Invoke(this, (Person)item);
-                    await Application.Current.MainPage.Navigation.PopAsync();
+                    await App.CurrentNavPage.Navigation.PopAsync();
                 });
             }
         }

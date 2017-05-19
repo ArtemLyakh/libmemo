@@ -56,7 +56,7 @@ namespace TK.CustomMap.Api.Google
         public async Task<GmsDirectionResult> CalculateRoute(Position origin, Position destination, GmsDirectionTravelMode mode, string language = null)
         {
             HttpClient client = new HttpClient();
-            client.Timeout = new TimeSpan(10 * 1000 * 1000 * 10);
+            client.Timeout = new TimeSpan(0, 0, 5);
             client.BaseAddress = new Uri(BaseUrl);
             string request = this.BuildQueryString(origin, destination, mode, language);
             try {
@@ -67,7 +67,7 @@ namespace TK.CustomMap.Api.Google
                 }
 
                 return null;
-            } catch (Exception e) {
+            } catch (Exception) {
                 return null;
             }
 

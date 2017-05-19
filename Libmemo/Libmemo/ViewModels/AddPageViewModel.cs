@@ -3,6 +3,7 @@ using Plugin.Media.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
@@ -10,41 +11,142 @@ using Xamarin.Forms.Maps;
 namespace Libmemo {
     class AddPageViewModel : INotifyPropertyChanged {
 
-        public AddPageViewModel(Position userPosition, EventHandler OnItemAddedCb = null) {
-            this.Latitude = userPosition.Latitude;
-            this.Longitude = userPosition.Longitude;
-            this.OnSuccess = OnItemAddedCb;
+
+
+
+        public AddPageViewModel() {
+            GetGPSPermission();
         }
 
-        #region Callbacks
+        #region Position
 
-        private EventHandler OnSuccess;
+        #region Constants
+        private const double DEFAULT_LATITUDE = 47.23135;
+        private const double DEFAULT_LONGITUDE = 39.72328;
+        private const float DEFAULT_ZOOM = 18;
+        #endregion
+
+        #region GPS Permissions
+
+        private bool _gpsPermissionsGained = false;
+
+        public void SetGPSTracking(bool track) {
+            if (_gpsPermissionsGained) {
+                this.MyLocationEnabled = track;
+            }
+        }
+
+        private async void GetGPSPermission() {
+            await UtilsFunctions.GetGPSPermissionOrExit();
+
+            this._gpsPermissionsGained = true;
+            SetGPSTracking(true);
+        }
 
         #endregion
 
+        #region Map
+
         #region Properties
 
-        private double? _latitude;
-        public double? Latitude {
-            get { return _latitude; }
+        private Position _mapCenter = new Position(DEFAULT_LATITUDE, DEFAULT_LONGITUDE);
+        public Position MapCenter {
+            get { return _mapCenter; }
             set {
-                if (_latitude != value) {
-                    _latitude = value;
-                    this.OnPropertyChanged(nameof(Latitude));
+                if (_mapCenter != value) {
+                    _mapCenter = value;
+                    this.OnPropertyChanged(nameof(MapCenter));
                 }
             }
         }
 
-        private double? _longitude;
-        public double? Longitude {
-            get { return _longitude; }
+        private float _zoom = DEFAULT_ZOOM;
+        public float Zoom {
+            get { return _zoom; }
             set {
-                if (_longitude != value) {
-                    _longitude = value;
+                if (_zoom != value) {
+                    _zoom = value;
+                    this.OnPropertyChanged(nameof(Zoom));
+                }
+            }
+        }
+
+        private bool _mLocationEnabled = false;
+        public bool MyLocationEnabled {
+            get { return _mLocationEnabled; }
+            private set {
+                if (_mLocationEnabled != value) {
+                    _mLocationEnabled = value;
+                    this.OnPropertyChanged(nameof(MyLocationEnabled));
+                }
+            }
+        }
+
+        private Position? _userPosition = null;
+        public Position? UserPosition {
+            get { return this._userPosition; }
+            private set {
+                if (this._userPosition != value) {
+                    this._userPosition = value;
+                    this.OnPropertyChanged(nameof(UserPosition));
+                    this.OnPropertyChanged(nameof(Latitude));
                     this.OnPropertyChanged(nameof(Longitude));
                 }
             }
         }
+        public string Latitude {
+            get { return this.UserPosition?.Latitude.ToString() ?? char.ConvertFromUtf32(0x2014); }
+        }
+        public string Longitude {
+            get { return this.UserPosition?.Longitude.ToString() ?? char.ConvertFromUtf32(0x2014); }
+        }
+
+        #endregion
+
+        #region Commands
+
+        public ICommand UserPositionChangedCommand {
+            get {
+                return new Command<Position>((Position position) => {
+                    this.MapCenter = position;
+                    this.UserPosition = position;
+                });
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #region Properties
 
         private string _firstName;
         public string FirstName {
@@ -184,8 +286,7 @@ namespace Libmemo {
             get {
                 return new Command(async () => {
                     List<string> errors = new List<string>();
-                    if (!this.Latitude.HasValue) errors.Add("Поле \"Широта\" не заполнено");
-                    if (!this.Longitude.HasValue) errors.Add("Поле \"Долгота\" не заполнено");
+                    if (!this.UserPosition.HasValue) errors.Add("Ошибка определения местоположения");
                     if (String.IsNullOrWhiteSpace(this.FirstName)) errors.Add("Поле \"Имя\" не заполнено");
 
                     if (errors.Count > 0) {
@@ -196,8 +297,8 @@ namespace Libmemo {
                     }
 
                     PersonDataUploader uploader = new PersonDataUploader();
-                    uploader.Params.Add("latitude", this.Latitude.ToString());
-                    uploader.Params.Add("longitude", this.Longitude.ToString());
+                    uploader.Params.Add("latitude", this.UserPosition.Value.Latitude.ToString(CultureInfo.InvariantCulture));
+                    uploader.Params.Add("longitude", this.UserPosition.Value.Longitude.ToString(CultureInfo.InvariantCulture));
                     uploader.Params.Add("first_name", this.FirstName.ToString());
 
                     if (!String.IsNullOrWhiteSpace(this.SecondName)) {
@@ -233,9 +334,10 @@ namespace Libmemo {
             }
         }
 
-        private async void UploadSucceeded() {
-            await Application.Current.MainPage.Navigation.PopAsync();
-            this.OnSuccess.Invoke(this, null);
+        private void UploadSucceeded() {
+            App.ToastNotificator.Show("Данные успешно отправлены");
+            ResetCommand.Execute(null);
+            App.Database.Load();
         }
 
         #endregion
