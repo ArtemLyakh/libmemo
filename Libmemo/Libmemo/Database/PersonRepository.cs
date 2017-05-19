@@ -27,7 +27,7 @@ namespace Libmemo {
             database.CreateTable<Person>();
 
             this.LoadSuccess += () => {
-                App.ToastNotificator.Show("Получены данные с сервера");
+                App.ToastNotificator.Show("База данных загружена");
             };
             this.LoadFail += () => {
                 App.ToastNotificator.Show("Ошибка загрузки данных с сервера");
@@ -55,6 +55,19 @@ namespace Libmemo {
             await AddNewPersons(result.add);
             await DeleteNewPersons(result.delete);
             SaveLastModified(result);
+
+            LoadSuccess?.Invoke();
+        }
+        public async void FullLoad() {
+            var result = await SendRequest(null);
+            if (result == null) {
+                LoadFail?.Invoke();
+                return;
+            }
+
+            await DeleteAllItems();
+            await AddNewPersons(result.add);
+
 
             LoadSuccess?.Invoke();
         }

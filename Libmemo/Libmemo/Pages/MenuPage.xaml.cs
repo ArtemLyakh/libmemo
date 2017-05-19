@@ -77,17 +77,20 @@ namespace Libmemo {
                 Page = typeof(MapPage)
             };
             yield return new MenuPageItem {
-                Title = "Добавить",
-                Text = "добавить",
-                Page = typeof(AddPage)
+                Title = "Обновить базу данных",
+                Text = "Полностью обновляет базу данных",
+                Action = () => {
+                    App.ToastNotificator.Show("Скачивание данных");
+                    App.Database.FullLoad();
+                }
             };
 
-            if (!isLogged) {
+            if (isLogged) {
                 yield return new MenuPageItem {
-                    Title = "Войти",
-                    Page = typeof(LoginPage)
+                    Title = "Добавить",
+                    Text = "добавить",
+                    Page = typeof(AddPage)
                 };
-            } else {
                 yield return new MenuPageItem {
                     Title = "AuthTest",
                     Page = typeof(TestAuthPage)
@@ -97,6 +100,11 @@ namespace Libmemo {
                     Action = () => {
                         AuthHelper.Logout();
                     }
+                };
+            } else {
+                yield return new MenuPageItem {
+                    Title = "Войти",
+                    Page = typeof(LoginPage)
                 };
             }
 
