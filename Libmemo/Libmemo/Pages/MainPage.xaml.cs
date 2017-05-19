@@ -31,5 +31,9 @@ namespace Libmemo {
                 }
             }
         }
+
+        public void ExecuteMenuItem(MenuPageItem item) {
+            this.OnMenuItemSelected(null, new SelectedItemChangedEventArgs(item));
+        }
     }
 }

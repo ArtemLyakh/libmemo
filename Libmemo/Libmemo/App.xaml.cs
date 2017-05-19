@@ -52,6 +52,10 @@ namespace Libmemo {
         public static MenuPage MenuPage {
             get { return (MenuPage)((MasterDetailPage)Application.Current.MainPage).Master; }
         }
+        public static MainPage GlobalPage {
+            get { return (MainPage)Application.Current.MainPage; }
+        }
+
 
         #endregion
 

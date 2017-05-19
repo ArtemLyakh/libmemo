@@ -15,23 +15,62 @@ namespace Libmemo {
         public ListView ListView { get { return this.listView; } }
 
 
-        public ObservableCollection<MenuPageItem> MenuList { get; set; }
+        public ObservableCollection<MenuPageItem> MenuList { get; set; } = new ObservableCollection<MenuPageItem>();
+        private string _userEmail;
+        public string UserEmail {
+            get { return _userEmail; }
+            set {
+                if (_userEmail != value) {
+                    _userEmail = value;
+                    OnPropertyChanged(nameof(UserEmail));
+                }
+            }
+        }
+
+        private bool _isUserEmailVisible;
+        public bool IsUserEmailVisible {
+            get { return _isUserEmailVisible; }
+            set {
+                if (_isUserEmailVisible != value) {
+                    _isUserEmailVisible = value;
+                    OnPropertyChanged(nameof(IsUserEmailVisible));
+                }
+            }
+        }
 
 
         public MenuPage() {
             InitializeComponent();
 
-            MenuList = new ObservableCollection<MenuPageItem>();
-            foreach (var item in GetMenuList()) {
-                MenuList.Add(item);
-            }
+            SetMenuPage();
 
             this.BindingContext = this;
         }
 
 
+        public void ExecuteMenuItem(string title) {
+            var item = MenuList.FirstOrDefault(i => i.Title.Equals(title));
+            if (item == null) throw new ArgumentException($"Не найден пункт \"{title}\"");
+            App.GlobalPage.ExecuteMenuItem(item);
+        }
+
+
+        public void SetMenuPage() {
+
+            UserEmail = Settings.Email;
+            IsUserEmailVisible = AuthHelper.IsLogged();
+
+            MenuList.Clear();
+            foreach (var item in GetMenuList()) {
+                MenuList.Add(item);
+            }
+        }
+
+
 
         private static IEnumerable<MenuPageItem> GetMenuList() {
+            bool isLogged = AuthHelper.IsLogged();
+
             yield return new MenuPageItem {
                 Title = "Карта",
                 Text = "карта",
@@ -42,18 +81,25 @@ namespace Libmemo {
                 Text = "добавить",
                 Page = typeof(AddPage)
             };
-            yield return new MenuPageItem {
-                Title = "test",
-                Action = () => {
-                    Device.BeginInvokeOnMainThread(async () => {
-                        await App.Current.MainPage.DisplayAlert("Test", "test", "ОК");
-                    });
-                }
-            };
-            yield return new MenuPageItem {
-                Title = "AuthTest",
-                Page = typeof(TestAuthPage)
-            };
+
+            if (!isLogged) {
+                yield return new MenuPageItem {
+                    Title = "Войти",
+                    Page = typeof(LoginPage)
+                };
+            } else {
+                yield return new MenuPageItem {
+                    Title = "AuthTest",
+                    Page = typeof(TestAuthPage)
+                };
+                yield return new MenuPageItem {
+                    Title = "Выйти",
+                    Action = () => {
+                        AuthHelper.Logout();
+                    }
+                };
+            }
+
         }
     }
 

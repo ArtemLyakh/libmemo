@@ -7,6 +7,7 @@
              >
     <ContentPage.Content>
         <StackLayout VerticalOptions="FillAndExpand">
+            <Label Text="{Binding UserEmail}" IsVisible="{Binding IsUserEmailVisible}" />
             <ListView x:Name="listView" VerticalOptions="FillAndExpand" SeparatorVisibility="Default" ItemsSource="{Binding MenuList}">
                 <ListView.ItemTemplate>
                     <DataTemplate>

@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Libmemo.LoginPage"
+             NavigationPage.HasNavigationBar="False"
+             >
+    <StackLayout VerticalOptions="CenterAndExpand"
+                 HorizontalOptions="FillAndExpand"
+                 Spacing="10"
+                 Padding="10"
+                 >
+        <Label Text="Авторизация" FontSize="Large" HorizontalOptions="CenterAndExpand" Margin="0,0,0,50"/>
+        <StackLayout Orientation="Horizontal"
+                     HorizontalOptions="FillAndExpand"
+                     Spacing="0"
+                     >
+            <Label Text="Email:" FontSize="Medium" HorizontalOptions="Start" VerticalOptions="Center" WidthRequest="100" />
+            <Entry Text="{Binding Email}" HorizontalOptions="FillAndExpand" VerticalOptions="Center" Keyboard="Email"/>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal"
+                     HorizontalOptions="FillAndExpand"
+                     Spacing="0"
+                     >
+            <Label Text="Пароль:" FontSize="Medium" HorizontalOptions="Start" VerticalOptions="Center" WidthRequest="100" />
+            <Entry Text="{Binding Password}" HorizontalOptions="FillAndExpand" VerticalOptions="Center" IsPassword="True" />
+        </StackLayout>
+        <StackLayout Orientation="Horizontal"
+                     HorizontalOptions="CenterAndExpand"
+                     Spacing="10"
+                     >
+            <Button Text="Войти" Command="{Binding LoginCommand}" />
+            <Button Text="Регистрация" Command="{Binding RegisterCommand}" />
+        </StackLayout>
+    </StackLayout>
+</ContentPage>

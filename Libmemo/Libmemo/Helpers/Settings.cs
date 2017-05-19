@@ -23,6 +23,8 @@ namespace Libmemo {
         private const string _databaseName = "database.db";
 
         private const string _addPersonUrl = "http://libmemo.com/api/add.php";
+
+        private const string _loginUri = "http://libmemo.com/api/login.php";
         #endregion
 
 
@@ -76,10 +78,43 @@ namespace Libmemo {
         }
 
 
+
+        public static bool Logged {
+            get { return AppSettings.GetValueOrDefault<bool>("logged", false); }
+            set { AppSettings.AddOrUpdateValue<bool>("logged", value); }
+        }
+        public static string Email {
+            get { return AppSettings.GetValueOrDefault<string>("login", null); }
+            set { AppSettings.AddOrUpdateValue("login", value); }
+        }
+        public static string Password {
+            get { return AppSettings.GetValueOrDefault<string>("password", null); }
+            set { AppSettings.AddOrUpdateValue("password", value); }
+        }
+        public static UserType UserType {
+            get { return (UserType)AppSettings.GetValueOrDefault<int>("usertype", default(int)); }
+            set { AppSettings.AddOrUpdateValue("usertype", (int)value); }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
         public static string DataUrl { get; } = _dataUrl;
         public static string AddPersonUrl { get; } = _addPersonUrl;
 
         public static string DatabaseName { get; } = _databaseName;
 
+        public static string LoginUri { get; } = _loginUri;
+
     }
+
 }
