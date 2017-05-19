@@ -77,8 +77,8 @@ namespace Libmemo {
                 Page = typeof(MapPage)
             };
             yield return new MenuPageItem {
-                Title = "Обновить базу данных",
-                Text = "Полностью обновляет базу данных",
+                Title = "Сбросить базу данных",
+                Text = "Полное обновление базы данных",
                 Action = () => {
                     App.ToastNotificator.Show("Скачивание данных");
                     App.Database.FullLoad();
@@ -103,8 +103,12 @@ namespace Libmemo {
                 };
             } else {
                 yield return new MenuPageItem {
-                    Title = "Войти",
+                    Title = "Авторизация",
                     Page = typeof(LoginPage)
+                };
+                yield return new MenuPageItem {
+                    Title = "Регистрация",
+                    Page = typeof(RegisterPage)
                 };
             }
 

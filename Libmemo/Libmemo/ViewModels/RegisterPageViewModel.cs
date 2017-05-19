@@ -6,17 +6,15 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Libmemo {
-    public class LoginPageViewModel : INotifyPropertyChanged {
-        public LoginPageViewModel() {
+    public class RegisterPageViewModel : INotifyPropertyChanged {
 
-        }
-
-        private string _email = Settings.Email;
+        private string _email;
         public string Email {
             get { return this._email; }
             set {
@@ -27,7 +25,7 @@ namespace Libmemo {
             }
         }
 
-        private string _password = Settings.Password;
+        private string _password;
         public string Password {
             get { return this._password; }
             set {
@@ -38,57 +36,86 @@ namespace Libmemo {
             }
         }
 
+        private string _confirmPassword;
+        public string ConfirmPassword {
+            get { return this._confirmPassword; }
+            set {
+                if (this._confirmPassword != value) {
+                    this._confirmPassword = value;
+                    this.OnPropertyChanged(nameof(ConfirmPassword));
+                }
+            }
+        }
+
+
         public ICommand LoginCommand {
             get {
-                return new Command(async () => {
-                    if (string.IsNullOrWhiteSpace(this.Email)) {
-                        App.ToastNotificator.Show("Не заполнен email");
-                        return;
-                    }
-                    if (string.IsNullOrWhiteSpace(this.Password)) {
-                        App.ToastNotificator.Show("Не заполнен пароль");
-                        return;
-                    }
-
-                    try {
-                        using (var handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
-                        using (var request = new HttpRequestMessage(HttpMethod.Post, Settings.LoginUri) {
-                            Content = new FormUrlEncodedContent(new Dictionary<string, string> {
-                                {"email", this.Email },
-                                {"password", this.Password }
-                            })
-                        })
-                        using (HttpClient client = new HttpClient(handler) { Timeout = new TimeSpan(0, 0, 5) })
-                        using (var responce = await client.SendAsync(request)) {
-                            var str = await responce.Content.ReadAsStringAsync();
-                            if (responce.StatusCode == HttpStatusCode.BadRequest) {
-                                JsonSerializerSettings settings = new JsonSerializerSettings();
-                                var error = JsonConvert.DeserializeObject<JsonLoginFail>(str).error;
-                                App.ToastNotificator.Show(error);
-                                return;
-                            }
-                            responce.EnsureSuccessStatusCode();
-
-                            AuthHelper.Login(
-                                this.Email,
-                                this.Password,
-                                JsonConvert.DeserializeObject<JsonLoginSuccess>(str).type,
-                                handler.CookieContainer
-                            );
-
-                            App.MenuPage.ExecuteMenuItem("Карта");
-                        }
-                    } catch {
-                        App.ToastNotificator.Show("Ошибка авторизации");
-                    }
+                return new Command(() => {
+                    App.MenuPage.ExecuteMenuItem("Авторизация");
                 });
             }
         }
 
         public ICommand RegisterCommand {
             get {
-                return new Command(() => {
-                    App.MenuPage.ExecuteMenuItem("Регистрация");
+                return new Command(async () => {
+
+                    if (!Regex.IsMatch(this.Email,
+                            @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
+                            @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$",
+                            RegexOptions.IgnoreCase)) { 
+                        App.ToastNotificator.Show("Невалидный email адрес");
+                        return;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(this.Password)) {
+                        App.ToastNotificator.Show("Не заполнен пароль");
+                        return;
+                    }
+                    if (string.IsNullOrWhiteSpace(this.ConfirmPassword)) {
+                        App.ToastNotificator.Show("Не заполнено подтверждение пароля");
+                        return;
+                    }
+                    if (!this.Password.Equals(this.ConfirmPassword)) {
+                        App.ToastNotificator.Show("Пароли не совпадают");
+                        return;
+                    }
+
+
+                    try {
+                        using (var handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
+                        using (var request = new HttpRequestMessage(HttpMethod.Post, Settings.RegisterUri) {
+                            Content = new FormUrlEncodedContent(new Dictionary<string, string> {
+                                {"email", this.Email },
+                                {"password", this.Password },
+                                {"confirm", this.ConfirmPassword }
+                            })
+                        })
+                        using (HttpClient client = new HttpClient(handler) { Timeout = new TimeSpan(0, 0, 5) })
+                        using (var responce = await client.SendAsync(request)) {
+                            var str = await responce.Content.ReadAsStringAsync();
+                            if (responce.StatusCode == HttpStatusCode.BadRequest) {
+                                var error = JsonConvert.DeserializeObject<JsonRegisterFail>(str).error;
+                                App.ToastNotificator.Show(error);
+                                return;
+                            }
+                            responce.EnsureSuccessStatusCode();
+
+                            App.ToastNotificator.Show("Регистрация успешно завершена");
+
+                            AuthHelper.Login(
+                                this.Email,
+                                this.Password,
+                                "default",
+                                handler.CookieContainer
+                            );
+
+                            //TODO добавить страницу изменения данных пользователя, перенаправить туда
+                            App.MenuPage.ExecuteMenuItem("Карта");
+                        }
+                    } catch {
+                        App.ToastNotificator.Show("Ошибка регистрации");
+                    }
                 });
             }
         }

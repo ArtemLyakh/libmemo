@@ -43,10 +43,18 @@ namespace Libmemo {
     public enum UserType {
         None = 0, Default, Privilege
     }
-    public class AuthJsonError {
-        public string error { get; set; }
-    }
-    public class AuthJsonSuccess {
+    public class JsonLoginSuccess {
         public string type { get; set; }
     }
+    public class JsonLoginFail {
+        public string error { get; set; }
+    }
+    public class JsonRegisterSuccess {
+        public string message { get; set; }
+    }
+    public class JsonRegisterFail {
+        public string error { get; set; }
+    }
+
+
 }

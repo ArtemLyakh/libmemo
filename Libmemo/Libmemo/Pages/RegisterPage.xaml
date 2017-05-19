@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Libmemo.LoginPage"
+             x:Class="Libmemo.RegisterPage"
              NavigationPage.HasNavigationBar="False"
              >
     <ScrollView>
@@ -10,7 +10,7 @@
                  Spacing="30"
                  Padding="10"
                  >
-            <Label Text="Авторизация" FontSize="Large" HorizontalOptions="CenterAndExpand" Margin="0,0,0,30"/>
+            <Label Text="Регистрация" FontSize="Large" HorizontalOptions="CenterAndExpand" Margin="0,0,0,30"/>
             <StackLayout Orientation="Vertical"
                      HorizontalOptions="FillAndExpand"
                      Spacing="0"
@@ -25,12 +25,19 @@
                 <Label Text="Пароль:" FontSize="Medium" HorizontalOptions="CenterAndExpand" />
                 <Entry Text="{Binding Password}" HorizontalOptions="FillAndExpand" IsPassword="True" />
             </StackLayout>
+            <StackLayout Orientation="Vertical"
+                     HorizontalOptions="FillAndExpand"
+                     Spacing="0"
+                     >
+                <Label Text="Подтверждение пароля:" FontSize="Medium" HorizontalOptions="CenterAndExpand" />
+                <Entry Text="{Binding ConfirmPassword}" HorizontalOptions="FillAndExpand" IsPassword="True" />
+            </StackLayout>
             <StackLayout Orientation="Horizontal"
                      HorizontalOptions="CenterAndExpand"
                      Spacing="10"
                      >
-                <Button Text="Войти" Command="{Binding LoginCommand}" />
-                <Button Text="Регистрация" Command="{Binding RegisterCommand}" />
+                <Button Text="Зарегистрироваться" Command="{Binding RegisterCommand}" />
+                <Button Text="Авторизация" Command="{Binding LoginCommand}" />
             </StackLayout>
         </StackLayout>
     </ScrollView>
