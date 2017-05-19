@@ -25,6 +25,8 @@ namespace Libmemo {
 
         public static void Logout() {
             Settings.Logged = false;
+            Settings.UserType = UserType.None;
+            Settings.AuthCookies = null;
 
             App.MenuPage.SetMenuPage();
 
