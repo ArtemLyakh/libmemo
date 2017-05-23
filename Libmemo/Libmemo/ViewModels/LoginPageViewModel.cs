@@ -63,7 +63,7 @@ namespace Libmemo {
                             var str = await responce.Content.ReadAsStringAsync();
                             if (responce.StatusCode == HttpStatusCode.BadRequest) {
                                 JsonSerializerSettings settings = new JsonSerializerSettings();
-                                var error = JsonConvert.DeserializeObject<JsonLoginFail>(str).error;
+                                var error = JsonConvert.DeserializeObject<JsonMessage>(str).message;
                                 App.ToastNotificator.Show(error);
                                 return;
                             }
@@ -72,7 +72,7 @@ namespace Libmemo {
                             AuthHelper.Login(
                                 this.Email,
                                 this.Password,
-                                JsonConvert.DeserializeObject<JsonLoginSuccess>(str).type,
+                                JsonConvert.DeserializeObject<JsonMessage>(str).message,
                                 handler.CookieContainer
                             );
 

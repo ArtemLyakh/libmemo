@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -24,28 +25,32 @@ namespace Libmemo {
 
 
         public async Task<bool> Upload() {
-            using (var client = new HttpClient()) {
-                client.Timeout = new TimeSpan(0, 0, 30);
+            try {
+                using (var handler = new HttpClientHandler { CookieContainer = Settings.AuthCookies })
+                using (var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(20) })
                 using (var content = new MultipartFormDataContent(String.Format("----------{0:N}", Guid.NewGuid()))) {
-
                     foreach (var item in this.Params) {
                         content.Add(new StringContent(item.Value), item.Key);
                     }
 
                     if (this._fileData != null) {
-                        content.Add(new StreamContent(new MemoryStream(this._fileData)), "photo", "photo.jpg");
+                        content.Add(new ByteArrayContent(this._fileData), "photo", "photo.jpg");
                     }
 
-                    try {
-                        using (var message = await client.PostAsync(url, content)) {
-                            message.EnsureSuccessStatusCode();
-                            return true;
+                    using (var message = await client.PostAsync(url, content)) {
+                        if (message.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
+                            throw new UnauthorizedAccessException();
                         }
-                    } catch (Exception) {
-                        return false;
+
+                        var str = await message.Content.ReadAsStringAsync();
+                        message.EnsureSuccessStatusCode();
+                        return true;
                     }
                 }
+            } catch {
+                return false;
             }
+
         }
 
     }

@@ -23,15 +23,25 @@ namespace Libmemo {
             App.ToastNotificator.Show($"Добро пожаловать, {email}");
         }
 
-        public static void Logout() {
+        private static void InnerLogout() {
             Settings.Logged = false;
             Settings.UserType = UserType.None;
             Settings.AuthCookies = null;
 
             App.MenuPage.SetMenuPage();
+        }
+
+        public static void Logout() {
+            InnerLogout();
 
             //принудительный сброс страницы
             App.MenuPage.ExecuteMenuItem("Карта");
+        }
+
+        public static void Relogin() {
+            InnerLogout();
+
+            App.MenuPage.ExecuteMenuItem("Авторизация");
         }
 
         public static bool IsLogged() {
@@ -43,18 +53,8 @@ namespace Libmemo {
     public enum UserType {
         None = 0, Default, Privilege
     }
-    public class JsonLoginSuccess {
-        public string type { get; set; }
-    }
-    public class JsonLoginFail {
-        public string error { get; set; }
-    }
-    public class JsonRegisterSuccess {
+    public class JsonMessage {
         public string message { get; set; }
     }
-    public class JsonRegisterFail {
-        public string error { get; set; }
-    }
-
 
 }

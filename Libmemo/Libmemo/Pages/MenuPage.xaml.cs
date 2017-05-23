@@ -92,10 +92,6 @@ namespace Libmemo {
                     Page = typeof(AddPage)
                 };
                 yield return new MenuPageItem {
-                    Title = "AuthTest",
-                    Page = typeof(TestAuthPage)
-                };
-                yield return new MenuPageItem {
                     Title = "Выйти",
                     Action = () => {
                         AuthHelper.Logout();

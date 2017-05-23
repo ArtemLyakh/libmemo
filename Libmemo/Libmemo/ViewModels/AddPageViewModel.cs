@@ -296,6 +296,8 @@ namespace Libmemo {
                         return;
                     }
 
+                    App.ToastNotificator.Show("Отправка на сервер");
+
                     PersonDataUploader uploader = new PersonDataUploader();
                     uploader.Params.Add("latitude", this.UserPosition.Value.Latitude.ToString(CultureInfo.InvariantCulture));
                     uploader.Params.Add("longitude", this.UserPosition.Value.Longitude.ToString(CultureInfo.InvariantCulture));
@@ -321,15 +323,20 @@ namespace Libmemo {
                         await uploader.SetFile(this.PhotoSource);
                     }
 
-                    App.ToastNotificator.Show("Отправка на сервер");
-                    var success = await uploader.Upload();
-                    if (success) {
-                        UploadSucceeded();
-                    } else {
-                        Device.BeginInvokeOnMainThread(async () => {
-                            await App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка отправки данных", "ОК");
-                        });
+                    try {
+                        var success = await uploader.Upload();
+
+                        if (success) {
+                            UploadSucceeded();
+                        } else {
+                            Device.BeginInvokeOnMainThread(async () => {
+                                await App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка отправки данных", "ОК");
+                            });
+                        }
+                    } catch (UnauthorizedAccessException) {
+                        AuthHelper.Relogin();
                     }
+                    
                 });
             }
         }

@@ -95,7 +95,7 @@ namespace Libmemo {
                         using (var responce = await client.SendAsync(request)) {
                             var str = await responce.Content.ReadAsStringAsync();
                             if (responce.StatusCode == HttpStatusCode.BadRequest) {
-                                var error = JsonConvert.DeserializeObject<JsonRegisterFail>(str).error;
+                                var error = JsonConvert.DeserializeObject<JsonMessage>(str).message;
                                 App.ToastNotificator.Show(error);
                                 return;
                             }
