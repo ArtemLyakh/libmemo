@@ -298,7 +298,7 @@ namespace Libmemo {
 
                     App.ToastNotificator.Show("Отправка на сервер");
 
-                    PersonDataUploader uploader = new PersonDataUploader();
+                    PersonDataLoader uploader = new PersonDataLoader(Settings.AddPersonUrl);
                     uploader.Params.Add("latitude", this.UserPosition.Value.Latitude.ToString(CultureInfo.InvariantCulture));
                     uploader.Params.Add("longitude", this.UserPosition.Value.Longitude.ToString(CultureInfo.InvariantCulture));
                     uploader.Params.Add("first_name", this.FirstName.ToString());

@@ -92,6 +92,11 @@ namespace Libmemo {
                     Page = typeof(AddPage)
                 };
                 yield return new MenuPageItem {
+                    Title = "Редактировать данные",
+                    Text = "Редактирование персональных данных",
+                    Page = typeof(PersonalDataPage)
+                };
+                yield return new MenuPageItem {
                     Title = "Выйти",
                     Action = () => {
                         AuthHelper.Logout();

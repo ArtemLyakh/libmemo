@@ -25,8 +25,9 @@ namespace Libmemo {
         private const string _addPersonUrl = "http://libmemo.com/api/add.php";
 
         private const string _loginUri = "http://libmemo.com/api/login.php";
-
         private const string _registerUri = "http://libmemo.com/api/register.php";
+        private const string _personalDataSend = "http://libmemo.com/api/personal-data-send.php";
+        private const string _personalDataGet = "http://libmemo.com/api/personal-data-get.php";
         #endregion
 
 
@@ -112,6 +113,8 @@ namespace Libmemo {
 
         public static string DataUrl { get; } = _dataUrl;
         public static string AddPersonUrl { get; } = _addPersonUrl;
+        public static string PersonalDataSend { get; } = _personalDataSend;
+        public static string PersonalDataGet { get; } = _personalDataGet;
 
         public static string DatabaseName { get; } = _databaseName;
 
