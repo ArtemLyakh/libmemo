@@ -11,7 +11,7 @@ namespace Libmemo {
             Settings.AuthCookies = cookieContainer;
             switch (type) {
                 case "default": Settings.UserType = UserType.Default; break;
-                case "privilege": Settings.UserType = UserType.Privilege; break;
+                case "admin": Settings.UserType = UserType.Admin; break;
                 default: Settings.UserType = UserType.None; break;
             }
             Settings.Email = email;
@@ -51,7 +51,7 @@ namespace Libmemo {
 
 
     public enum UserType {
-        None = 0, Default, Privilege
+        None = 0, Default, Admin
     }
     public class JsonMessage {
         public string message { get; set; }
