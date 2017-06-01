@@ -459,7 +459,7 @@ namespace Libmemo.Droid {
                 var infoSubtitle = view.FindViewById<TextView>(Resource.Id.InfoWindowSubtitle);
                 var infoWindowButton = view.FindViewById<ImageButton>(Resource.Id.InfoWindowButton);
 
-                var b64 = App.Database.GetBase64ProfilePictureById(int.Parse(customPin.Id));
+                var b64 = string.IsNullOrWhiteSpace(customPin.Base64) ? null : customPin.Base64;
                 if (b64 != null) {
                     var imageBytes = Convert.FromBase64String(b64);
                     Android.Graphics.Bitmap bitmap;

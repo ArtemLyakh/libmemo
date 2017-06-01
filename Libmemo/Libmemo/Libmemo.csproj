@@ -64,7 +64,7 @@
     <Compile Include="CustomElements\CustomMap\INativeMapFunctions.cs" />
     <Compile Include="CustomElements\CustomMap\PinImageEnum.cs" />
     <Compile Include="Database\JsonData.cs" />
-    <Compile Include="Database\Person.cs" />
+    <Compile Include="Database\Classes.cs" />
     <Compile Include="Database\PersonRepository.cs" />
     <Compile Include="Dependencies\ICloseApplication.cs" />
     <Compile Include="Dependencies\IImageFileToByteArrayConverter.cs" />

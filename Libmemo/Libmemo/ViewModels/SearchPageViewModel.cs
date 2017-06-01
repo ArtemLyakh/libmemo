@@ -22,7 +22,7 @@ namespace Libmemo {
 
         private void GetItems(string search) {
             Task.Factory.StartNew(async () => {
-                SearchList = await App.Database.GetItems(search);
+                SearchList = await App.Database.GetItems<Person>(search);
             });
         }
 

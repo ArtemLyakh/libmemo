@@ -18,7 +18,7 @@ namespace Libmemo {
 
         private static readonly long _lastModifiedDefault = 0;
 
-        private const string _dataUrl = "http://libmemo.com/api/data.php";
+        private const string _dataUrl = "http://libmemo.com/api/database.php";//"http://libmemo.com/api/data.php";
 
         private const string _databaseName = "database.db";
 

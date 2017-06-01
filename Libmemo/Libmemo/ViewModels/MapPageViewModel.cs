@@ -97,11 +97,12 @@ namespace Libmemo {
         public ICommand InfoWindowClickedCommand {
             get {
                 return new Command<CustomPin>(async (CustomPin pin) => {
-                    var url = (await App.Database.GetById(int.Parse(pin.Id)))?.Link;
+                    throw new NotImplementedException();
+                    //var url = (await App.Database.GetById(int.Parse(pin.Id)))?.Link;
 
-                    if (Uri.TryCreate(url, UriKind.Absolute, out Uri res)) {
-                        Device.OpenUri(new Uri(url));
-                    }
+                    //if (Uri.TryCreate(url, UriKind.Absolute, out Uri res)) {
+                    //    Device.OpenUri(new Uri(url));
+                    //}
                 });
             }
         }
@@ -115,7 +116,8 @@ namespace Libmemo {
                 Position = new Position(person.Latitude, person.Longitude),
                 Title = person.Name,
                 Text = person.DateBirth.HasValue && person.DateDeath.HasValue ? $"{person.DateBirth.Value.Date.ToString("dd.MM.yyyy")}\u2014{person.DateDeath.Value.ToString("dd.MM.yyyy")}" : "",
-                Visible = true
+                Visible = true,
+                Base64 = person.Image
             };
         }
 
@@ -448,7 +450,7 @@ namespace Libmemo {
                 return new Command(async () => {
                     if (this._ttsStarted) return;
                     this._ttsStarted = true;
-                    var person = await App.Database.GetById(int.Parse(this.SelectedPin.Id));
+                    var person = await App.Database.GetById<Person>(int.Parse(this.SelectedPin.Id));
                     SpeakPersonText(person);
                 });
             }
@@ -493,7 +495,7 @@ namespace Libmemo {
         #region Database
 
         private async void InitPinsFromMemory() {
-            var list = await App.Database.GetItems();
+            var list = await App.Database.GetItems<Person>();
 
             if (list.Count() > 0) {
                 var buf = new ObservableCollection<CustomPin>();

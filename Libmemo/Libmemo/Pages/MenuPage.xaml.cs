@@ -81,7 +81,7 @@ namespace Libmemo {
                 Text = "Полное обновление базы данных",
                 Action = () => {
                     App.ToastNotificator.Show("Скачивание данных");
-                    App.Database.FullLoad();
+                    App.Database.Load(true);
                 }
             };
 
