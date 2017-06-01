@@ -80,7 +80,7 @@ namespace Libmemo {
 
             } catch (UnauthorizedAccessException) {
                 throw;
-            } catch (Exception e) {
+            } catch (Exception) {
                 return null;
             }
         }

@@ -153,7 +153,7 @@ namespace Libmemo {
                         uploader.Params.Add("date_birth", this.DateBirth.Value.ToString("yyyy-MM-dd"));
                     }
                     if (this.PhotoSource != null) {
-                        await uploader.SetFile(this.PhotoSource);
+                        await uploader.SetFile(this.PhotoSource);      
                     }
 
                     try {
