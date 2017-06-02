@@ -17,7 +17,7 @@ namespace Libmemo {
         }
 
         private void OnMenuItemSelected(object sender, SelectedItemChangedEventArgs e) {
-            var item = e.SelectedItem as MenuPageItem;
+            var item = e.SelectedItem as MenuItem;
             if (item != null) {
                 this.menuPage.ListView.SelectedItem = null;
                 IsPresented = false;
@@ -32,7 +32,7 @@ namespace Libmemo {
             }
         }
 
-        public void ExecuteMenuItem(MenuPageItem item) {
+        public void ExecuteMenuItem(MenuItem item) {
             this.OnMenuItemSelected(null, new SelectedItemChangedEventArgs(item));
         }
     }

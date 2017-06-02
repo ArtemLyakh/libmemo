@@ -76,7 +76,7 @@ namespace Libmemo {
                                 handler.CookieContainer
                             );
 
-                            App.MenuPage.ExecuteMenuItem("map");
+                            App.MenuPage.ExecuteMenuItem(MenuItemId.Map);
                         }
                     } catch {
                         App.ToastNotificator.Show("Ошибка авторизации");
@@ -88,7 +88,7 @@ namespace Libmemo {
         public ICommand RegisterCommand {
             get {
                 return new Command(() => {
-                    App.MenuPage.ExecuteMenuItem("register");
+                    App.MenuPage.ExecuteMenuItem(MenuItemId.Register);
                 });
             }
         }

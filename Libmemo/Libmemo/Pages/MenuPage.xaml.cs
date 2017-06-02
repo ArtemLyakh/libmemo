@@ -15,7 +15,7 @@ namespace Libmemo {
         public ListView ListView { get { return this.listView; } }
 
 
-        public ObservableCollection<MenuPageItem> MenuList { get; set; } = new ObservableCollection<MenuPageItem>();
+        public ObservableCollection<MenuItem> MenuList { get; set; } = new ObservableCollection<MenuItem>();
         private string _userEmail;
         public string UserEmail {
             get { return _userEmail; }
@@ -58,9 +58,9 @@ namespace Libmemo {
         }
 
 
-        public void ExecuteMenuItem(string id) {
-            var item = MenuList.FirstOrDefault(i => i.Id.Equals(id));
-            if (item == null) throw new ArgumentException($"Не найден пункт \"{id}\"");
+        public void ExecuteMenuItem(MenuItemId id) {
+            var item = MenuList.FirstOrDefault(i => i.Id.Equals(id))
+                ?? throw new ArgumentException($"Не найден пункт \"{id}\"");
             App.GlobalPage.ExecuteMenuItem(item);
         }
 
@@ -79,15 +79,15 @@ namespace Libmemo {
 
 
 
-        private static IEnumerable<MenuPageItem> GetMenuList() {
-            yield return new MenuPageItem {
-                Id = "map",
+        private static IEnumerable<MenuItem> GetMenuList() {
+            yield return new MenuItem {
+                Id = MenuItemId.Map,
                 Title = "Карта",
                 Text = "карта",
                 Page = typeof(MapPage)
             };
-            yield return new MenuPageItem {
-                Id = "reload",
+            yield return new MenuItem {
+                Id = MenuItemId.ReloadDatabase,
                 Title = "Сбросить базу данных",
                 Text = "Полное обновление базы данных",
                 Action = () => {
@@ -98,42 +98,40 @@ namespace Libmemo {
 
             if (AuthHelper.IsLogged) {
                 if (AuthHelper.IsAdmin) {
-                    yield return new MenuPageItem {
-                        Id = "add_admin",
+                    yield return new MenuItem {
+                        Id = MenuItemId.AddAdmin,
                         Title = "Добавить/админ",
                         Text = "админ",
                         Page = typeof(AddPageAdmin)
                     };
                 } else {
-                    yield return new MenuPageItem {
-                        Id = "add",
+                    yield return new MenuItem {
+                        Id = MenuItemId.Add,
                         Title = "Добавить",
                         Text = "добавить",
                         Page = typeof(AddPage)
                     };
                 }
 
-                yield return new MenuPageItem {
-                    Id = "edit",
+                yield return new MenuItem {
+                    Id = MenuItemId.Edit,
                     Title = "Редактировать данные",
                     Text = "Редактирование персональных данных",
                     Page = typeof(PersonalDataPage)
                 };
-                yield return new MenuPageItem {
-                    Id = "exit",
+                yield return new MenuItem {
+                    Id = MenuItemId.Exit,
                     Title = "Выйти",
-                    Action = () => {
-                        AuthHelper.Logout();
-                    }
+                    Action = () => AuthHelper.Logout()
                 };
             } else {
-                yield return new MenuPageItem {
-                    Id = "login",
+                yield return new MenuItem {
+                    Id = MenuItemId.Login,
                     Title = "Авторизация",
                     Page = typeof(LoginPage)
                 };
-                yield return new MenuPageItem {
-                    Id = "register",
+                yield return new MenuItem {
+                    Id = MenuItemId.Register,
                     Title = "Регистрация",
                     Page = typeof(RegisterPage)
                 };
@@ -142,11 +140,15 @@ namespace Libmemo {
         }
     }
 
-    public class MenuPageItem {
-        public string Id { get; set; }
+    public class MenuItem {
+        public MenuItemId Id { get; set; }
         public string Title { get; set; }
         public string Text { get; set; }
         public Type Page { get; set; }
         public Action Action { get; set; }
+    }
+
+    public enum MenuItemId {
+        Map, ReloadDatabase, Add, AddAdmin, Edit, Exit, Login, Register
     }
 }
