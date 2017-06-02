@@ -50,6 +50,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Behaviors\EntryChangedBehavior.cs" />
     <Compile Include="Behaviors\EntrySelectedBehavior.cs" />
     <Compile Include="Converters\FollowUserMapButtonColorConverter.cs" />
     <Compile Include="Converters\IsNullToColorConverter.cs" />

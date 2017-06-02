@@ -386,9 +386,11 @@ namespace Libmemo {
         public ICommand SearchCommand {
             get {
                 return new Command(async () => {
-                    if (string.IsNullOrWhiteSpace(this.SearchText)) return;
 
-                    var searchPage = new SearchPage(this.SearchText, OnSearchItemSelected, OnSearchChanged);
+                    var searchPage = new SearchPage(await App.Database.GetItems<Person>(), this.SearchText);
+                    searchPage.ItemSelected += OnSearchItemSelected;
+                    searchPage.SearchTextChanged += OnSearchChanged;
+ 
                     this.SelectedPin = null;
                     await App.CurrentNavPage.Navigation.PushAsync(searchPage);
                 });
@@ -405,17 +407,16 @@ namespace Libmemo {
 
         #endregion
 
-        #region Callbacks
+        #region Event Handlers
 
         private void OnSearchChanged(object sender, string e) {
             this.SearchText = e;
         }
 
-        private void OnSearchItemSelected(object sender, Person person) {
-            var pin = _customPins.FirstOrDefault(e => e.Id == person.Id.ToString());
+        private void OnSearchItemSelected(object sender, int id) {
+            var pin = _customPins.FirstOrDefault(e => e.Id == id.ToString());
 
             if (pin != null) {
-                this.SearchText = person.Name;
                 this.SelectedPin = pin;
                 this.FollowUser = false;
                 MoveCameraToPosition(pin.Position);

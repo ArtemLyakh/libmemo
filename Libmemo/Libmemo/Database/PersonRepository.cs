@@ -141,10 +141,6 @@ namespace Libmemo {
         public async Task<IEnumerable<T>> GetItems<T>() where T : IDatabaseSavable, new() => await Task.Run(() => {
             lock (database) return database.Table<T>().ToList();
         });
-        //выбирает все объекты из указанной таблицы с фильтрацией по имени
-        public async Task<IEnumerable<T>> GetItems<T>(string name) where T : IDatabaseSavable, new() => await Task.Run(() => {
-            lock (database) return database.Table<T>().Where(i => i.Name.ToLowerInvariant().Equals(name.ToLowerInvariant())).ToList();
-        });
 
         //сохраняет/обновляет данные
         public async Task SaveItems<T>(IEnumerable<T> items) where T : IDatabaseSavable, new() => await Task.Run(() => {

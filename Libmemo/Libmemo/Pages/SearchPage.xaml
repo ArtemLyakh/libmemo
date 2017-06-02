@@ -9,9 +9,11 @@
         <StackLayout Orientation="Horizontal" Padding="10,0,10,0" Spacing="1" VerticalOptions="Start">
             <Entry Text="{Binding Search}"
                    VerticalOptions="Center"
-                   HorizontalOptions="FillAndExpand">
+                   HorizontalOptions="FillAndExpand"
+                   >
                 <Entry.Behaviors>
-                    <local:EntrySelectedBehavior SelectedCommand="{Binding SearhCommand}"/>
+                    <local:EntrySelectedBehavior SelectedCommand="{Binding SearchCommand}" />
+                    <local:EntryChangedBehavior ChangedCommand="{Binding SearchCommand}" />
                 </Entry.Behaviors>
             </Entry>
             <Button x:Name="searchButton"
@@ -28,10 +30,7 @@
                   ItemClickCommand="{Binding ItemSelectedCommand}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding Name}"
-                              Detail="{Binding Text}"
-                              Height="70"
-                              />
+                    <TextCell Text="{Binding Item2}" Height="70" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </local:CustomListView>

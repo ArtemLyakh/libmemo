@@ -11,31 +11,32 @@ using Xamarin.Forms;
 namespace Libmemo {
     public class SearchPageViewModel : INotifyPropertyChanged {
 
-        public SearchPageViewModel(string search, EventHandler<Person> OnItemSelected = null, EventHandler<string> OnSearchChanged = null) {
-            this.search = search;
-            this.OnItemSelected = OnItemSelected;
-            this.OnSearchChanged = OnSearchChanged;
-            GetItems(search);
+        private IEnumerable<IDatabaseSavable> data;
+
+        public SearchPageViewModel(IEnumerable<IDatabaseSavable> data, string search = null) {
+            this.data = data;
+            this.Search = search;
+
+            GetItems();
         }
 
-        #region Utils
+        public event EventHandler<string> SearchTextChanged;
+        public event EventHandler<int> ItemSelected;
 
-        private void GetItems(string search) {
-            Task.Factory.StartNew(async () => {
-                SearchList = await App.Database.GetItems<Person>(search);
-            });
+
+
+        private void GetItems() {
+            IEnumerable<T> WhereIf<T>(IEnumerable<T> data, bool filter, Func<T, bool> func) =>
+                filter ? data.Where(func) : data;
+
+            this.SearchList = WhereIf(
+                data,
+                !string.IsNullOrWhiteSpace(this.Search),
+                i => i.Name.ToLowerInvariant().IndexOf(this.Search.ToLowerInvariant()) != -1
+            )
+            .OrderBy(i => i.Name)
+            .Select(i => Tuple.Create(i.Id, i.Name));
         }
-
-        #endregion
-
-        #region Callbacks
-
-        public EventHandler<string> OnSearchChanged = null;
-        public EventHandler<Person> OnItemSelected = null;
-
-        #endregion
-
-        #region Properties
 
         private string search;
         public string Search {
@@ -44,13 +45,13 @@ namespace Libmemo {
                 if (search != value) {
                     search = value;
                     OnPropertyChanged(nameof(Search));
-                    OnSearchChanged?.Invoke(this, value);
+                    SearchTextChanged?.Invoke(this, value);
                 }
             }
         }
 
-        private IEnumerable<Person> searchList;
-        public IEnumerable<Person> SearchList {
+        private IEnumerable<Tuple<int, string>> searchList;
+        public IEnumerable<Tuple<int, string>> SearchList {
             get { return searchList; }
             set {
                 if (searchList != value) {
@@ -60,29 +61,24 @@ namespace Libmemo {
             }
         }
 
-        #endregion
 
-        #region Commands
 
-        public ICommand SearhCommand {
-            get {
-                return new Command(() => {
-                    if (String.IsNullOrWhiteSpace(Search)) return;
-                    GetItems(this.Search);
-                });
-            }
+        public ICommand SearchCommand {
+            get => new Command(() => GetItems());
         }
 
         public ICommand ItemSelectedCommand {
-            get {
-                return new Command(async (object item) => {
-                    OnItemSelected?.Invoke(this, (Person)item);
-                    await App.CurrentNavPage.Navigation.PopAsync();
-                });
-            }
+            get => new Command(async (object item) => {
+                await App.CurrentNavPage.Navigation.PopAsync();
+
+                var tuple = (Tuple<int, string>)item;
+
+                SearchTextChanged?.Invoke(this, tuple.Item2);
+                ItemSelected?.Invoke(this, tuple.Item1);
+            });
         }
 
-        #endregion
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         void OnPropertyChanged(string propertyName = "") =>

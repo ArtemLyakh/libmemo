@@ -15,11 +15,18 @@ namespace Libmemo {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SearchPage : ContentPage {
 
-        public SearchPage(string search, EventHandler<Person> OnItemSelected, EventHandler<string> OnSearchChanged) {
+        public SearchPage(IEnumerable<IDatabaseSavable> data, string search = null) {
             InitializeComponent();
 
-            BindingContext = new SearchPageViewModel(search, OnItemSelected, OnSearchChanged);
+            var model = new SearchPageViewModel(data, search);
+            model.ItemSelected += (sender, id) => this.ItemSelected?.Invoke(this, id);
+            model.SearchTextChanged += (sender, text) => this.SearchTextChanged?.Invoke(this, text);
+
+            this.BindingContext = model;
         }
+
+        public event EventHandler<int> ItemSelected;
+        public event EventHandler<string> SearchTextChanged;
 
     }
 
