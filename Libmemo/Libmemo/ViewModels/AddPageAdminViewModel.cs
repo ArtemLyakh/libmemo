@@ -13,24 +13,27 @@ namespace Libmemo {
 
         private User _owner;
         public User Owner {
-            get { return _owner; }
+            get => _owner; 
             set {
                 if (_owner != value) {
                     _owner = value;
                     this.OnPropertyChanged(nameof(Owner));
+                    this.OnPropertyChanged(nameof(OwnerText));
                 }
             }
         }
         public string OwnerText { get => this.Owner == null ? "Не выбрано" : $"{this.Owner.Id}: {this.Owner.Name}"; }
 
+
         public ICommand SelectOwnerCommand {
-            get {
-                return new Command(() => {
-                    Device.BeginInvokeOnMainThread(() => {
-                        App.ToastNotificator.Show("SelectOwnerCommand");
-                    });
-                });
-            }
+            get => new Command(async () => {
+                var searchPage = new SearchPage(await App.Database.GetItems<User>());
+                searchPage.ItemSelected += async (sender, id) => {
+                    this.Owner = await App.Database.GetById<User>(id);
+                };
+
+                await App.CurrentNavPage.Navigation.PushAsync(searchPage);
+            });
         }
 
 
