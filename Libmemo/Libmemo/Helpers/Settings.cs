@@ -18,11 +18,12 @@ namespace Libmemo {
 
         private static readonly long _lastModifiedDefault = 0;
 
-        private const string _dataUrl = "http://libmemo.com/api/database.php";//"http://libmemo.com/api/data.php";
+        private const string _dataUrl = "http://libmemo.com/api/database.php";
 
         private const string _databaseName = "database.db";
 
         private const string _addPersonUrl = "http://libmemo.com/api/add.php";
+        private const string _addPersonAdminUrl = "http://libmemo.com/api/admin/add.php";
 
         private const string _loginUri = "http://libmemo.com/api/login.php";
         private const string _registerUri = "http://libmemo.com/api/register.php";
@@ -113,6 +114,7 @@ namespace Libmemo {
 
         public static string DataUrl { get; } = _dataUrl;
         public static string AddPersonUrl { get; } = _addPersonUrl;
+        public static string AddPersoAdminUrl { get; } = _addPersonAdminUrl;
         public static string PersonalDataSend { get; } = _personalDataSend;
         public static string PersonalDataGet { get; } = _personalDataGet;
 

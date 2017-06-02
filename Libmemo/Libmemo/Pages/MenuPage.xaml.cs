@@ -38,6 +38,16 @@ namespace Libmemo {
             }
         }
 
+        private bool _isUserAdminVisible;
+        public bool IsUserAdminVisible {
+            get { return _isUserAdminVisible; }
+            set {
+                if (_isUserAdminVisible != value) {
+                    _isUserAdminVisible = value;
+                    OnPropertyChanged(nameof(IsUserAdminVisible));
+                }
+            }
+        }
 
         public MenuPage() {
             InitializeComponent();
@@ -58,7 +68,8 @@ namespace Libmemo {
         public void SetMenuPage() {
 
             UserEmail = Settings.Email;
-            IsUserEmailVisible = AuthHelper.IsLogged();
+            IsUserEmailVisible = AuthHelper.IsLogged;
+            IsUserAdminVisible = AuthHelper.IsAdmin;
 
             MenuList.Clear();
             foreach (var item in GetMenuList()) {
@@ -69,8 +80,6 @@ namespace Libmemo {
 
 
         private static IEnumerable<MenuPageItem> GetMenuList() {
-            bool isLogged = AuthHelper.IsLogged();
-
             yield return new MenuPageItem {
                 Title = "Карта",
                 Text = "карта",
@@ -85,12 +94,21 @@ namespace Libmemo {
                 }
             };
 
-            if (isLogged) {
-                yield return new MenuPageItem {
-                    Title = "Добавить",
-                    Text = "добавить",
-                    Page = typeof(AddPage)
-                };
+            if (AuthHelper.IsLogged) {
+                if (AuthHelper.IsAdmin) {
+                    yield return new MenuPageItem {
+                        Title = "Добавить/админ",
+                        Text = "админ",
+                        Page = typeof(AddPageAdmin)
+                    };
+                } else {
+                    yield return new MenuPageItem {
+                        Title = "Добавить",
+                        Text = "добавить",
+                        Page = typeof(AddPage)
+                    };
+                }
+
                 yield return new MenuPageItem {
                     Title = "Редактировать данные",
                     Text = "Редактирование персональных данных",

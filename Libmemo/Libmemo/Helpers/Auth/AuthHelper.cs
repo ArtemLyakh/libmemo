@@ -44,9 +44,8 @@ namespace Libmemo {
             App.MenuPage.ExecuteMenuItem("Авторизация");
         }
 
-        public static bool IsLogged() {
-            return Settings.Logged;
-        }
+        public static bool IsLogged { get => Settings.Logged; }
+        public static bool IsAdmin { get => Settings.UserType == UserType.Admin; }
     }
 
 

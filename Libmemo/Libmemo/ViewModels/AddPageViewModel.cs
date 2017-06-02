@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
@@ -12,7 +13,7 @@ namespace Libmemo {
     class AddPageViewModel : INotifyPropertyChanged {
 
 
-
+        protected virtual string SendUri { get => Settings.AddPersonUrl; }
 
         public AddPageViewModel() {
             GetGPSPermission();
@@ -285,43 +286,19 @@ namespace Libmemo {
         public ICommand SendCommand {
             get {
                 return new Command(async () => {
-                    List<string> errors = new List<string>();
-                    if (!this.UserPosition.HasValue) errors.Add("Ошибка определения местоположения");
-                    if (String.IsNullOrWhiteSpace(this.FirstName)) errors.Add("Поле \"Имя\" не заполнено");
+                    var errors = string.Join("\n", ValidateSend());
 
-                    if (errors.Count > 0) {
+                    if (!string.IsNullOrWhiteSpace(errors)) {
                         Device.BeginInvokeOnMainThread(async () => {
-                            await App.Current.MainPage.DisplayAlert("Ошибка", String.Join("\n", errors), "ОК");
+                            await App.Current.MainPage.DisplayAlert("Ошибка", errors, "ОК");
                         });
                         return;
                     }
 
                     App.ToastNotificator.Show("Отправка на сервер");
 
-                    PersonDataLoader uploader = new PersonDataLoader(Settings.AddPersonUrl);
-                    uploader.Params.Add("latitude", this.UserPosition.Value.Latitude.ToString(CultureInfo.InvariantCulture));
-                    uploader.Params.Add("longitude", this.UserPosition.Value.Longitude.ToString(CultureInfo.InvariantCulture));
-                    uploader.Params.Add("first_name", this.FirstName.ToString());
-
-                    if (!String.IsNullOrWhiteSpace(this.SecondName)) {
-                        uploader.Params.Add("second_name", this.SecondName.ToString());
-                    }
-                    if (!String.IsNullOrWhiteSpace(this.LastName)) {
-                        uploader.Params.Add("last_name", this.LastName.ToString());
-                    }
-
-                    if (this.DateBirth.HasValue) {
-                        uploader.Params.Add("date_birth", this.DateBirth.Value.ToString("yyyy-MM-dd"));
-                    }
-                    if (this.DateDeath.HasValue) {
-                        uploader.Params.Add("date_death", this.DateDeath.Value.ToString("yyyy-MM-dd"));
-                    }
-                    if (!String.IsNullOrWhiteSpace(this.Text)) {
-                        uploader.Params.Add("text", this.Text.ToString());
-                    }
-                    if (this.PhotoSource != null) {
-                        await uploader.SetFile(this.PhotoSource);
-                    }
+                    PersonDataLoader uploader = new PersonDataLoader(this.SendUri);
+                    await AddParams(uploader);
 
                     try {
                         var success = await uploader.Upload();
@@ -341,7 +318,38 @@ namespace Libmemo {
             }
         }
 
-        private void UploadSucceeded() {
+        protected virtual IEnumerable<string> ValidateSend() {
+            if (!this.UserPosition.HasValue) yield return "Ошибка определения местоположения";
+            if (String.IsNullOrWhiteSpace(this.FirstName)) yield return "Поле \"Имя\" не заполнено";
+        }
+
+        protected virtual async Task AddParams(PersonDataLoader uploader) {
+            uploader.Params.Add("latitude", this.UserPosition.Value.Latitude.ToString(CultureInfo.InvariantCulture));
+            uploader.Params.Add("longitude", this.UserPosition.Value.Longitude.ToString(CultureInfo.InvariantCulture));
+            uploader.Params.Add("first_name", this.FirstName.ToString());
+
+            if (!string.IsNullOrWhiteSpace(this.SecondName)) {
+                uploader.Params.Add("second_name", this.SecondName.ToString());
+            }
+            if (!string.IsNullOrWhiteSpace(this.LastName)) {
+                uploader.Params.Add("last_name", this.LastName.ToString());
+            }
+
+            if (this.DateBirth.HasValue) {
+                uploader.Params.Add("date_birth", this.DateBirth.Value.ToString("yyyy-MM-dd"));
+            }
+            if (this.DateDeath.HasValue) {
+                uploader.Params.Add("date_death", this.DateDeath.Value.ToString("yyyy-MM-dd"));
+            }
+            if (!string.IsNullOrWhiteSpace(this.Text)) {
+                uploader.Params.Add("text", this.Text.ToString());
+            }
+            if (this.PhotoSource != null) {
+                await uploader.SetFile(this.PhotoSource);
+            }
+        }
+
+        protected virtual void UploadSucceeded() {
             App.ToastNotificator.Show("Данные успешно отправлены");
             ResetCommand.Execute(null);
             App.Database.Load();
@@ -352,7 +360,7 @@ namespace Libmemo {
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
-        void OnPropertyChanged(string propertyName = "") =>
+        protected void OnPropertyChanged(string propertyName = "") =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
     }
