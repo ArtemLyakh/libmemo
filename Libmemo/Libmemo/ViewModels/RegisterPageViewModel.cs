@@ -51,7 +51,7 @@ namespace Libmemo {
         public ICommand LoginCommand {
             get {
                 return new Command(() => {
-                    App.MenuPage.ExecuteMenuItem("Авторизация");
+                    App.MenuPage.ExecuteMenuItem("login");
                 });
             }
         }
@@ -111,7 +111,7 @@ namespace Libmemo {
                             );
 
                             //TODO добавить страницу изменения данных пользователя, перенаправить туда
-                            App.MenuPage.ExecuteMenuItem("Карта");
+                            App.MenuPage.ExecuteMenuItem("edit");
                         }
                     } catch {
                         App.ToastNotificator.Show("Ошибка регистрации");

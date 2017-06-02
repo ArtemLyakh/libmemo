@@ -35,13 +35,13 @@ namespace Libmemo {
             InnerLogout();
 
             //принудительный сброс страницы
-            App.MenuPage.ExecuteMenuItem("Карта");
+            App.MenuPage.ExecuteMenuItem("map");
         }
 
         public static void Relogin() {
             InnerLogout();
 
-            App.MenuPage.ExecuteMenuItem("Авторизация");
+            App.MenuPage.ExecuteMenuItem("login");
         }
 
         public static bool IsLogged { get => Settings.Logged; }

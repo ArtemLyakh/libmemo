@@ -58,9 +58,9 @@ namespace Libmemo {
         }
 
 
-        public void ExecuteMenuItem(string title) {
-            var item = MenuList.FirstOrDefault(i => i.Title.Equals(title));
-            if (item == null) throw new ArgumentException($"Не найден пункт \"{title}\"");
+        public void ExecuteMenuItem(string id) {
+            var item = MenuList.FirstOrDefault(i => i.Id.Equals(id));
+            if (item == null) throw new ArgumentException($"Не найден пункт \"{id}\"");
             App.GlobalPage.ExecuteMenuItem(item);
         }
 
@@ -81,11 +81,13 @@ namespace Libmemo {
 
         private static IEnumerable<MenuPageItem> GetMenuList() {
             yield return new MenuPageItem {
+                Id = "map",
                 Title = "Карта",
                 Text = "карта",
                 Page = typeof(MapPage)
             };
             yield return new MenuPageItem {
+                Id = "reload",
                 Title = "Сбросить базу данных",
                 Text = "Полное обновление базы данных",
                 Action = () => {
@@ -97,12 +99,14 @@ namespace Libmemo {
             if (AuthHelper.IsLogged) {
                 if (AuthHelper.IsAdmin) {
                     yield return new MenuPageItem {
+                        Id = "add_admin",
                         Title = "Добавить/админ",
                         Text = "админ",
                         Page = typeof(AddPageAdmin)
                     };
                 } else {
                     yield return new MenuPageItem {
+                        Id = "add",
                         Title = "Добавить",
                         Text = "добавить",
                         Page = typeof(AddPage)
@@ -110,11 +114,13 @@ namespace Libmemo {
                 }
 
                 yield return new MenuPageItem {
+                    Id = "edit",
                     Title = "Редактировать данные",
                     Text = "Редактирование персональных данных",
                     Page = typeof(PersonalDataPage)
                 };
                 yield return new MenuPageItem {
+                    Id = "exit",
                     Title = "Выйти",
                     Action = () => {
                         AuthHelper.Logout();
@@ -122,10 +128,12 @@ namespace Libmemo {
                 };
             } else {
                 yield return new MenuPageItem {
+                    Id = "login",
                     Title = "Авторизация",
                     Page = typeof(LoginPage)
                 };
                 yield return new MenuPageItem {
+                    Id = "register",
                     Title = "Регистрация",
                     Page = typeof(RegisterPage)
                 };
@@ -135,6 +143,7 @@ namespace Libmemo {
     }
 
     public class MenuPageItem {
+        public string Id { get; set; }
         public string Title { get; set; }
         public string Text { get; set; }
         public Type Page { get; set; }
