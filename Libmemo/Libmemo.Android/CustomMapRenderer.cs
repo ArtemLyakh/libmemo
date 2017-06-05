@@ -61,6 +61,8 @@ namespace Libmemo.Droid {
         bool _isTiltGesturesEnabled;
         bool _isZoomGesturesEnabled;
 
+        bool _isShowInfoWindow;
+
         CustomPin _selectedPin = null;
 
         ObservableCollection<CustomPin> _customPins;
@@ -333,6 +335,8 @@ namespace Libmemo.Droid {
             this._isTiltGesturesEnabled = map.IsTiltGesturesEnabled;
             this._isZoomGesturesEnabled = map.IsZoomGesturesEnabled;
 
+            this._isShowInfoWindow = map.IsShowInfoWindow;
+
             this._mapType = map.MapType;
 
             this._customPins = map.CustomPins;
@@ -346,6 +350,8 @@ namespace Libmemo.Droid {
             _googleMap.InfoWindowClick += _googleMap_InfoWindowClick;
 
             _googleMap.MyLocationChange += _googleMap_MyLocationChange;
+
+            _googleMap.GroundOverlayClick += _googleMap_GroundOverlayClick;
         }
 
         private void RemoveEventHandlers() {
@@ -356,6 +362,8 @@ namespace Libmemo.Droid {
             _googleMap.InfoWindowClick -= _googleMap_InfoWindowClick;
 
             _googleMap.MyLocationChange -= _googleMap_MyLocationChange;
+
+            _googleMap.GroundOverlayClick -= _googleMap_GroundOverlayClick;
         }
 
         private void FullDrawMap() {
@@ -423,6 +431,8 @@ namespace Libmemo.Droid {
         }
 
         private void _googleMap_MarkerClick(object sender, GoogleMap.MarkerClickEventArgs e) {
+            if (!this._isShowInfoWindow) return;
+
             try {
                 var binding = _customPinsBindings.First(i => i.Value.Id == e.Marker.Id);
 
@@ -456,6 +466,10 @@ namespace Libmemo.Droid {
 
             var newPosition = new Position(e.Location.Latitude, e.Location.Longitude);
             this.MapFunctions?.RaiseUserLocationChange(newPosition);
+        }
+
+        private void _googleMap_GroundOverlayClick(object sender, GoogleMap.GroundOverlayClickEventArgs e) {
+            this.MapFunctions?.RaiseMapClick(new Position(e.GroundOverlay.Position.Latitude, e.GroundOverlay.Position.Longitude));
         }
 
         #endregion

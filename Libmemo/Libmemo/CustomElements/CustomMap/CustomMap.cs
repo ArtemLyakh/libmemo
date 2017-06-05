@@ -118,6 +118,25 @@ namespace Libmemo {
         }
         #endregion
 
+        #region MapClicked
+        public class MapClickEventArgs {
+            public Position Position { get; set; }
+        }
+
+        public event EventHandler<MapClickEventArgs> MapClick;
+
+        void IMapFunctions.RaiseMapClick(Position position) {
+            var args = new MapClickEventArgs() {
+                Position = position
+            };
+            MapClick?.Invoke(this, args);
+
+            if (UserPositionChangedCommand != null && UserPositionChangedCommand.CanExecute(position)) {
+                UserPositionChangedCommand.Execute(position);
+            }
+        }
+        #endregion
+
         #endregion
 
         #region Properties
@@ -256,6 +275,18 @@ namespace Libmemo {
             true);
         #endregion
 
+        #region IsShowInfoWindow
+        public bool IsShowInfoWindow {
+            get { return (bool)this.GetValue(IsShowInfoWindowProperty); }
+            set { this.SetValue(IsShowInfoWindowProperty, value); }
+        }
+        public static readonly BindableProperty IsShowInfoWindowProperty = BindableProperty.Create(
+            nameof(IsShowInfoWindow),
+            typeof(bool),
+            typeof(CustomMap),
+            false);
+        #endregion
+
         #endregion
 
         #region Commands
@@ -312,6 +343,17 @@ namespace Libmemo {
         public static readonly BindableProperty RouteInitializingFailedCommandProperty = BindableProperty.Create(
             nameof(RouteInitializingFailedCommand),
             typeof(Command),
+            typeof(CustomMap));
+        #endregion
+
+        #region MapClickChanged
+        public ICommand MapClickCommand {
+            get { return (ICommand)this.GetValue(MapClickCommandProperty); }
+            set { this.SetValue(MapClickCommandProperty, value); }
+        }
+        public static readonly BindableProperty MapClickCommandProperty = BindableProperty.Create(
+            nameof(MapClickCommand),
+            typeof(Command<Position>),
             typeof(CustomMap));
         #endregion
 

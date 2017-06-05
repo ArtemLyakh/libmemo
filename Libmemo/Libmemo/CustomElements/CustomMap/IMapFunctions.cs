@@ -7,6 +7,7 @@ namespace Libmemo {
         void RaiseUserLocationChange(Position position);
         void RaiseRouteInitializingSucceed();
         void RaiseRouteInitializingFailed();
+        void RaiseMapClick(Position position);
 
         void SetRenderer(INativeMapFunction renderer);
     }

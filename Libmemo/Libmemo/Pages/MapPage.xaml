@@ -93,6 +93,8 @@
                                  RouteInitializingFailedCommand="{Binding RouteInitializingFailedCommand}"
                                  
                                  MyLocationEnabled="{Binding MyLocationEnabled}"
+                                 
+                                 IsShowInfoWindow="True"
                                  />
 
                 <StackLayout x:Name="rigthStackLayout"
