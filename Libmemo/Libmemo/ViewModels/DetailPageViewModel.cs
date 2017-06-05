@@ -4,27 +4,36 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Xamarin.Forms;
 
 namespace Libmemo {
     public class DetailPageViewModel : INotifyPropertyChanged {
 
-        public DetailPageViewModel(Person person) {
-            this.FIO = person.FIO;
-            this.LatLon = $"{person.Latitude.ToString(CultureInfo.InvariantCulture)}, {person.Longitude.ToString(CultureInfo.InvariantCulture)}";
-            
-            if (!string.IsNullOrWhiteSpace(person.ImageUrl) && Uri.TryCreate(person.ImageUrl, UriKind.Absolute, out Uri uri)) {
-                this.ImageUri = uri;
-            }
-
-            if (!string.IsNullOrWhiteSpace(person.Text)) {
-                this.Text = person.Text;
-            }
-
-            if (AuthHelper.IsAdmin || AuthHelper.CurrentUserId == person.Owner) {
-                CanEdit = true;
-            }
+        private int id;
+        public DetailPageViewModel(int id) {
+            this.id = id;
         }
 
+        public async void Init() {
+            var person = await App.Database.GetById<Person>(id);
+            if (person != null) {
+                this.FIO = person.FIO;
+                this.LatLon = $"{person.Latitude.ToString(CultureInfo.InvariantCulture)}, {person.Longitude.ToString(CultureInfo.InvariantCulture)}";
+
+                if (!string.IsNullOrWhiteSpace(person.ImageUrl) && Uri.TryCreate(person.ImageUrl, UriKind.Absolute, out Uri uri)) {
+                    this.ImageUri = uri;
+                }
+
+                if (!string.IsNullOrWhiteSpace(person.Text)) {
+                    this.Text = person.Text;
+                }
+
+                if (AuthHelper.IsAdmin || AuthHelper.CurrentUserId == person.Owner) {
+                    CanEdit = true;
+                }
+            }
+        }
 
         private bool _canEdit;
         public bool CanEdit {
@@ -81,6 +90,20 @@ namespace Libmemo {
                 }
             }
         }
+
+
+
+        public ICommand EditCommand {
+            get => new Command(async () => {
+                var page = new EditPersonPage(id);
+                await App.CurrentNavPage.Navigation.PushAsync(page);
+            });
+        }
+
+
+
+
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName = "") =>

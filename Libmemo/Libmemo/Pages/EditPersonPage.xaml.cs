@@ -9,16 +9,15 @@ using Xamarin.Forms.Xaml;
 
 namespace Libmemo {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class DetailPage : ContentPage {
-
-        public DetailPage(int id) {
+    public partial class EditPersonPage : ContentPage {
+        public EditPersonPage(int id) {
             InitializeComponent();
-            this.BindingContext = new DetailPageViewModel(id);
+            BindingContext = new EditPersonPageViewModel(id);
         }
 
         protected override void OnAppearing() {
             base.OnAppearing();
-            (BindingContext as DetailPageViewModel)?.Init();
+            (BindingContext as EditPersonPageViewModel)?.Init();
         }
 
     }

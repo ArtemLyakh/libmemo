@@ -98,9 +98,8 @@ namespace Libmemo {
 
         public ICommand InfoWindowClickedCommand {
             get => new Command<CustomPin>(async (CustomPin pin) => {
-                var person = await App.Database.GetById<Person>(int.Parse(pin.Id));
-                if (person != null) {
-                    var page = new DetailPage(person);
+                if (int.TryParse(pin.Id, out int id)) {
+                    var page = new DetailPage(id);
                     await App.CurrentNavPage.Navigation.PushAsync(page);
                 }
             });
