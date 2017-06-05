@@ -10,13 +10,11 @@ namespace Libmemo {
 
             Settings.AuthCookies = cookieContainer;
             switch (type) {
-                case "default": Settings.UserType = UserType.Default; break;
-                case "admin": Settings.UserType = UserType.Admin; break;
-                default: Settings.UserType = UserType.None; break;
+                case "admin": Settings.CurrentUser = -1; break;
+                default: Settings.CurrentUser = int.TryParse(type, out int userId) ? userId : default(int); break;
             }
             Settings.Email = email;
             Settings.Password = password;
-            Settings.Logged = true;
 
             App.MenuPage.SetMenuPage();
 
@@ -24,8 +22,7 @@ namespace Libmemo {
         }
 
         private static void InnerLogout() {
-            Settings.Logged = false;
-            Settings.UserType = UserType.None;
+            Settings.CurrentUser = default(int);
             Settings.AuthCookies = null;
 
             App.MenuPage.SetMenuPage();
@@ -44,8 +41,9 @@ namespace Libmemo {
             App.MenuPage.ExecuteMenuItem(MenuItemId.Login);
         }
 
-        public static bool IsLogged { get => Settings.Logged; }
-        public static bool IsAdmin { get => Settings.UserType == UserType.Admin; }
+        public static bool IsLogged { get => Settings.CurrentUser != default(int); }
+        public static bool IsAdmin { get => Settings.CurrentUser == -1; }
+        public static int? CurrentUserId { get => Settings.CurrentUser > 0 ? (int?)Settings.CurrentUser : null; }
     }
 
 

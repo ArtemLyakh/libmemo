@@ -106,7 +106,7 @@ namespace Libmemo {
                             AuthHelper.Login(
                                 this.Email,
                                 this.Password,
-                                "default",
+                                JsonConvert.DeserializeObject<JsonMessage>(str).message,
                                 handler.CookieContainer
                             );
 

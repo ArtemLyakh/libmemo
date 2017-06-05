@@ -19,9 +19,23 @@ namespace Libmemo {
             if (!string.IsNullOrWhiteSpace(person.Text)) {
                 this.Text = person.Text;
             }
+
+            if (AuthHelper.IsAdmin || AuthHelper.CurrentUserId == 216) {
+                CanEdit = true;
+            }
         }
 
 
+        private bool _canEdit;
+        public bool CanEdit {
+            get { return this._canEdit; }
+            set {
+                if (this._canEdit != value) {
+                    this._canEdit = value;
+                    this.OnPropertyChanged(nameof(CanEdit));
+                }
+            }
+        }
 
 
         private string _fio;

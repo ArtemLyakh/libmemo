@@ -83,10 +83,10 @@ namespace Libmemo {
 
 
 
-        public static bool Logged {
-            get { return AppSettings.GetValueOrDefault<bool>("logged", false); }
-            set { AppSettings.AddOrUpdateValue<bool>("logged", value); }
-        }
+        //public static bool Logged {
+        //    get { return AppSettings.GetValueOrDefault<bool>("logged", false); }
+        //    set { AppSettings.AddOrUpdateValue<bool>("logged", value); }
+        //}
         public static string Email {
             get { return AppSettings.GetValueOrDefault<string>("login", null); }
             set { AppSettings.AddOrUpdateValue("login", value); }
@@ -95,11 +95,15 @@ namespace Libmemo {
             get { return AppSettings.GetValueOrDefault<string>("password", null); }
             set { AppSettings.AddOrUpdateValue("password", value); }
         }
-        public static UserType UserType {
-            get { return (UserType)AppSettings.GetValueOrDefault<int>("usertype", default(int)); }
-            set { AppSettings.AddOrUpdateValue("usertype", (int)value); }
-        }
+        //public static UserType UserType {
+        //    get { return (UserType)AppSettings.GetValueOrDefault<int>("usertype", default(int)); }
+        //    set { AppSettings.AddOrUpdateValue("usertype", (int)value); }
+        //}
 
+        public static int CurrentUser {
+            get { return AppSettings.GetValueOrDefault("currentuser", default(int)); }
+            set { AppSettings.AddOrUpdateValue("currentuser", value); }
+        }
 
 
 
