@@ -12,6 +12,7 @@ namespace Libmemo {
         [PrimaryKey, Column("_id")]
         public int Id { get; set; }
         public long LastModified { get; set; }
+        public int Owner { get; set; }
 
         public string FIO { get => string.Join(" ", new string[] { LastName, FirstName, SecondName }).Trim(); }
         public string FirstName { get; set; }

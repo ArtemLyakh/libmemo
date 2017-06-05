@@ -20,7 +20,7 @@ namespace Libmemo {
                 this.Text = person.Text;
             }
 
-            if (AuthHelper.IsAdmin || AuthHelper.CurrentUserId == 216) {
+            if (AuthHelper.IsAdmin || AuthHelper.CurrentUserId == person.Owner) {
                 CanEdit = true;
             }
         }
