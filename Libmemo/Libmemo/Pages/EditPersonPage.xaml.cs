@@ -17,8 +17,13 @@ namespace Libmemo {
 
         protected override void OnAppearing() {
             base.OnAppearing();
-            (BindingContext as EditPersonPageViewModel)?.Init();
+            //(BindingContext as EditPersonPageViewModel)?.Init();
+            ((EditPersonPageViewModel)BindingContext).SetGPSTracking(true);
         }
 
+        protected override void OnDisappearing() {
+            base.OnDisappearing();
+            ((EditPersonPageViewModel)BindingContext).SetGPSTracking(false);
+        }
     }
 }

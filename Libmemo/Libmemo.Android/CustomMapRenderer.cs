@@ -351,8 +351,9 @@ namespace Libmemo.Droid {
 
             _googleMap.MyLocationChange += _googleMap_MyLocationChange;
 
-            _googleMap.GroundOverlayClick += _googleMap_GroundOverlayClick;
+            _googleMap.MapClick += _googleMap_MapClick;
         }
+
 
         private void RemoveEventHandlers() {
             _googleMap.CameraChange -= _googleMap_CameraChange;
@@ -363,7 +364,7 @@ namespace Libmemo.Droid {
 
             _googleMap.MyLocationChange -= _googleMap_MyLocationChange;
 
-            _googleMap.GroundOverlayClick -= _googleMap_GroundOverlayClick;
+            _googleMap.MapClick -= _googleMap_MapClick;
         }
 
         private void FullDrawMap() {
@@ -468,8 +469,8 @@ namespace Libmemo.Droid {
             this.MapFunctions?.RaiseUserLocationChange(newPosition);
         }
 
-        private void _googleMap_GroundOverlayClick(object sender, GoogleMap.GroundOverlayClickEventArgs e) {
-            this.MapFunctions?.RaiseMapClick(new Position(e.GroundOverlay.Position.Latitude, e.GroundOverlay.Position.Longitude));
+        private void _googleMap_MapClick(object sender, GoogleMap.MapClickEventArgs e) {
+            this.MapFunctions?.RaiseMapClick(new Position(e.Point.Latitude, e.Point.Longitude));
         }
 
         #endregion

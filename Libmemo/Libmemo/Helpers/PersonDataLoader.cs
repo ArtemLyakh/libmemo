@@ -8,7 +8,7 @@ using Xamarin.Forms;
 using Newtonsoft.Json;
 
 namespace Libmemo {
-    class PersonDataLoader {
+    public class PersonDataLoader {
 
         private readonly string url;
 

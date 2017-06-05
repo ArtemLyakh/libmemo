@@ -110,6 +110,7 @@ namespace Libmemo {
             .Select(i => new User {
                 Id = i.id,
                 LastModified = i.modified,
+                Owner = i.owner,
                 FirstName = i.first_name.Trim(),
                 SecondName = string.IsNullOrWhiteSpace(i.second_name) ? null : i.second_name.Trim(),
                 LastName = string.IsNullOrWhiteSpace(i.last_name) ? null : i.last_name.Trim(),

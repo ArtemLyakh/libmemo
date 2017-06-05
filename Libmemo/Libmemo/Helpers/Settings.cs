@@ -25,6 +25,8 @@ namespace Libmemo {
         private const string _addPersonUrl = "http://libmemo.com/api/add.php";
         private const string _addPersonAdminUrl = "http://libmemo.com/api/admin/add.php";
 
+        private const string _editPersonUrl = "http://libmemo.com/api/edit.php";
+
         private const string _loginUri = "http://libmemo.com/api/login.php";
         private const string _registerUri = "http://libmemo.com/api/register.php";
         private const string _personalDataSend = "http://libmemo.com/api/personal-data-send.php";
@@ -121,6 +123,8 @@ namespace Libmemo {
         public static string AddPersoAdminUrl { get; } = _addPersonAdminUrl;
         public static string PersonalDataSend { get; } = _personalDataSend;
         public static string PersonalDataGet { get; } = _personalDataGet;
+
+        public static string EditPersonUrl { get; } = _editPersonUrl;
 
         public static string DatabaseName { get; } = _databaseName;
 

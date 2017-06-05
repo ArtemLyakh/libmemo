@@ -131,8 +131,8 @@ namespace Libmemo {
             };
             MapClick?.Invoke(this, args);
 
-            if (UserPositionChangedCommand != null && UserPositionChangedCommand.CanExecute(position)) {
-                UserPositionChangedCommand.Execute(position);
+            if (MapClickCommand != null && MapClickCommand.CanExecute(position)) {
+                MapClickCommand.Execute(position);
             }
         }
         #endregion

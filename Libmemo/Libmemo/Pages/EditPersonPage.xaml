@@ -27,42 +27,59 @@
                     HorizontalOptions="FillAndExpand"
                     />
         </StackLayout>
-        <ScrollView>
-            <StackLayout Spacing="50" Padding="10">
-
-                <!--<StackLayout HorizontalOptions="FillAndExpand" Spacing="10">
-                    <Label Text="Координаты" HorizontalOptions="CenterAndExpand" FontSize="Large" />
-                    <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="FillAndExpand" HeightRequest="200">
-                        <StackLayout Orientation="Vertical" Spacing="10" HorizontalOptions="Start" WidthRequest="{StaticResource titleWidth}" >
-                            <StackLayout Orientation="Vertical" Spacing="0">
-                                <Label Text="Широта:" FontSize="Medium" HorizontalOptions="CenterAndExpand" />
-                                <Label Text="{Binding Latitude}" FontSize="Default" HorizontalOptions="CenterAndExpand" />
-                            </StackLayout>
-                            <StackLayout Orientation="Vertical" Spacing="0">
-                                <Label Text="Долгота:" FontSize="Medium" HorizontalOptions="CenterAndExpand" />
-                                <Label Text="{Binding Longitude}" FontSize="Default" HorizontalOptions="CenterAndExpand" />
-                            </StackLayout>
-                        </StackLayout>
-
-                        <local:CustomMap x:Name="CoorMap"
+        <StackLayout HorizontalOptions="FillAndExpand" Spacing="15">
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" Spacing="0">
+                <Label Text="{Binding PersonLatLon}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" />
+                <Button x:Name="geoButton"
+                        Text="&#x2295;"
+                        HorizontalOptions="End"
+                        Command="{Binding CurrentGeoCommand}" 
+                        IsVisible="{Binding IsLatLonShow}"    
+                        VerticalOptions="FillAndExpand"
+                        WidthRequest="{Binding Source={x:Reference Name=geoButton}, Path=Height}" 
+                        />
+                <Button Text="{Binding ButtonShowHide}" HorizontalOptions="End" Command="{Binding ButtonShowHideClickCommand}" />
+            </StackLayout>
+            <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" IsVisible="{Binding IsLatLonShow}">
+                <Label Text="Координаты" HorizontalOptions="CenterAndExpand" FontSize="Large" />
+                <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="FillAndExpand" HeightRequest="400">
+                    <local:CustomMap x:Name="CoorMap"
                                          MapType="Street"
                                          HorizontalOptions="FillAndExpand"
                                          VerticalOptions="FillAndExpand"
+                                         
+                                         MapFunctions="{Binding MapFunctions}"
                                          
                                          MapCenter="{Binding MapCenter}"
                                          Zoom="{Binding Zoom}"
                                          IsCameraAnimated="False"
                                          
                                          IsRotateGesturesEnabled="True"
-                                         IsScrollGesturesEnabled="False"
-                                         IsTiltGesturesEnabled="False"
+                                         IsScrollGesturesEnabled="True"
+                                         IsTiltGesturesEnabled="True"
                                          IsZoomGesturesEnabled="True"
                                          
                                          UserPositionChangedCommand="{Binding UserPositionChangedCommand}"
                                          MyLocationEnabled="{Binding MyLocationEnabled}"
+                                         
+                                         IsShowInfoWindow="False"
+                                         CustomPins="{Binding CustomPins}"
+                                         
+                                         MapClickCommand="{Binding MapClickCommand}"
                                          />
+                </StackLayout>
+            </StackLayout>
+        </StackLayout>
+        <ScrollView>
+            <StackLayout Spacing="50" Padding="10">
+
+                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" IsVisible="{Binding IsOwnerVisible}">
+                    <Label Text="Владелец" HorizontalOptions="CenterAndExpand" FontSize="Large" />
+                    <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="FillAndExpand">
+                        <Button Text="Выбрать" Command="{Binding SelectOwnerCommand}" VerticalOptions="CenterAndExpand" HorizontalOptions="Start" />
+                        <Label Text="{Binding OwnerText}" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center" />
                     </StackLayout>
-                </StackLayout>-->
+                </StackLayout>
 
                 <StackLayout HorizontalOptions="FillAndExpand" Spacing="10">
                     <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">

@@ -10,6 +10,7 @@ namespace Libmemo {
     public class UserJsonAdd {
         public int id { get; set; }
         public long modified { get; set; }
+        public int owner { get; set; }
         //public string fio { get; set; }
         public string first_name { get; set; }
         public string second_name { get; set; }
