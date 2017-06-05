@@ -32,10 +32,10 @@ namespace Libmemo {
             this.SearchList = WhereIf(
                 data,
                 !string.IsNullOrWhiteSpace(this.Search),
-                i => i.Name.ToLowerInvariant().IndexOf(this.Search.ToLowerInvariant()) != -1
+                i => i.FIO.ToLowerInvariant().IndexOf(this.Search.ToLowerInvariant()) != -1
             )
-            .OrderBy(i => i.Name)
-            .Select(i => Tuple.Create(i.Id, i.Name));
+            .OrderBy(i => i.FIO)
+            .Select(i => Tuple.Create(i.Id, i.FIO));
         }
 
         private string search;

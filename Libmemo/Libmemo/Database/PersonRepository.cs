@@ -38,7 +38,7 @@ namespace Libmemo {
 
         #region Load
         public async void Load(bool full = false) {
-            long? lastModified = await GetLastModified();
+            long? lastModified = full ? null : await GetLastModified();
 
             var result = await SendRequest(lastModified);
             if (result == null) {
@@ -84,31 +84,37 @@ namespace Libmemo {
 
         //сохранение в базу полученных пользователей
         private async Task AddNewPersons(List<PersonJsonAdd> list) => await SaveItems(
-            list.Where(i => !string.IsNullOrWhiteSpace(i.fio)
+            list.Where(i => !string.IsNullOrWhiteSpace(i.first_name)
                 && double.TryParse(i.latitude, NumberStyles.Any, CultureInfo.InvariantCulture, out double lat)
                 && double.TryParse(i.longitude, NumberStyles.Any, CultureInfo.InvariantCulture, out double lon))
             .Select(i => new Person {
                 Id = i.id,
                 LastModified = i.modified,
-                Name = i.fio,
+                FirstName = i.first_name.Trim(),
+                SecondName = string.IsNullOrWhiteSpace(i.second_name) ? null : i.second_name.Trim(),
+                LastName = string.IsNullOrWhiteSpace(i.last_name) ? null : i.last_name.Trim(),
                 DateBirth = DateTime.TryParse(i.date_birth, out DateTime dBirth) ? (DateTime?)dBirth : null,
                 DateDeath = DateTime.TryParse(i.date_death, out DateTime dDeath) ? (DateTime?)dDeath : null,
                 Latitude = double.Parse(i.latitude, NumberStyles.Any, CultureInfo.InvariantCulture),
                 Longitude = double.Parse(i.longitude, NumberStyles.Any, CultureInfo.InvariantCulture),
-                Text = string.IsNullOrWhiteSpace(i.text) ? null : i.text,
-                Image = string.IsNullOrWhiteSpace(i.photo) ? null : i.photo
+                Text = string.IsNullOrWhiteSpace(i.text) ? null : i.text.Trim(),
+                Icon = string.IsNullOrWhiteSpace(i.icon) ? null : i.icon,
+                ImageUrl = string.IsNullOrWhiteSpace(i.image_url) ? null : i.image_url
             })
         );
 
         //сохранение в базу полученных пользователей
         private async Task AddNewUsers(List<UserJsonAdd> list) => await SaveItems(
-            list.Where(i => !string.IsNullOrWhiteSpace(i.fio))
+            list.Where(i => !string.IsNullOrWhiteSpace(i.first_name))
             .Select(i => new User {
                 Id = i.id,
                 LastModified = i.modified,
-                Name = i.fio,
+                FirstName = i.first_name.Trim(),
+                SecondName = string.IsNullOrWhiteSpace(i.second_name) ? null : i.second_name.Trim(),
+                LastName = string.IsNullOrWhiteSpace(i.last_name) ? null : i.last_name.Trim(),
                 DateBirth = DateTime.TryParse(i.date_birth, out DateTime dBirth) ? (DateTime?)dBirth : null,
-                Image = String.IsNullOrWhiteSpace(i.photo) ? null : i.photo
+                Icon = string.IsNullOrWhiteSpace(i.icon) ? null : i.icon,
+                ImageUrl = string.IsNullOrWhiteSpace(i.image_url) ? null : i.image_url
             })
         );
 
@@ -121,12 +127,12 @@ namespace Libmemo {
         //сохраняет последнюю дату синхронизации с сервером
         private void SaveLastModified(JsonData data) {
             var modified = data.users.Select(i => i.modified)
-                .Union(data.persons.Select(i => i.modified))
-                .Union(data.persons.Select(i => i.modified))
+                .Concat(data.persons.Select(i => i.modified))
+                .Concat(data.persons.Select(i => i.modified))
                 .DefaultIfEmpty(0)
                 .Max();
-
-            if (modified != 0) Settings.LastModified = modified;
+                
+            if (modified != default(long)) Settings.LastModified = modified;
         }
 
         #endregion
@@ -169,46 +175,6 @@ namespace Libmemo {
                 .FirstOrDefault();
             return last == default(long) ? null : (long?)last;
         });
-
-
-
-
-        #region Database CRUD
-
-
-
-
-        //public async Task SaveItems(IEnumerable<Person> items) {
-        //    await Task.Factory.StartNew(() => {
-        //        lock (database) {
-        //            foreach (var item in items) {
-        //                if (database.Update(item) == 0) {
-        //                    database.Insert(item);
-        //                }
-        //            }
-        //        }
-        //    });
-        //}
-
-        //public async Task DeleteItems(IEnumerable<int> ids) {
-        //    await Task.Factory.StartNew(() => {
-        //        lock (database) {
-        //            foreach (var id in ids) {
-        //                var q = database.Delete<Person>(id);
-        //            }
-        //        }
-        //    });
-        //}
-
-        //public async Task DeleteAllItems() {
-        //    await Task.Factory.StartNew(() => {
-        //        lock (database) {
-        //            database.DeleteAll<Person>();
-        //        }
-        //    });
-        //}
-        #endregion
-
 
     }
 }

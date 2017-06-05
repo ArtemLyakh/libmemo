@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Libmemo.DetailPage"
+             NavigationPage.HasNavigationBar="False"
+             >
+
+    <ScrollView>
+        <StackLayout HorizontalOptions="FillAndExpand"
+                     Padding="10"
+                     Spacing="25"
+                     >
+            <StackLayout HorizontalOptions="FillAndExpand"
+                         Spacing="10"
+                         >
+                <Label Text="{Binding FIO}" HorizontalOptions="CenterAndExpand" FontAttributes="Bold" FontSize="Medium" />
+                <Label Text="{Binding LatLon}" HorizontalOptions="EndAndExpand" FontAttributes="Italic" FontSize="Small" />
+            </StackLayout>
+            <Image>
+                <Image.Source>
+                    <UriImageSource CachingEnabled="True" Uri="{Binding ImageUri}" />
+                </Image.Source>
+            </Image>
+            <Label Text="{Binding Text}" HorizontalOptions="FillAndExpand" LineBreakMode="WordWrap" />
+
+        </StackLayout>
+    </ScrollView>
+
+
+    
+    
+</ContentPage>

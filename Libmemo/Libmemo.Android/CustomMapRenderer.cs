@@ -67,8 +67,7 @@ namespace Libmemo.Droid {
         Dictionary<CustomPin, Marker> _customPinsBindings = new Dictionary<CustomPin, Marker>();
 
         Polyline _route = null;
-        Position? _routeFrom = null;
-        Position? _routeTo = null;
+        List<LatLng> _routePoints = null;
 
         bool _myLocationEnabled = false;
 
@@ -111,7 +110,18 @@ namespace Libmemo.Droid {
             base.OnElementPropertyChanged(sender, e);
 
             if (_googleMap != null && !isDrawn) {
-                _googleMap.Clear();
+                foreach (var bind in _customPinsBindings) {
+                    bind.Value.Remove();
+                }
+                _customPinsBindings = new Dictionary<CustomPin, Marker>();
+
+                _route?.Remove();
+                _route = null;
+
+                try {
+                    _googleMap.Clear();
+                } catch { }
+                
 
                 FullDrawMap();
 
@@ -260,54 +270,54 @@ namespace Libmemo.Droid {
             if (this._route != null) {
                 this._route.Remove();
                 this._route = null;
-                this._routeFrom = null;
-                this._routeTo = null;
+                this._routePoints = null;
             }
         }
 
         private void AddLinearRoute(Position from, Position to) {
-            this._route = DrawLinearRoute(from, to);
+            SetLinearRoute(from, to);
+            this._route = DrawRoute();
             if (this._route == null) {
                 this.MapFunctions?.RaiseRouteInitializingFailed();
             } else {
-                this._routeFrom = from;
-                this._routeTo = to;
                 this.MapFunctions?.RaiseRouteInitializingSucceed();
             }
         }
         private async void AddCalculatedRoute(Position from, Position to) {
-            this._route = await DrawCalculatedRoute(from, to);
+            await DrawCalculatedRoute(from, to);
+            this._route = DrawRoute();
             if (this._route == null) {
                 this.MapFunctions?.RaiseRouteInitializingFailed();
             } else {
-                this._routeFrom = from;
-                this._routeTo = to;
                 this.MapFunctions?.RaiseRouteInitializingSucceed();
             }
         }
 
-        private Polyline DrawLinearRoute(Position from, Position to) {
-            var route = GetPolylineOptions();
-            route.Add(new LatLng(from.Latitude, from.Longitude));
-            route.Add(new LatLng(to.Latitude, to.Longitude));
-            return _googleMap.AddPolyline(route);
+        private void SetLinearRoute(Position from, Position to) {        
+            _routePoints = new List<LatLng>() {
+                new LatLng(from.Latitude, from.Longitude),
+                new LatLng(to.Latitude, to.Longitude)
+            };
         }
-        private async Task<Polyline> DrawCalculatedRoute(Position from, Position to) {
+        private async Task DrawCalculatedRoute(Position from, Position to) {
             var routeData = await TK.CustomMap.Api.Google.GmsDirection.Instance.CalculateRoute(from, to, TK.CustomMap.Api.Google.GmsDirectionTravelMode.Walking);
             if (routeData != null && routeData.Status == TK.CustomMap.Api.Google.GmsDirectionResultStatus.Ok) {
                 var r = routeData.Routes.FirstOrDefault();
                 if (r != null && r.Polyline.Positions != null && r.Polyline.Positions.Any()) {
-                    var route = GetPolylineOptions();
-                    foreach (var item in r.Polyline.Positions) {
-                        route.Add(new LatLng(item.Latitude, item.Longitude));
-                    }
-
-                    return _googleMap.AddPolyline(route);
+                    _routePoints = r.Polyline.Positions.Select(i => new LatLng(i.Latitude, i.Longitude)).ToList();
                 }
             }
-
-            return null;
         }
+        private Polyline DrawRoute() {
+            if (_routePoints == null) return null;
+            var route = GetPolylineOptions();
+            foreach (var point in _routePoints) {
+                route.Add(point);
+            }
+            return _googleMap.AddPolyline(route);
+        }
+
+
 
         #endregion
 
@@ -373,13 +383,16 @@ namespace Libmemo.Droid {
             _googleMap.UiSettings.TiltGesturesEnabled = this._isTiltGesturesEnabled;
             _googleMap.UiSettings.ZoomGesturesEnabled = this._isZoomGesturesEnabled;
 
-            _customPinsBindings = new Dictionary<CustomPin, Marker>();
+            //метки
             if (_customPins != null) {
                 foreach (var pin in _customPins) {
                     pin.PropertyChanged += CustomPin_PropertyChanged;
                     AddPin(pin);
                 }
             }
+
+            //линии
+            this._route = DrawRoute();
 
             _googleMap.MyLocationEnabled = this.FormsMap?.MyLocationEnabled ?? false;
         }
@@ -410,14 +423,17 @@ namespace Libmemo.Droid {
         }
 
         private void _googleMap_MarkerClick(object sender, GoogleMap.MarkerClickEventArgs e) {
-            var binding = _customPinsBindings.FirstOrDefault(i => i.Value.Id == e.Marker.Id);
-            this._selectedPin = binding.Key;
+            try {
+                var binding = _customPinsBindings.First(i => i.Value.Id == e.Marker.Id);
 
-            SetFormProperties(() => {
-                this.FormsMap.SelectedPin = binding.Key;
-            });
+                this._selectedPin = binding.Key;
 
-            binding.Value.ShowInfoWindow();
+                SetFormProperties(() => {
+                    this.FormsMap.SelectedPin = binding.Key;
+                });
+
+                binding.Value.ShowInfoWindow();
+            } catch { }
         }
 
         private void _googleMap_InfoWindowClose(object sender, GoogleMap.InfoWindowCloseEventArgs e) {

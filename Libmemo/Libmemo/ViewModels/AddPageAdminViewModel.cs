@@ -22,7 +22,7 @@ namespace Libmemo {
                 }
             }
         }
-        public string OwnerText { get => this.Owner == null ? "Не выбрано" : $"{this.Owner.Id}: {this.Owner.Name}"; }
+        public string OwnerText { get => this.Owner == null ? "Не выбрано" : $"{this.Owner.Id}: {this.Owner.FIO}"; }
 
 
         public ICommand SelectOwnerCommand {

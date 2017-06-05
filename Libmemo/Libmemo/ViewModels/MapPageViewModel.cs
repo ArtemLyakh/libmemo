@@ -21,6 +21,8 @@ namespace Libmemo {
 
             GetGPSPermission();
 
+            Zoom = DEFAULT_ZOOM;
+            MapCenter = new Position(DEFAULT_LATITUDE, DEFAULT_LONGITUDE);
         }
 
         public void StartListen() {
@@ -95,16 +97,14 @@ namespace Libmemo {
         #region Commands
 
         public ICommand InfoWindowClickedCommand {
-            get {
-                return new Command<CustomPin>(async (CustomPin pin) => {
-                    throw new NotImplementedException();
-                    //var url = (await App.Database.GetById(int.Parse(pin.Id)))?.Link;
+            get => new Command<CustomPin>(async (CustomPin pin) => {
+                var person = await App.Database.GetById<Person>(int.Parse(pin.Id));
+                if (person != null) {
+                    var page = new DetailPage(person);
+                    await App.CurrentNavPage.Navigation.PushAsync(page);
+                }
+            });
 
-                    //if (Uri.TryCreate(url, UriKind.Absolute, out Uri res)) {
-                    //    Device.OpenUri(new Uri(url));
-                    //}
-                });
-            }
         }
 
         #endregion
@@ -114,10 +114,10 @@ namespace Libmemo {
                 Id = person.Id.ToString(),
                 PinImage = string.IsNullOrWhiteSpace(person.Text) ? PinImage.Default : PinImage.Speaker,
                 Position = new Position(person.Latitude, person.Longitude),
-                Title = person.Name,
+                Title = person.FIO,
                 Text = person.DateBirth.HasValue && person.DateDeath.HasValue ? $"{person.DateBirth.Value.Date.ToString("dd.MM.yyyy")}\u2014{person.DateDeath.Value.ToString("dd.MM.yyyy")}" : "",
                 Visible = true,
-                Base64 = person.Image
+                Base64 = person.Icon
             };
         }
 
@@ -127,7 +127,7 @@ namespace Libmemo {
 
         #region Properties
 
-        private Position _mapCenter = new Position(DEFAULT_LATITUDE, DEFAULT_LONGITUDE);
+        private Position _mapCenter;
         public Position MapCenter {
             get { return _mapCenter; }
             set {
@@ -138,7 +138,7 @@ namespace Libmemo {
             }
         }
 
-        private float _zoom = DEFAULT_ZOOM;
+        private float _zoom;
         public float Zoom {
             get { return _zoom; }
             set {
@@ -384,17 +384,15 @@ namespace Libmemo {
         #region Commands
 
         public ICommand SearchCommand {
-            get {
-                return new Command(async () => {
-
-                    var searchPage = new SearchPage(await App.Database.GetItems<Person>(), this.SearchText);
-                    searchPage.ItemSelected += OnSearchItemSelected;
-                    searchPage.SearchTextChanged += OnSearchChanged;
+            get => new Command(async () => {
+                var searchPage = new SearchPage(await App.Database.GetItems<Person>(), this.SearchText);
+                searchPage.ItemSelected += OnSearchItemSelected;
+                searchPage.SearchTextChanged += OnSearchChanged;
  
-                    this.SelectedPin = null;
-                    await App.CurrentNavPage.Navigation.PushAsync(searchPage);
-                });
-            }
+                this.SelectedPin = null;
+                await App.CurrentNavPage.Navigation.PushAsync(searchPage);
+            });
+
         }
 
         public ICommand ResetCommand {
