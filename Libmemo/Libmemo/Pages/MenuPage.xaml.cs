@@ -104,6 +104,12 @@ namespace Libmemo {
                         Text = "админ",
                         Page = typeof(AddPageAdmin)
                     };
+                    yield return new MenuItem {
+                        Id = MenuItemId.RegisterAdmin,
+                        Title = "Зарегистрировать пользователя",
+                        Text = "Админ",
+                        Page = typeof(RegisterAdminPage)
+                    };
                 } else {
                     yield return new MenuItem {
                         Id = MenuItemId.Add,
@@ -149,6 +155,6 @@ namespace Libmemo {
     }
 
     public enum MenuItemId {
-        Map, ReloadDatabase, Add, AddAdmin, Edit, Exit, Login, Register
+        Map, ReloadDatabase, Add, AddAdmin, Edit, Exit, Login, Register, RegisterAdmin
     }
 }

@@ -104,6 +104,9 @@
     <Compile Include="Pages\PersonalDataPage.xaml.cs">
       <DependentUpon>PersonalDataPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\RegisterAdminPage.xaml.cs">
+      <DependentUpon>RegisterAdminPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\RegisterPage.xaml.cs">
       <DependentUpon>RegisterPage.xaml</DependentUpon>
     </Compile>
@@ -115,11 +118,13 @@
     <Compile Include="ToastNotificator\ToastNotificator.cs" />
     <Compile Include="ViewModels\AddPageAdminViewModel.cs" />
     <Compile Include="ViewModels\AddPageViewModel.cs" />
+    <Compile Include="ViewModels\Base\BaseRegisterViewModel.cs" />
     <Compile Include="ViewModels\DetailPageViewModel.cs" />
     <Compile Include="ViewModels\EditPersonPageViewModel.cs" />
     <Compile Include="ViewModels\LoginPageViewModel.cs" />
     <Compile Include="ViewModels\MapPageViewModel.cs" />
     <Compile Include="ViewModels\PersonalDataPageViewModel.cs" />
+    <Compile Include="ViewModels\RegisterAdminPageViewModel.cs" />
     <Compile Include="ViewModels\RegisterPageViewModel.cs" />
     <Compile Include="ViewModels\SearchPageViewModel.cs" />
   </ItemGroup>
@@ -247,6 +252,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Pages\EditPersonPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\RegisterAdminPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

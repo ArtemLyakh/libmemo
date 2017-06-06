@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Libmemo.RegisterAdminPage"
+             NavigationPage.HasNavigationBar="False"
+             >
+    <ScrollView>
+        <StackLayout VerticalOptions="CenterAndExpand"
+                 HorizontalOptions="FillAndExpand"
+                 Spacing="30"
+                 Padding="10"
+                 >
+            <Label Text="Регистрация" FontSize="Large" HorizontalOptions="CenterAndExpand" Margin="0,0,0,30"/>
+            <StackLayout Orientation="Vertical"
+                     HorizontalOptions="FillAndExpand"
+                     Spacing="0"
+                     >
+                <Label Text="Email:" FontSize="Medium" HorizontalOptions="CenterAndExpand" />
+                <Entry Text="{Binding Email}" HorizontalOptions="FillAndExpand" Keyboard="Email"/>
+            </StackLayout>
+            <StackLayout Orientation="Vertical"
+                     HorizontalOptions="FillAndExpand"
+                     Spacing="0"
+                     >
+                <Label Text="Пароль:" FontSize="Medium" HorizontalOptions="CenterAndExpand" />
+                <Entry Text="{Binding Password}" HorizontalOptions="FillAndExpand" IsPassword="True" />
+            </StackLayout>
+            <StackLayout Orientation="Vertical"
+                     HorizontalOptions="FillAndExpand"
+                     Spacing="0"
+                     >
+                <Label Text="Подтверждение пароля:" FontSize="Medium" HorizontalOptions="CenterAndExpand" />
+                <Entry Text="{Binding ConfirmPassword}" HorizontalOptions="FillAndExpand" IsPassword="True" />
+            </StackLayout>
+            <StackLayout Orientation="Horizontal"
+                     HorizontalOptions="CenterAndExpand"
+                     Spacing="10"
+                     >
+                <Button Text="Зарегистрироваться" Command="{Binding RegisterCommand}" />
+            </StackLayout>
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

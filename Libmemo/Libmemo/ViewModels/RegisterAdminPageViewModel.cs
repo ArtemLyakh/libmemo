@@ -12,28 +12,20 @@ using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Libmemo {
-    public class RegisterPageViewModel : BaseRegisterViewModel {
-
-        public ICommand LoginCommand {
-            get {
-                return new Command(() => {
-                    App.MenuPage.ExecuteMenuItem(MenuItemId.Login);
-                });
-            }
-        }
+    public class RegisterAdminPageViewModel : BaseRegisterViewModel {
 
         public ICommand RegisterCommand {
             get => new Command(async () => {
+
                 var errors = this.Validate();
                 if (errors.Count() > 0) {
                     App.ToastNotificator.Show(string.Join("\n", errors));
                     return;
                 }
 
-
                 try {
                     using (var handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
-                    using (var request = new HttpRequestMessage(HttpMethod.Post, Settings.RegisterAdminUri) {
+                    using (var request = new HttpRequestMessage(HttpMethod.Post, Settings.RegisterUri) {
                         Content = new FormUrlEncodedContent(new Dictionary<string, string> {
                             {"email", this.Email },
                             {"password", this.Password },
@@ -52,7 +44,8 @@ namespace Libmemo {
 
                         App.ToastNotificator.Show("Регистрация успешно завершена");
 
-                        App.MenuPage.ExecuteMenuItem(MenuItemId.Edit);
+                        //TODO добавить переход на редактирование пользователя от админа
+                        App.MenuPage.ExecuteMenuItem(MenuItemId.Map);
                     }
                 } catch {
                     App.ToastNotificator.Show("Ошибка регистрации");
@@ -60,6 +53,7 @@ namespace Libmemo {
             });
 
         }
+
 
     }
 }

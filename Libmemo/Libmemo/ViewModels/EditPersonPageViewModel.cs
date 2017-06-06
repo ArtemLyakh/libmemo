@@ -20,6 +20,14 @@ namespace Libmemo {
         public EditPersonPageViewModel(int id) {
             this.id = id;
             GetGPSPermission();
+
+            CustomPins.Add(new CustomPin() {
+                PinImage = PinImage.Default,
+                Id = id.ToString(),
+                Position = new Position(),
+                Visible = true
+            });
+
             Init();
         }
 
@@ -238,13 +246,6 @@ namespace Libmemo {
             if (Uri.TryCreate(person.ImageUrl, UriKind.Absolute, out Uri imageUri))
                 PhotoSource = new UriImageSource() { CachingEnabled = true, Uri = imageUri };
 
-            CustomPins.Clear();
-            CustomPins.Add(new CustomPin() {
-                PinImage = PinImage.Default,
-                Id = person.Id.ToString(),
-                Position = new Position(person.Latitude, person.Longitude),
-                Visible = true
-            });
             PersonPosition = new Position(person.Latitude, person.Longitude);
 
             if (AuthHelper.IsAdmin) {

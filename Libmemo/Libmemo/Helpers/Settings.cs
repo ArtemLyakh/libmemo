@@ -28,7 +28,10 @@ namespace Libmemo {
         private const string _editPersonUrl = "http://libmemo.com/api/edit.php";
 
         private const string _loginUri = "http://libmemo.com/api/login.php";
+
         private const string _registerUri = "http://libmemo.com/api/register.php";
+        private const string _registerAdminUri = "http://libmemo.com/api/admin/register.php";
+
         private const string _personalDataSend = "http://libmemo.com/api/personal-data-send.php";
         private const string _personalDataGet = "http://libmemo.com/api/personal-data-get.php";
         #endregion
@@ -84,11 +87,6 @@ namespace Libmemo {
         }
 
 
-
-        //public static bool Logged {
-        //    get { return AppSettings.GetValueOrDefault<bool>("logged", false); }
-        //    set { AppSettings.AddOrUpdateValue<bool>("logged", value); }
-        //}
         public static string Email {
             get { return AppSettings.GetValueOrDefault<string>("login", null); }
             set { AppSettings.AddOrUpdateValue("login", value); }
@@ -97,10 +95,6 @@ namespace Libmemo {
             get { return AppSettings.GetValueOrDefault<string>("password", null); }
             set { AppSettings.AddOrUpdateValue("password", value); }
         }
-        //public static UserType UserType {
-        //    get { return (UserType)AppSettings.GetValueOrDefault<int>("usertype", default(int)); }
-        //    set { AppSettings.AddOrUpdateValue("usertype", (int)value); }
-        //}
 
         public static int CurrentUser {
             get { return AppSettings.GetValueOrDefault("currentuser", default(int)); }
@@ -131,6 +125,7 @@ namespace Libmemo {
         public static string LoginUri { get; } = _loginUri;
 
         public static string RegisterUri { get; } = _registerUri;
+        public static string RegisterAdminUri { get; } = _registerAdminUri;
     }
 
 }
