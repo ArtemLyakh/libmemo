@@ -231,7 +231,7 @@ namespace Libmemo {
 
             FirstName = person.FirstName;
             SecondName = person.SecondName;
-            SecondName = person.LastName;
+            LastName = person.LastName;
             DateBirth = person.DateBirth;
             DateDeath = person.DateDeath;
             Text = person.Text;

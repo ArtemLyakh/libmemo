@@ -1,20 +1,29 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Libmemo {
 
     public class CustomListView : Xamarin.Forms.ListView {
-        public static BindableProperty ItemClickCommandProperty = BindableProperty.Create<CustomListView, ICommand>(x => x.ItemClickCommand, null);
+
+        public static readonly BindableProperty ItemClickCommandProperty = BindableProperty.Create(
+            nameof(ItemClickCommand),
+            typeof(Command<Tuple<int, string>>),
+            typeof(CustomListView));
+
+        public ICommand ItemClickCommand {
+            get { return (ICommand)this.GetValue(ItemClickCommandProperty); }
+            set { this.SetValue(ItemClickCommandProperty, value); }
+        }
+
+
 
         public CustomListView() {
             this.ItemTapped += this.OnItemTapped;
         }
 
 
-        public ICommand ItemClickCommand {
-            get { return (ICommand)this.GetValue(ItemClickCommandProperty); }
-            set { this.SetValue(ItemClickCommandProperty, value); }
-        }
+
 
         private object prevTapped = null;
         private void OnItemTapped(object sender, ItemTappedEventArgs e) {
@@ -23,7 +32,7 @@ namespace Libmemo {
                 this.prevTapped = e.Item;
                 return;
             } else {
-                if (e.Item != null && this.ItemClickCommand != null && this.ItemClickCommand.CanExecute(e)) {
+                if (e.Item != null && this.ItemClickCommand != null && this.ItemClickCommand.CanExecute(e.Item)) {
                     this.ItemClickCommand.Execute(e.Item);
                     this.SelectedItem = null;
                     this.prevTapped = null;

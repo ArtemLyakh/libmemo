@@ -148,7 +148,7 @@ namespace Libmemo {
             }
         }
 
-        private bool _isCameraAnimated = true;
+        private bool _isCameraAnimated = false;
         public bool IsCameraAnimated {
             get { return _isCameraAnimated; }
             set {
@@ -249,12 +249,17 @@ namespace Libmemo {
 
         #region Commands
 
+        private bool firstCamera = true;
         public ICommand UserPositionChangedCommand {
             get {
                 return new Command<Position>((Position position) => {
                     this.UserPosition = position;
 
                     if (this.FollowUser) {
+                        if (firstCamera) {
+                            this.IsCameraAnimated = true;
+                            firstCamera = false;
+                        }
                         MoveCameraToUserPosition();
                     }
                 });

@@ -68,13 +68,11 @@ namespace Libmemo {
         }
 
         public ICommand ItemSelectedCommand {
-            get => new Command(async (object item) => {
+            get => new Command<Tuple<int, string>>(async (Tuple<int, string> item) => {
                 await App.CurrentNavPage.Navigation.PopAsync();
 
-                var tuple = (Tuple<int, string>)item;
-
-                SearchTextChanged?.Invoke(this, tuple.Item2);
-                ItemSelected?.Invoke(this, tuple.Item1);
+                SearchTextChanged?.Invoke(this, item.Item2);
+                ItemSelected?.Invoke(this, item.Item1);
             });
         }
 
