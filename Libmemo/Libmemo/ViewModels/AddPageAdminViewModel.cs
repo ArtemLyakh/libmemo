@@ -7,7 +7,7 @@ using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Libmemo {
-    class AddPageAdminViewModel : AddPageViewModel {
+    class AddPageAdminViewModel : BaseAddViewModel {
 
         public AddPageAdminViewModel() : base() { }
 
@@ -24,13 +24,11 @@ namespace Libmemo {
         }
         public string OwnerText { get => this.Owner == null ? "Не выбрано" : $"{this.Owner.Id}: {this.Owner.FIO}"; }
 
-
         public ICommand SelectOwnerCommand {
             get => new Command(async () => {
                 var searchPage = new SearchPage(await App.Database.GetItems<User>());
-                searchPage.ItemSelected += async (sender, id) => {
+                searchPage.ItemSelected += async (sender, id) => 
                     this.Owner = await App.Database.GetById<User>(id);
-                };
 
                 await App.CurrentNavPage.Navigation.PushAsync(searchPage);
             });
@@ -38,17 +36,43 @@ namespace Libmemo {
 
 
 
-
-        protected override string SendUri => Settings.AddPersoAdminUrl;
-
-        protected override IEnumerable<string> ValidateSend() => base.ValidateSend().Union(_ValidateSend());
-        private IEnumerable<string> _ValidateSend() {
+        protected override IEnumerable<string> Validate() => base.Validate().Concat(_Validate());
+        private IEnumerable<string> _Validate() {
             if (this.Owner == null) yield return "Не указан владелец";
         }
 
         protected async override Task AddParams(PersonDataLoader uploader) {
             await base.AddParams(uploader);
             uploader.Params.Add("owner", this.Owner.Id.ToString());
+        }
+
+
+
+        protected override async void Send() {
+            var errors = Validate();
+            if (errors.Count() > 0) {
+                Device.BeginInvokeOnMainThread(() => App.Current.MainPage.DisplayAlert("Ошибка", string.Join("\n", errors), "ОК"));
+                return;
+            }
+
+            App.ToastNotificator.Show("Отправка на сервер");
+
+            var uploader = new PersonDataLoader(Settings.AddPersoAdminUrl);
+            await AddParams(uploader);
+
+            try {
+                var success = await uploader.Upload();
+
+                if (success) {
+                    App.ToastNotificator.Show("Данные успешно отправлены");
+                    ResetCommand.Execute(null);
+                    App.Database.Load();
+                } else {
+                    Device.BeginInvokeOnMainThread(() => App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка отправки данных", "ОК"));
+                }
+            } catch (UnauthorizedAccessException) {
+                AuthHelper.Relogin();
+            }
         }
     }
 }

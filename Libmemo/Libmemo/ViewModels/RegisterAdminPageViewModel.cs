@@ -18,7 +18,7 @@ namespace Libmemo {
             get => new Command(async () => {
 
                 var errors = this.Validate();
-                if (errors.Count() > 0) {
+                if (errors.Count > 0) {
                     App.ToastNotificator.Show(string.Join("\n", errors));
                     return;
                 }

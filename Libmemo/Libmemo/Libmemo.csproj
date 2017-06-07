@@ -118,6 +118,7 @@
     <Compile Include="ToastNotificator\ToastNotificator.cs" />
     <Compile Include="ViewModels\AddPageAdminViewModel.cs" />
     <Compile Include="ViewModels\AddPageViewModel.cs" />
+    <Compile Include="ViewModels\Base\BaseAddViewModel.cs" />
     <Compile Include="ViewModels\Base\BaseRegisterViewModel.cs" />
     <Compile Include="ViewModels\DetailPageViewModel.cs" />
     <Compile Include="ViewModels\EditPersonPageViewModel.cs" />

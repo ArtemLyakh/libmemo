@@ -69,12 +69,7 @@ namespace Libmemo {
                             }
                             responce.EnsureSuccessStatusCode();
 
-                            AuthHelper.Login(
-                                this.Email,
-                                this.Password,
-                                JsonConvert.DeserializeObject<JsonMessage>(str).message,
-                                handler.CookieContainer
-                            );
+                            AuthHelper.Login(Email, Password, JsonConvert.DeserializeObject<JsonMessage>(str).message, handler.CookieContainer);
 
                             App.MenuPage.ExecuteMenuItem(MenuItemId.Map);
                         }
