@@ -18,14 +18,14 @@ namespace Libmemo {
             get => new Command(async () => {
 
                 var errors = this.Validate();
-                if (errors.Count > 0) {
+                if (errors.Count() > 0) {
                     App.ToastNotificator.Show(string.Join("\n", errors));
                     return;
                 }
 
                 try {
                     using (var handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
-                    using (var request = new HttpRequestMessage(HttpMethod.Post, Settings.RegisterUri) {
+                    using (var request = new HttpRequestMessage(HttpMethod.Post, Settings.RegisterUrl) {
                         Content = new FormUrlEncodedContent(new Dictionary<string, string> {
                             {"email", this.Email },
                             {"password", this.Password },

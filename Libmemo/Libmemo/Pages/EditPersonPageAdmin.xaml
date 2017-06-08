@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Libmemo.EditPersonPage"
+             x:Class="Libmemo.EditPersonPageAdmin"
              xmlns:local="clr-namespace:Libmemo"
              NavigationPage.HasNavigationBar="False"
              >
@@ -14,7 +14,6 @@
             <Color x:Key="invalidLatLngColor">Red</Color>
         </ResourceDictionary>
     </ContentPage.Resources>
-
 
     <StackLayout>
         <StackLayout Orientation="Horizontal" Padding="10" HorizontalOptions="FillAndExpand">
@@ -72,6 +71,15 @@
         </StackLayout>
         <ScrollView>
             <StackLayout Spacing="50" Padding="10">
+
+                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10">
+                    <Label Text="Владелец" HorizontalOptions="CenterAndExpand" FontSize="Large" />
+                    <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="FillAndExpand">
+                        <Button Text="Выбрать" Command="{Binding SelectOwnerCommand}" VerticalOptions="CenterAndExpand" HorizontalOptions="Start" />
+                        <Label Text="{Binding OwnerText}" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center" />
+                    </StackLayout>
+                </StackLayout>
+
                 <StackLayout HorizontalOptions="FillAndExpand" Spacing="10">
                     <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
                         <Label Text="Имя: "
@@ -164,6 +172,5 @@
             </StackLayout>
         </ScrollView>
     </StackLayout>
-    
-    
+
 </ContentPage>

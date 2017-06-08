@@ -89,6 +89,9 @@
     <Compile Include="Pages\EditPersonPage.xaml.cs">
       <DependentUpon>EditPersonPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\EditPersonPageAdmin.xaml.cs">
+      <DependentUpon>EditPersonPageAdmin.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
@@ -119,8 +122,11 @@
     <Compile Include="ViewModels\AddPageAdminViewModel.cs" />
     <Compile Include="ViewModels\AddPageViewModel.cs" />
     <Compile Include="ViewModels\Base\BaseAddViewModel.cs" />
+    <Compile Include="ViewModels\Base\BaseEditPersonViewModel.cs" />
     <Compile Include="ViewModels\Base\BaseRegisterViewModel.cs" />
+    <Compile Include="ViewModels\Base\BasePersonalDataViewModel.cs" />
     <Compile Include="ViewModels\DetailPageViewModel.cs" />
+    <Compile Include="ViewModels\EditPersonPageAdminViewModel.cs" />
     <Compile Include="ViewModels\EditPersonPageViewModel.cs" />
     <Compile Include="ViewModels\LoginPageViewModel.cs" />
     <Compile Include="ViewModels\MapPageViewModel.cs" />
@@ -259,6 +265,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Pages\RegisterAdminPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\EditPersonPageAdmin.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

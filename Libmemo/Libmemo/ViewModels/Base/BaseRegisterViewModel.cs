@@ -42,27 +42,23 @@ namespace Libmemo {
             }
         }
 
-        protected virtual List<string> Validate() {
-            var errors = new List<string>();
-
+        protected virtual IEnumerable<string> Validate() {
             if (string.IsNullOrWhiteSpace(this.Email) || !Regex.IsMatch(this.Email,
-            @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
-            @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$",
-            RegexOptions.IgnoreCase)) {
-                errors.Add("Невалидный email адрес");
+                @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
+                @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$",
+                RegexOptions.IgnoreCase)) {
+                yield return "Невалидный email адрес";
             }
 
             if (string.IsNullOrWhiteSpace(this.Password)) {
-                errors.Add("Не заполнен пароль");
+                yield return "Не заполнен пароль";
             }
             if (string.IsNullOrWhiteSpace(this.ConfirmPassword)) {
-                errors.Add("Не заполнено подтверждение пароля");
+                yield return "Не заполнено подтверждение пароля";
             }
-            if (Password != ConfirmPassword) {
-                errors.Add("Пароли не совпадают");
+            if (!string.Equals(this.Password, this.ConfirmPassword)) {
+                yield return "Пароли не совпадают";
             }
-
-            return errors;
         }
 
 

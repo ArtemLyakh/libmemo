@@ -20,7 +20,7 @@ namespace Libmemo {
         private SQLiteConnection database;
 
         public PersonRepository() {
-            string databasePath = DependencyService.Get<ISQLite>().GetDatabasePath(Settings.DatabaseName);
+            string databasePath = DependencyService.Get<ISQLite>().GetDatabasePath("database.db");
             database = new SQLiteConnection(databasePath);
             database.CreateTable<Person>();
             database.CreateTable<User>();

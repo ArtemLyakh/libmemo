@@ -9,20 +9,21 @@ using Xamarin.Forms.Xaml;
 
 namespace Libmemo {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class EditPersonPage : ContentPage {
-        public EditPersonPage(int id) {
+    public partial class EditPersonPageAdmin : ContentPage {
+        public EditPersonPageAdmin(int id) {
             InitializeComponent();
-            BindingContext = new EditPersonPageViewModel(id);
+            BindingContext = new EditPersonPageAdminViewModel(id);
         }
 
         protected override void OnAppearing() {
             base.OnAppearing();
-            ((EditPersonPageViewModel)BindingContext).SetGPSTracking(true);
+            ((EditPersonPageAdminViewModel)BindingContext).SetGPSTracking(true);
         }
 
         protected override void OnDisappearing() {
             base.OnDisappearing();
-            ((EditPersonPageViewModel)BindingContext).SetGPSTracking(false);
+            ((EditPersonPageAdminViewModel)BindingContext).SetGPSTracking(false);
         }
+
     }
 }

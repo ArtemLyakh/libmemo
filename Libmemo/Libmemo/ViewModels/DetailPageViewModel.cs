@@ -95,7 +95,12 @@ namespace Libmemo {
 
         public ICommand EditCommand {
             get => new Command(async () => {
-                var page = new EditPersonPage(id);
+                ContentPage page;
+                if (AuthHelper.IsAdmin) {
+                    page = new EditPersonPageAdmin(id);
+                } else {
+                    page = new EditPersonPage(id);
+                }
                 await App.CurrentNavPage.Navigation.PushAsync(page);
             });
         }

@@ -1,0 +1,349 @@
+﻿using Plugin.Media;
+using Plugin.Media.Abstractions;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Xamarin.Forms;
+using Xamarin.Forms.Maps;
+
+namespace Libmemo {
+    public abstract class BaseEditPersonViewModel : INotifyPropertyChanged {
+
+        protected int Id { get; set; }
+        public BaseEditPersonViewModel(int id) {
+            this.Id = id;
+
+            GetGPSPermission();
+
+            CustomPins.Add(new CustomPin() {
+                PinImage = PinImage.Default,
+                Id = id.ToString(),
+                Position = new Position(),
+                Visible = true
+            });
+
+            Init();
+        }
+
+        public async void Init() {
+            var person = await App.Database.GetById<Person>(Id);
+            InitFields(person);
+        }
+        protected virtual void InitFields(Person person) {
+            FirstName = person.FirstName;
+            SecondName = person.SecondName;
+            LastName = person.LastName;
+            DateBirth = person.DateBirth;
+            DateDeath = person.DateDeath;
+            Text = person.Text;
+            if (Uri.TryCreate(person.ImageUrl, UriKind.Absolute, out Uri imageUri))
+                PhotoSource = new UriImageSource() { CachingEnabled = true, Uri = imageUri };
+
+            PersonPosition = new Position(person.Latitude, person.Longitude);
+        }
+
+
+
+
+
+
+
+        private const double DEFAULT_LATITUDE = 47.23135;
+        private const double DEFAULT_LONGITUDE = 39.72328;
+        private const float DEFAULT_ZOOM = 18;
+
+
+
+        private bool _gpsPermissionsGained = false;
+        public void SetGPSTracking(bool track) {
+            if (_gpsPermissionsGained) {
+                this.MyLocationEnabled = track;
+            }
+        }
+        private async void GetGPSPermission() {
+            await UtilsFunctions.GetGPSPermissionOrExit();
+
+            this._gpsPermissionsGained = true;
+            SetGPSTracking(true);
+        }
+
+
+        public INativeMapFunction MapFunctions { get; set; }
+
+        private ObservableCollection<CustomPin> _customPins = new ObservableCollection<CustomPin>();
+        public ObservableCollection<CustomPin> CustomPins {
+            get { return _customPins; }
+            set {
+                if (_customPins != value) {
+                    _customPins = value;
+                    this.OnPropertyChanged(nameof(CustomPins));
+                }
+            }
+        }
+
+        private Position _mapCenter = new Position(DEFAULT_LATITUDE, DEFAULT_LONGITUDE);
+        public Position MapCenter {
+            get { return _mapCenter; }
+            set {
+                if (_mapCenter != value) {
+                    _mapCenter = value;
+                    this.OnPropertyChanged(nameof(MapCenter));
+                }
+            }
+        }
+
+        private float _zoom = DEFAULT_ZOOM;
+        public float Zoom {
+            get { return _zoom; }
+            set {
+                if (_zoom != value) {
+                    _zoom = value;
+                    this.OnPropertyChanged(nameof(Zoom));
+                }
+            }
+        }
+
+        private bool _mLocationEnabled = false;
+        public bool MyLocationEnabled {
+            get { return _mLocationEnabled; }
+            private set {
+                if (_mLocationEnabled != value) {
+                    _mLocationEnabled = value;
+                    this.OnPropertyChanged(nameof(MyLocationEnabled));
+                }
+            }
+        }
+
+        private Position? _userPosition = null;
+        public Position? UserPosition {
+            get { return this._userPosition; }
+            private set {
+                if (this._userPosition != value) {
+                    this._userPosition = value;
+                    this.OnPropertyChanged(nameof(UserPosition));
+                }
+            }
+        }
+
+        public string PersonLatLon {
+            get => $"{PersonPosition.Latitude}\n{PersonPosition.Longitude}";
+        }
+
+        private Position _personPosition;
+        public Position PersonPosition {
+            get { return _personPosition; }
+            set {
+                if (_personPosition != value) {
+                    _personPosition = value;
+
+                    var pin = CustomPins.FirstOrDefault();
+                    if (pin != null) pin.Position = value;
+
+                    OnPropertyChanged(nameof(PersonLatLon));
+                }
+            }
+        }
+
+        private bool firstTimeUserPosition = true;
+        public ICommand UserPositionChangedCommand {
+            get {
+                return new Command<Position>((Position position) => {
+                    if (firstTimeUserPosition) {
+                        firstTimeUserPosition = false;
+                        this.MapCenter = position;
+                    }
+                    this.UserPosition = position;
+                });
+            }
+        }
+
+        public ICommand MapClickCommand {
+            get => new Command<Position>((Position position) => PersonPosition = position);
+        }
+
+        public ICommand CurrentGeoCommand {
+            get => new Command(() => {
+                if (UserPosition.HasValue) {
+                    PersonPosition = UserPosition.Value;
+                }
+            });
+        }
+
+
+        private bool _isLatLonShow;
+        public bool IsLatLonShow {
+            get { return _isLatLonShow; }
+            set {
+                if (_isLatLonShow != value) {
+                    _isLatLonShow = value;
+                    if (value) _buttonShowHide = "Скрыть";
+                    else _buttonShowHide = "Редактировать";
+                    this.OnPropertyChanged(nameof(ButtonShowHide));
+                    this.OnPropertyChanged(nameof(IsLatLonShow));
+                }
+            }
+        }
+        private string _buttonShowHide = "Редактировать";
+        public string ButtonShowHide {
+            get => _buttonShowHide;
+        }
+
+
+        public ICommand ButtonShowHideClickCommand {
+            get => new Command(() => IsLatLonShow = !IsLatLonShow);
+        }
+
+
+        private string _firstName;
+        public string FirstName {
+            get { return _firstName; }
+            set {
+                if (_firstName != value) {
+                    _firstName = value;
+                    this.OnPropertyChanged(nameof(FirstName));
+                }
+            }
+        }
+
+        private string _secondName;
+        public string SecondName {
+            get { return _secondName; }
+            set {
+                if (_secondName != value) {
+                    _secondName = value;
+                    this.OnPropertyChanged(nameof(SecondName));
+                }
+            }
+        }
+
+        private string _lastName;
+        public string LastName {
+            get { return _lastName; }
+            set {
+                if (_lastName != value) {
+                    _lastName = value;
+                    this.OnPropertyChanged(nameof(LastName));
+                }
+            }
+        }
+
+        private DateTime? _dateBirth = null;
+        public DateTime? DateBirth {
+            get { return _dateBirth; }
+            set {
+                if (_dateBirth != value) {
+                    _dateBirth = value;
+                    this.OnPropertyChanged(nameof(DateBirth));
+                }
+            }
+        }
+
+        private DateTime? _dateDeath = null;
+        public DateTime? DateDeath {
+            get { return _dateDeath; }
+            set {
+                if (_dateDeath != value) {
+                    _dateDeath = value;
+                    this.OnPropertyChanged(nameof(DateDeath));
+                }
+            }
+        }
+
+        private string _text;
+        public string Text {
+            get { return _text; }
+            set {
+                if (_text != value) {
+                    _text = value;
+                    this.OnPropertyChanged(nameof(Text));
+                }
+            }
+        }
+
+        private ImageSource _photoSource;
+        public ImageSource PhotoSource {
+            get { return _photoSource; }
+            set {
+                if (_photoSource != value) {
+                    _photoSource = value;
+                    this.OnPropertyChanged(nameof(PhotoSource));
+                }
+            }
+        }
+
+        public ICommand PickPhotoCommand {
+            get => new Command(async () => {
+                if (CrossMedia.Current.IsPickPhotoSupported) {
+                    MediaFile photo = await CrossMedia.Current.PickPhotoAsync();
+                    if (photo == null) return;
+                    this.PhotoSource = ImageSource.FromFile(photo.Path);
+                }
+            });
+        }
+
+        public ICommand MakePhotoCommand {
+            get => new Command(async () => {
+                if (CrossMedia.Current.IsCameraAvailable && CrossMedia.Current.IsTakePhotoSupported) {
+                    MediaFile file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions { SaveToAlbum = false });
+                    if (file == null) return;
+                    PhotoSource = ImageSource.FromFile(file.Path);
+                }
+            });
+        }
+
+        public ICommand ResetCommand {
+            get => new Command(Init);
+        }
+
+        public ICommand SendCommand {
+            get => new Command(Send);
+        }
+        protected abstract void Send();
+
+
+        protected virtual IEnumerable<string> Validate() {
+            if (String.IsNullOrWhiteSpace(this.FirstName)) yield return "Поле \"Имя\" не заполнено";
+        }
+
+        protected virtual async Task AddParams(PersonDataLoader uploader) {
+            uploader.Params.Add("id", this.Id.ToString());
+
+            uploader.Params.Add("latitude", this.PersonPosition.Latitude.ToString(CultureInfo.InvariantCulture));
+            uploader.Params.Add("longitude", this.PersonPosition.Longitude.ToString(CultureInfo.InvariantCulture));
+
+            if (!string.IsNullOrWhiteSpace(this.FirstName)) {
+                uploader.Params.Add("first_name", this.FirstName.ToString());
+            }
+            if (!string.IsNullOrWhiteSpace(this.SecondName)) {
+                uploader.Params.Add("second_name", this.SecondName.ToString());
+            }
+            if (!string.IsNullOrWhiteSpace(this.LastName)) {
+                uploader.Params.Add("last_name", this.LastName.ToString());
+            }
+
+            if (this.DateBirth.HasValue) {
+                uploader.Params.Add("date_birth", this.DateBirth.Value.ToString("yyyy-MM-dd"));
+            }
+            if (this.DateDeath.HasValue) {
+                uploader.Params.Add("date_death", this.DateDeath.Value.ToString("yyyy-MM-dd"));
+            }
+            if (!string.IsNullOrWhiteSpace(this.Text)) {
+                uploader.Params.Add("text", this.Text.ToString());
+            }
+            if (this.PhotoSource != null && this.PhotoSource is FileImageSource) {
+                await uploader.SetFile(this.PhotoSource);
+            }
+        }
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName = "") =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+}

@@ -14,44 +14,55 @@ namespace Libmemo {
         }
 
         #region Setting Constants
-        private const string SERVER_URI = "http://libmemo.com";
+        private const string SERVER_URL = "http://libmemo.com";
 
-        private static readonly long _lastModifiedDefault = 0;
+        private const string DATABASE_URL = SERVER_URL + "/api/database.php";
 
-        private const string _dataUrl = "http://libmemo.com/api/database.php";
+        private const string LOGIN_URL = SERVER_URL + "/api/login.php";
 
-        private const string _databaseName = "database.db";
+        private const string REGISTER_URL = SERVER_URL + "/api/register.php";
+        private const string REGISTER_URL_ADMIN = SERVER_URL + "/api/admin/register.php";
 
-        private const string _addPersonUrl = "http://libmemo.com/api/add.php";
-        private const string _addPersonAdminUrl = "http://libmemo.com/api/admin/add.php";
+        private const string ADD_PERSON_URL = SERVER_URL + "/api/add.php";
+        private const string ADD_PERSON_URL_ADMIN = SERVER_URL + "/api/admin/add.php";
 
-        private const string _editPersonUrl = "http://libmemo.com/api/edit.php";
+        private const string EDIT_PERSON_URL = SERVER_URL + "/api/edit.php";
+        private const string EDIT_PERSON_URL_ADMIN = SERVER_URL + "/api/admin/edit.php";
 
-        private const string _loginUri = "http://libmemo.com/api/login.php";
 
-        private const string _registerUri = "http://libmemo.com/api/register.php";
-        private const string _registerAdminUri = "http://libmemo.com/api/admin/register.php";
 
         private const string _personalDataSend = "http://libmemo.com/api/personal-data-send.php";
         private const string _personalDataGet = "http://libmemo.com/api/personal-data-get.php";
         #endregion
 
 
+        private static readonly long _lastModifiedDefault = 0;
         public static long? LastModified {
             get {
-                long res = AppSettings.GetValueOrDefault<long>("modified", _lastModifiedDefault);
+                long res = AppSettings.GetValueOrDefault("modified", _lastModifiedDefault);
                 return res == 0 ? null : (long?)res;
             }
             set {
                 if (value != null) {
-                    AppSettings.AddOrUpdateValue<long>("modified", (long)value);
+                    AppSettings.AddOrUpdateValue("modified", (long)value);
                 } else {
-                    AppSettings.AddOrUpdateValue<long>("modified", _lastModifiedDefault);
+                    AppSettings.AddOrUpdateValue("modified", _lastModifiedDefault);
                 }
             }
         }
 
 
+        
+
+
+        public static string Email {
+            get { return AppSettings.GetValueOrDefault<string>("login", null); }
+            set { AppSettings.AddOrUpdateValue("login", value); }
+        }
+        public static string Password {
+            get { return AppSettings.GetValueOrDefault<string>("password", null); }
+            set { AppSettings.AddOrUpdateValue("password", value); }
+        }
         public static CookieContainer AuthCookies {
             get {
                 var str = AppSettings.GetValueOrDefault<string>("authCookies", null);
@@ -64,7 +75,7 @@ namespace Libmemo {
                     }
 
                     CookieContainer cookieContainer = new CookieContainer();
-                    cookieContainer.Add(new Uri(SERVER_URI), cookieCollection);
+                    cookieContainer.Add(new Uri(SERVER_URL), cookieCollection);
 
                     return cookieContainer;
                 }
@@ -73,7 +84,7 @@ namespace Libmemo {
                 if (value == null) AppSettings.AddOrUpdateValue<string>("authCookies", null);
                 else {
                     List<Cookie> cookieList = new List<Cookie>();
-                    foreach (var item in value.GetCookies(new Uri(SERVER_URI))) {
+                    foreach (var item in value.GetCookies(new Uri(SERVER_URL))) {
                         Cookie cookie = (Cookie)item;
                         cookieList.Add(cookie);
                     }
@@ -84,16 +95,6 @@ namespace Libmemo {
                 }
 
             }
-        }
-
-
-        public static string Email {
-            get { return AppSettings.GetValueOrDefault<string>("login", null); }
-            set { AppSettings.AddOrUpdateValue("login", value); }
-        }
-        public static string Password {
-            get { return AppSettings.GetValueOrDefault<string>("password", null); }
-            set { AppSettings.AddOrUpdateValue("password", value); }
         }
 
         public static int CurrentUser {
@@ -107,25 +108,24 @@ namespace Libmemo {
 
 
 
+        public static string DataUrl { get; } = DATABASE_URL;
 
+        public static string LoginUrl { get; } = LOGIN_URL;
 
+        public static string RegisterUrl { get; } = REGISTER_URL;
+        public static string RegisterUrlAdmin { get; } = REGISTER_URL_ADMIN;
 
+        public static string AddPersonUrl { get; } = ADD_PERSON_URL;
+        public static string AddPersonUrlAdmin { get; } = ADD_PERSON_URL_ADMIN;
 
+        public static string EditPersonUrl { get; } = EDIT_PERSON_URL;
+        public static string EditPersonUrlAdmin { get; } = EDIT_PERSON_URL_ADMIN;
 
-        public static string DataUrl { get; } = _dataUrl;
-        public static string AddPersonUrl { get; } = _addPersonUrl;
-        public static string AddPersoAdminUrl { get; } = _addPersonAdminUrl;
         public static string PersonalDataSend { get; } = _personalDataSend;
         public static string PersonalDataGet { get; } = _personalDataGet;
 
-        public static string EditPersonUrl { get; } = _editPersonUrl;
 
-        public static string DatabaseName { get; } = _databaseName;
 
-        public static string LoginUri { get; } = _loginUri;
-
-        public static string RegisterUri { get; } = _registerUri;
-        public static string RegisterAdminUri { get; } = _registerAdminUri;
     }
 
 }
