@@ -84,7 +84,7 @@ namespace Libmemo {
                 Id = MenuItemId.Map,
                 Title = "Карта",
                 Text = "карта",
-                Page = typeof(MapPage)
+                Action = async () => { await App.GlobalPage.PopToRootPage(); }
             };
             yield return new MenuItem {
                 Id = MenuItemId.ReloadDatabase,
@@ -102,32 +102,32 @@ namespace Libmemo {
                         Id = MenuItemId.AddAdmin,
                         Title = "Добавить/админ",
                         Text = "админ",
-                        Page = typeof(AddPageAdmin)
+                        Action = async () => { await App.GlobalPage.PushRoot(new AddPageAdmin()); }
                     };
                     yield return new MenuItem {
                         Id = MenuItemId.RegisterAdmin,
                         Title = "Зарегистрировать пользователя",
                         Text = "Админ",
-                        Page = typeof(RegisterAdminPage)
+                        Action = async () => { await App.GlobalPage.PushRoot(new RegisterAdminPage()); }
                     };
                     yield return new MenuItem {
                         Id = MenuItemId.UserDataAdmin,
                         Title = "Редактировать данные",
                         Text = "Редактировать данные пользователей",
-                        Page = typeof(PersonalDataPageAdmin)
+                        Action = async () => { await App.GlobalPage.PushRoot(new PersonalDataPageAdmin()); }
                     };
                 } else {
                     yield return new MenuItem {
                         Id = MenuItemId.Add,
                         Title = "Добавить",
                         Text = "добавить",
-                        Page = typeof(AddPage)
+                        Action = async () => { await App.GlobalPage.PushRoot(new AddPage()); }
                     };
                     yield return new MenuItem {
                         Id = MenuItemId.UserData,
                         Title = "Редактировать данные",
                         Text = "Редактирование персональных данных",
-                        Page = typeof(PersonalDataPage)
+                        Action = async () => { await App.GlobalPage.PushRoot(new PersonalDataPage()); }
                     };
                 }
 
@@ -141,12 +141,12 @@ namespace Libmemo {
                 yield return new MenuItem {
                     Id = MenuItemId.Login,
                     Title = "Авторизация",
-                    Page = typeof(LoginPage)
+                    Action = async () => { await App.GlobalPage.PushRoot(new LoginPage()); }
                 };
                 yield return new MenuItem {
                     Id = MenuItemId.Register,
                     Title = "Регистрация",
-                    Page = typeof(RegisterPage)
+                    Action = async () => { await App.GlobalPage.PushRoot(new RegisterPage()); }
                 };
             }
 
@@ -157,7 +157,6 @@ namespace Libmemo {
         public MenuItemId Id { get; set; }
         public string Title { get; set; }
         public string Text { get; set; }
-        public Type Page { get; set; }
         public Action Action { get; set; }
     }
 
