@@ -53,7 +53,7 @@ namespace Libmemo {
                         AuthHelper.Login(this.Email, this.Password, JsonConvert.DeserializeObject<JsonMessage>(str).message, handler.CookieContainer);
 
                         App.ToastNotificator.Show("Регистрация успешно завершена");
-                        App.MenuPage.ExecuteMenuItem(MenuItemId.Edit);
+                        App.MenuPage.ExecuteMenuItem(MenuItemId.UserData);
                     }
                 } catch {
                     App.ToastNotificator.Show("Ошибка регистрации");

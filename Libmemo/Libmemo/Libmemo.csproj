@@ -107,6 +107,9 @@
     <Compile Include="Pages\PersonalDataPage.xaml.cs">
       <DependentUpon>PersonalDataPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\PersonalDataPageAdmin.xaml.cs">
+      <DependentUpon>PersonalDataPageAdmin.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\RegisterAdminPage.xaml.cs">
       <DependentUpon>RegisterAdminPage.xaml</DependentUpon>
     </Compile>
@@ -130,6 +133,7 @@
     <Compile Include="ViewModels\EditPersonPageViewModel.cs" />
     <Compile Include="ViewModels\LoginPageViewModel.cs" />
     <Compile Include="ViewModels\MapPageViewModel.cs" />
+    <Compile Include="ViewModels\PersonalDataPageAdminViewModel.cs" />
     <Compile Include="ViewModels\PersonalDataPageViewModel.cs" />
     <Compile Include="ViewModels\RegisterAdminPageViewModel.cs" />
     <Compile Include="ViewModels\RegisterPageViewModel.cs" />
@@ -271,6 +275,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Pages\EditPersonPageAdmin.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\PersonalDataPageAdmin.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

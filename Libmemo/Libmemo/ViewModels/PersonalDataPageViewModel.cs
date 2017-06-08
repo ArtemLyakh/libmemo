@@ -12,19 +12,33 @@ using Xamarin.Forms;
 namespace Libmemo {
     public class PersonalDataPageViewModel : BasePersonalDataViewModel {
 
-        public PersonalDataPageViewModel() : base() { }
+        public PersonalDataPageViewModel() : base() {
+            LoadData();
+        }
 
+        protected override PersonData PersonData { get; set; } = null;
 
+        protected async void LoadData() {
+            var loader = new PersonDataLoader(Settings.PersonalDataUrl);
 
-        protected override async void Send() {
-            if (!IsSomethingChanged()) {
-                App.ToastNotificator.Show("Отсутствуют изменения");
+            try {
+                PersonData = await loader.GetPersonData();
+            } catch (UnauthorizedAccessException) {
+                AuthHelper.Relogin();
                 return;
-            } else {
-                App.ToastNotificator.Show("Отправка на сервер");
             }
 
-            PersonDataLoader uploader = new PersonDataLoader(Settings.PersonalDataSend);
+            if (PersonData == null) {
+                App.ToastNotificator.Show("Ошибка загрузки текущих данных");
+            } else {
+                App.ToastNotificator.Show("Данные с сервера получены");
+                this.ResetCommand.Execute(null);
+            }
+
+        }
+
+        protected override async void Send() {
+            PersonDataLoader uploader = new PersonDataLoader(Settings.PersonalDataUrl);
             await AddParams(uploader);
 
             try {

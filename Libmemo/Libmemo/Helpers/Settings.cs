@@ -29,10 +29,8 @@ namespace Libmemo {
         private const string EDIT_PERSON_URL = SERVER_URL + "/api/edit.php";
         private const string EDIT_PERSON_URL_ADMIN = SERVER_URL + "/api/admin/edit.php";
 
-
-
-        private const string _personalDataSend = "http://libmemo.com/api/personal-data-send.php";
-        private const string _personalDataGet = "http://libmemo.com/api/personal-data-get.php";
+        private const string PERSONAL_DATA_URL = SERVER_URL + "/api/personal_data.php";
+        private const string PERSONAL_DATA_URL_ADMIN = SERVER_URL + "/api/admin/personal_data.php";
         #endregion
 
 
@@ -121,10 +119,8 @@ namespace Libmemo {
         public static string EditPersonUrl { get; } = EDIT_PERSON_URL;
         public static string EditPersonUrlAdmin { get; } = EDIT_PERSON_URL_ADMIN;
 
-        public static string PersonalDataSend { get; } = _personalDataSend;
-        public static string PersonalDataGet { get; } = _personalDataGet;
-
-
+        public static string PersonalDataUrl { get; } = PERSONAL_DATA_URL;
+        public static string PersonalDataUrlAdmin { get; } = PERSONAL_DATA_URL_ADMIN;
 
     }
 

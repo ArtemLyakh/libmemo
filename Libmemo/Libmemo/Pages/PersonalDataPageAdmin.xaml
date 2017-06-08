@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Libmemo.PersonalDataPage"
+             x:Class="Libmemo.PersonalDataPageAdmin"
              xmlns:local="clr-namespace:Libmemo"
-             NavigationPage.HasNavigationBar="False">
+             NavigationPage.HasNavigationBar="False"
+             >
     <ContentPage.Resources>
         <ResourceDictionary>
             <local:NullableDateConverter x:Key="NullableDateConverter"/>
@@ -23,6 +24,14 @@
         </StackLayout>
         <ScrollView>
             <StackLayout Spacing="50" Padding="10">
+
+                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10">
+                    <Label Text="Пользователь" HorizontalOptions="CenterAndExpand" FontSize="Large" />
+                    <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="FillAndExpand">
+                        <Button Text="Выбрать" Command="{Binding SelectOwnerCommand}" VerticalOptions="CenterAndExpand" HorizontalOptions="Start" />
+                        <Label Text="{Binding OwnerText}" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center" />
+                    </StackLayout>
+                </StackLayout>
 
                 <StackLayout HorizontalOptions="FillAndExpand" Spacing="10">
                     <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
@@ -94,5 +103,4 @@
             </StackLayout>
         </ScrollView>
     </StackLayout>
-
 </ContentPage>

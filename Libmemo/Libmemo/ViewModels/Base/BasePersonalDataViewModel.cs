@@ -11,35 +11,10 @@ using Xamarin.Forms;
 
 namespace Libmemo {
     public abstract class BasePersonalDataViewModel : INotifyPropertyChanged {
-    
-        public BasePersonalDataViewModel() {
-            LoadData();
-        }
-        public BasePersonalDataViewModel(int id) {
-            LoadData(id);
-        }
 
+        public BasePersonalDataViewModel() { }
 
-        protected PersonData _personData = null;
-        protected async void LoadData(int? id = null) {
-            var loader = new PersonDataLoader(id.HasValue ? id.Value.ToString() : Settings.PersonalDataGet);
-
-            try {
-                _personData = await loader.GetPersonData();
-            } catch (UnauthorizedAccessException) {
-                AuthHelper.Relogin();
-                return;
-            }
-
-            if (_personData == null) {
-                App.ToastNotificator.Show("Ошибка загрузки текущих данных");
-            } else {
-                App.ToastNotificator.Show("Данные с сервера получены");
-                this.ResetCommand.Execute(null);
-            }
-
-        }
-
+        protected abstract PersonData PersonData { get; set; }
 
         private string _firstName;
         public string FirstName {
@@ -121,12 +96,12 @@ namespace Libmemo {
             get => new Command(Reset);
         }
         protected virtual void Reset() {
-            this.FirstName = _personData?.FirstName;
-            this.SecondName = _personData?.SecondName;
-            this.LastName = _personData?.LastName;
-            this.DateBirth = _personData?.DateBirth;
+            this.FirstName = PersonData?.FirstName;
+            this.SecondName = PersonData?.SecondName;
+            this.LastName = PersonData?.LastName;
+            this.DateBirth = PersonData?.DateBirth;
 
-            this.PhotoSource = null;
+            this.PhotoSource = PersonData?.PhotoUri == null ? null : new UriImageSource() { CachingEnabled = true, Uri = PersonData.PhotoUri };
         }
 
         public ICommand SendCommand {
@@ -135,14 +110,6 @@ namespace Libmemo {
         protected abstract void Send();
 
 
-
-        protected virtual bool IsSomethingChanged() {
-            return _personData?.FirstName != this.FirstName
-                || _personData?.SecondName != this.SecondName
-                || _personData?.LastName != this.LastName
-                || _personData?.DateBirth != this.DateBirth
-                || this.PhotoSource != null;
-        }
 
         protected virtual async Task AddParams(PersonDataLoader uploader) {
             if (!String.IsNullOrWhiteSpace(this.SecondName)) {
@@ -157,7 +124,7 @@ namespace Libmemo {
             if (this.DateBirth.HasValue) {
                 uploader.Params.Add("date_birth", this.DateBirth.Value.ToString("yyyy-MM-dd"));
             }
-            if (this.PhotoSource != null) {
+            if (this.PhotoSource != null && this.PhotoSource is FileImageSource) {
                 await uploader.SetFile(this.PhotoSource);
             }
         }

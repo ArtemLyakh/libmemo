@@ -10,10 +10,13 @@ using Newtonsoft.Json;
 namespace Libmemo {
     public class PersonDataLoader {
 
-        private readonly string url;
+        private readonly Uri uri;
 
         public PersonDataLoader(string url) {
-            this.url = url;
+            this.uri = new Uri(url);
+        }
+        public PersonDataLoader(Uri uri) {
+            this.uri = uri;
         }
 
         private Dictionary<string, string> _params = new Dictionary<string, string>();
@@ -40,7 +43,7 @@ namespace Libmemo {
                         content.Add(new ByteArrayContent(this._fileData), "photo", "photo.jpg");
                     }
 
-                    using (var message = await client.PostAsync(url, content)) {
+                    using (var message = await client.PostAsync(uri, content)) {
                         if (message.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
                             throw new UnauthorizedAccessException();
                         }
@@ -62,7 +65,8 @@ namespace Libmemo {
             try {
                 using (var handler = new HttpClientHandler { CookieContainer = Settings.AuthCookies })
                 using (var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(5) })
-                using (var responce = await client.GetAsync(url)) {
+                using (var responce = await client.GetAsync(uri)) {
+
                     if (responce.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
                         throw new UnauthorizedAccessException();
                     }
@@ -74,7 +78,8 @@ namespace Libmemo {
                         FirstName = !string.IsNullOrWhiteSpace(data.firstName) ? data.firstName : null,
                         SecondName = !string.IsNullOrWhiteSpace(data.secondName) ? data.secondName : null,
                         LastName = !string.IsNullOrWhiteSpace(data.lastName) ? data.lastName : null,
-                        DateBirth = (DateTime.TryParse(data.dateBirth, out DateTime dateBirth)) ? (DateTime?)dateBirth : null
+                        DateBirth = (DateTime.TryParse(data.dateBirth, out DateTime dateBirth)) ? (DateTime?)dateBirth : null,
+                        PhotoUri = (Uri.TryCreate(data.photo, UriKind.Absolute, out Uri photoUri)) ? photoUri : null
                     };
                 }
 
@@ -94,12 +99,14 @@ namespace Libmemo {
         public string SecondName { get; set; }
         public string LastName { get; set; }
         public DateTime? DateBirth { get; set; }
+        public Uri PhotoUri { get; set; }
     }
     public class PersonDataJson {
         public string firstName { get; set; }
         public string secondName { get; set; }
         public string lastName { get; set; }
         public string dateBirth { get; set; }
+        public string photo { get; set; }
     }
 
 }

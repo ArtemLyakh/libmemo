@@ -110,6 +110,12 @@ namespace Libmemo {
                         Text = "Админ",
                         Page = typeof(RegisterAdminPage)
                     };
+                    yield return new MenuItem {
+                        Id = MenuItemId.UserDataAdmin,
+                        Title = "Редактировать данные",
+                        Text = "Редактировать данные пользователей",
+                        Page = typeof(PersonalDataPageAdmin)
+                    };
                 } else {
                     yield return new MenuItem {
                         Id = MenuItemId.Add,
@@ -117,14 +123,15 @@ namespace Libmemo {
                         Text = "добавить",
                         Page = typeof(AddPage)
                     };
+                    yield return new MenuItem {
+                        Id = MenuItemId.UserData,
+                        Title = "Редактировать данные",
+                        Text = "Редактирование персональных данных",
+                        Page = typeof(PersonalDataPage)
+                    };
                 }
 
-                yield return new MenuItem {
-                    Id = MenuItemId.Edit,
-                    Title = "Редактировать данные",
-                    Text = "Редактирование персональных данных",
-                    Page = typeof(PersonalDataPage)
-                };
+
                 yield return new MenuItem {
                     Id = MenuItemId.Exit,
                     Title = "Выйти",
@@ -155,6 +162,6 @@ namespace Libmemo {
     }
 
     public enum MenuItemId {
-        Map, ReloadDatabase, Add, AddAdmin, Edit, Exit, Login, Register, RegisterAdmin
+        Map, ReloadDatabase, Add, AddAdmin, UserData, UserDataAdmin, Exit, Login, Register, RegisterAdmin
     }
 }
