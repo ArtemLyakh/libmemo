@@ -117,7 +117,7 @@ namespace Libmemo {
                     };
                     yield return new MenuItem {
                         Title = "Древо",
-                        Text = "Редактирование генеологического древа",
+                        Text = "Редактирование генеалогического древа",
                         Action = () => App.GlobalPage.PushRoot(new TreePage())
                     };
                 }
