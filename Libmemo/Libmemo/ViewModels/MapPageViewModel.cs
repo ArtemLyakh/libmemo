@@ -100,7 +100,7 @@ namespace Libmemo {
             get => new Command<CustomPin>(async (CustomPin pin) => {
                 if (int.TryParse(pin.Id, out int id)) {
                     var page = new DetailPage(id);
-                    await App.CurrentNavPage.Navigation.PushAsync(page);
+                    await App.GlobalPage.Push(page);
                 }
             });
 
@@ -394,7 +394,7 @@ namespace Libmemo {
                 searchPage.SearchTextChanged += OnSearchChanged;
  
                 this.SelectedPin = null;
-                await App.CurrentNavPage.Navigation.PushAsync(searchPage);
+                await App.GlobalPage.Push(searchPage);
             });
 
         }

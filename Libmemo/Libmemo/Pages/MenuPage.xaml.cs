@@ -58,13 +58,6 @@ namespace Libmemo {
         }
 
 
-        public void ExecuteMenuItem(MenuItemId id) {
-            var item = MenuList.FirstOrDefault(i => i.Id.Equals(id))
-                ?? throw new ArgumentException($"Не найден пункт \"{id}\"");
-            App.GlobalPage.ExecuteMenuItem(item);
-        }
-
-
         public void SetMenuPage() {
 
             UserEmail = Settings.Email;
@@ -84,16 +77,16 @@ namespace Libmemo {
                 Id = MenuItemId.Map,
                 Title = "Карта",
                 Text = "карта",
-                Action = async () => { await App.GlobalPage.PopToRootPage(); }
+                Action = () => App.GlobalPage.PopToRootPage()
             };
             yield return new MenuItem {
                 Id = MenuItemId.ReloadDatabase,
                 Title = "Сбросить базу данных",
                 Text = "Полное обновление базы данных",
-                Action = () => {
+                Action = () => Task.Run(() => {
                     App.ToastNotificator.Show("Скачивание данных");
                     App.Database.Load(true);
-                }
+                })
             };
 
             if (AuthHelper.IsLogged) {
@@ -102,32 +95,32 @@ namespace Libmemo {
                         Id = MenuItemId.AddAdmin,
                         Title = "Добавить/админ",
                         Text = "админ",
-                        Action = async () => { await App.GlobalPage.PushRoot(new AddPageAdmin()); }
+                        Action = () => App.GlobalPage.PushRoot(new AddPageAdmin())
                     };
                     yield return new MenuItem {
                         Id = MenuItemId.RegisterAdmin,
                         Title = "Зарегистрировать пользователя",
                         Text = "Админ",
-                        Action = async () => { await App.GlobalPage.PushRoot(new RegisterAdminPage()); }
+                        Action = () => App.GlobalPage.PushRoot(new RegisterAdminPage())
                     };
                     yield return new MenuItem {
                         Id = MenuItemId.UserDataAdmin,
                         Title = "Редактировать данные",
                         Text = "Редактировать данные пользователей",
-                        Action = async () => { await App.GlobalPage.PushRoot(new PersonalDataPageAdmin()); }
+                        Action = () => App.GlobalPage.PushRoot(new PersonalDataPageAdmin())
                     };
                 } else {
                     yield return new MenuItem {
                         Id = MenuItemId.Add,
                         Title = "Добавить",
                         Text = "добавить",
-                        Action = async () => { await App.GlobalPage.PushRoot(new AddPage()); }
+                        Action = () => App.GlobalPage.PushRoot(new AddPage())
                     };
                     yield return new MenuItem {
                         Id = MenuItemId.UserData,
                         Title = "Редактировать данные",
                         Text = "Редактирование персональных данных",
-                        Action = async () => { await App.GlobalPage.PushRoot(new PersonalDataPage()); }
+                        Action = () => App.GlobalPage.PushRoot(new PersonalDataPage())
                     };
                 }
 
@@ -141,12 +134,12 @@ namespace Libmemo {
                 yield return new MenuItem {
                     Id = MenuItemId.Login,
                     Title = "Авторизация",
-                    Action = async () => { await App.GlobalPage.PushRoot(new LoginPage()); }
+                    Action = () => App.GlobalPage.PushRoot(new LoginPage())
                 };
                 yield return new MenuItem {
                     Id = MenuItemId.Register,
                     Title = "Регистрация",
-                    Action = async () => { await App.GlobalPage.PushRoot(new RegisterPage()); }
+                    Action = () => App.GlobalPage.PushRoot(new RegisterPage())
                 };
             }
 
@@ -157,7 +150,7 @@ namespace Libmemo {
         public MenuItemId Id { get; set; }
         public string Title { get; set; }
         public string Text { get; set; }
-        public Action Action { get; set; }
+        public Func<Task> Action { get; set; }
     }
 
     public enum MenuItemId {

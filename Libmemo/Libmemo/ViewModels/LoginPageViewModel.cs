@@ -71,7 +71,7 @@ namespace Libmemo {
 
                             AuthHelper.Login(Email, Password, JsonConvert.DeserializeObject<JsonMessage>(str).message, handler.CookieContainer);
 
-                            App.MenuPage.ExecuteMenuItem(MenuItemId.Map);
+                            await App.GlobalPage.PopToRootPage();
                         }
                     } catch {
                         App.ToastNotificator.Show("Ошибка авторизации");
@@ -81,11 +81,7 @@ namespace Libmemo {
         }
 
         public ICommand RegisterCommand {
-            get {
-                return new Command(() => {
-                    App.MenuPage.ExecuteMenuItem(MenuItemId.Register);
-                });
-            }
+            get => new Command(async () => await App.GlobalPage.PushRoot(new RegisterPage()));
         }
 
 

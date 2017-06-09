@@ -36,12 +36,12 @@ namespace Libmemo {
                 if (success) {
                     App.ToastNotificator.Show("Данные успешно отправлены");
                     App.Database.Load();
-                    App.MenuPage.ExecuteMenuItem(MenuItemId.Map);
+                    await App.GlobalPage.PopToRootPage();
                 } else {
                     Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка отправки данных", "ОК"));
                 }
             } catch (UnauthorizedAccessException) {
-                AuthHelper.Relogin();
+                await AuthHelper.ReloginAsync();
             }
         }  
 

@@ -46,16 +46,13 @@ namespace Libmemo {
             (Application.Current.MainPage as MainPage).IsPresented = true;
         }
 
-        public static NavigationPage CurrentNavPage {
-            get { return (NavigationPage)((MasterDetailPage)Application.Current.MainPage).Detail; }
+        public static void InitMenu() {
+            ((Application.Current.MainPage as MainPage).Master as MenuPage).SetMenuPage();
         }
-        public static MenuPage MenuPage {
-            get { return (MenuPage)((MasterDetailPage)Application.Current.MainPage).Master; }
-        }
+
         public static MainPage GlobalPage {
             get { return (MainPage)Application.Current.MainPage; }
         }
-
 
         #endregion
 

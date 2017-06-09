@@ -15,11 +15,7 @@ namespace Libmemo {
     public class RegisterPageViewModel : BaseRegisterViewModel {
 
         public ICommand LoginCommand {
-            get {
-                return new Command(() => {
-                    App.MenuPage.ExecuteMenuItem(MenuItemId.Login);
-                });
-            }
+            get => new Command(async () => await App.GlobalPage.PushRoot(new LoginPage()));
         }
 
         public ICommand RegisterCommand {
@@ -53,7 +49,7 @@ namespace Libmemo {
                         AuthHelper.Login(this.Email, this.Password, JsonConvert.DeserializeObject<JsonMessage>(str).message, handler.CookieContainer);
 
                         App.ToastNotificator.Show("Регистрация успешно завершена");
-                        App.MenuPage.ExecuteMenuItem(MenuItemId.UserData);
+                        await App.GlobalPage.PushRoot(new PersonalDataPage());
                     }
                 } catch {
                     App.ToastNotificator.Show("Ошибка регистрации");

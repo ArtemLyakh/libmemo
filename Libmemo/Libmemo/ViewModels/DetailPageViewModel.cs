@@ -101,7 +101,7 @@ namespace Libmemo {
                 } else {
                     page = new EditPersonPage(id);
                 }
-                await App.CurrentNavPage.Navigation.PushAsync(page);
+                await App.GlobalPage.Push(page);
             });
         }
 

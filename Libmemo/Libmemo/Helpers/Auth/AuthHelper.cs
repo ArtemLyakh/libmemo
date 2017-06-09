@@ -16,7 +16,7 @@ namespace Libmemo {
             Settings.Email = email;
             Settings.Password = password;
 
-            App.MenuPage.SetMenuPage();
+            App.InitMenu();
 
             App.ToastNotificator.Show($"Добро пожаловать, {email}");
         }
@@ -25,20 +25,20 @@ namespace Libmemo {
             Settings.CurrentUser = default(int);
             Settings.AuthCookies = null;
 
-            App.MenuPage.SetMenuPage();
+            App.InitMenu();
         }
 
-        public static void Logout() {
+        public static async Task Logout() {
             InnerLogout();
 
             //принудительный сброс страницы
-            App.MenuPage.ExecuteMenuItem(MenuItemId.Map);
+            await App.GlobalPage.PopToRootPage();
         }
 
-        public static void Relogin() {
+        public static async Task ReloginAsync() {
             InnerLogout();
 
-            App.MenuPage.ExecuteMenuItem(MenuItemId.Login);
+            await App.GlobalPage.PushRoot(new LoginPage());
         }
 
         public static bool IsLogged { get => Settings.CurrentUser != default(int); }

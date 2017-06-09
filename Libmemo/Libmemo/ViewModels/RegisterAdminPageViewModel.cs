@@ -17,13 +17,13 @@ namespace Libmemo {
         public ICommand RegisterCommand {
             get => new Command(async () => {
 
-                var errors = this.Validate();
-                if (errors.Count() > 0) {
-                    App.ToastNotificator.Show(string.Join("\n", errors));
-                    return;
-                }
+            var errors = this.Validate();
+            if (errors.Count() > 0) {
+                App.ToastNotificator.Show(string.Join("\n", errors));
+                return;
+            }
 
-                try {
+            try {
                     using (var handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
                     using (var request = new HttpRequestMessage(HttpMethod.Post, Settings.RegisterUrl) {
                         Content = new FormUrlEncodedContent(new Dictionary<string, string> {
@@ -44,8 +44,9 @@ namespace Libmemo {
 
                         App.ToastNotificator.Show("Регистрация успешно завершена");
 
-                        //TODO добавить переход на редактирование пользователя от админа
-                        App.MenuPage.ExecuteMenuItem(MenuItemId.Map);
+                        //TODO переход на страницу редактирования данных пользователя
+                        await App.GlobalPage.PopToRootPage();
+                        //await App.GlobalPage.PushRoot(new PersonalDataPageAdmin(id));
                     }
                 } catch {
                     App.ToastNotificator.Show("Ошибка регистрации");

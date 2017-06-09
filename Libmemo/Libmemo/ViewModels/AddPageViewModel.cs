@@ -38,7 +38,7 @@ namespace Libmemo {
                     Device.BeginInvokeOnMainThread(() => App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка отправки данных", "ОК"));
                 }
             } catch (UnauthorizedAccessException) {
-                AuthHelper.Relogin();
+                await AuthHelper.ReloginAsync();
             }
         }
 

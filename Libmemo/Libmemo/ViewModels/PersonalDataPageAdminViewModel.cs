@@ -36,9 +36,9 @@ namespace Libmemo {
                 searchPage.ItemSelected += async (sender, id) => {
                     this.User = await App.Database.GetById<User>(id);
                     LoadData(this.User.Owner);
-                };                 
+                };
 
-                await App.CurrentNavPage.Navigation.PushAsync(searchPage);
+                await App.GlobalPage.Push(searchPage);
             });
         }
 
@@ -55,7 +55,7 @@ namespace Libmemo {
             try {
                 PersonData = await loader.GetPersonData();
             } catch (UnauthorizedAccessException) {
-                AuthHelper.Relogin();
+                await AuthHelper.ReloginAsync();
                 return;
             }
 
@@ -100,7 +100,7 @@ namespace Libmemo {
                     Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка отправки данных", "ОК"));
                 }
             } catch (UnauthorizedAccessException) {
-                AuthHelper.Relogin();
+                await AuthHelper.ReloginAsync();
             }
         }
     }

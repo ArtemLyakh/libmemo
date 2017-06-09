@@ -32,30 +32,15 @@ namespace Libmemo {
 
 
 
-        private void OnMenuItemSelected(object sender, SelectedItemChangedEventArgs e) {
+        private async void OnMenuItemSelected(object sender, SelectedItemChangedEventArgs e) {
             var item = e.SelectedItem as MenuItem;
             if (item != null) {
                 this.menuPage.ListView.SelectedItem = null;
+
+                await item.Action?.Invoke();
                 IsPresented = false;
-
-                if (item.Action != null) {
-                    item.Action.Invoke();
-                }
-
-                //if (item.Page != null) {
-                //    Detail = new NavigationPage((Page)Activator.CreateInstance(item.Page));
-                //}
             }
         }
-
-        public void ExecuteMenuItem(MenuItem item) {
-            this.OnMenuItemSelected(null, new SelectedItemChangedEventArgs(item));
-        }
-
-
-
-
-
 
 
 
