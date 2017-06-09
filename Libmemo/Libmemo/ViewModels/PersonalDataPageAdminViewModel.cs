@@ -17,12 +17,12 @@ namespace Libmemo {
 
         protected override PersonData PersonData { get; set; } = null;
 
-        private User _owner;
+        private User _user;
         public User User {
-            get => _owner;
+            get => _user;
             set {
-                if (_owner != value) {
-                    _owner = value;
+                if (_user != value) {
+                    _user = value;
                     this.OnPropertyChanged(nameof(User));
                     this.OnPropertyChanged(nameof(OwnerText));
                 }
@@ -44,10 +44,32 @@ namespace Libmemo {
 
 
 
-
-
+        private int _dbId = default(int);
+        private async void LoadSuccess() {
+            App.Database.LoadSuccess -= LoadSuccess;
+            App.Database.LoadFail -= LoadFail;
+            this.User = (await App.Database.GetItems<User>()).Where(i => i.Owner == _dbId).FirstOrDefault();         
+        }
+        private async void LoadFail() {
+            App.Database.LoadSuccess -= LoadSuccess;
+            App.Database.LoadFail -= LoadFail;
+            Device.BeginInvokeOnMainThread(() => App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка синхронизации", "ОК"));
+            await App.GlobalPage.PopToRootPage();
+        }
 
         protected async void LoadData(int id) {
+            var user = (await App.Database.GetItems<User>()).Where(i => i.Owner == id).FirstOrDefault();
+            if (user != null) {
+                this.User = user;
+            } else {
+                _dbId = id;
+                App.Database.LoadSuccess += LoadSuccess;
+                App.Database.LoadFail += LoadFail;
+                App.Database.Load();
+            }
+
+
+
             var uri = new UriBuilder(Settings.PersonalDataUrlAdmin) { Query = $"id={id}" }.Uri;
 
             var loader = new PersonDataLoader(uri);

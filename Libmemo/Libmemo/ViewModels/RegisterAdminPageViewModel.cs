@@ -45,8 +45,9 @@ namespace Libmemo {
                         App.ToastNotificator.Show("Регистрация успешно завершена");
 
                         //TODO переход на страницу редактирования данных пользователя
-                        await App.GlobalPage.PopToRootPage();
-                        //await App.GlobalPage.PushRoot(new PersonalDataPageAdmin(id));
+
+                        var id = int.Parse(JsonConvert.DeserializeObject<JsonMessage>(str).message);
+                        await App.GlobalPage.PushRoot(new PersonalDataPageAdmin(id));
                     }
                 } catch {
                     App.ToastNotificator.Show("Ошибка регистрации");

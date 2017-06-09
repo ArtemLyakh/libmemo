@@ -36,7 +36,7 @@
                      HorizontalOptions="CenterAndExpand"
                      Spacing="10"
                      >
-                <Button Text="Зарегистрироваться" Command="{Binding RegisterCommand}" />
+                <Button Text="Зарегистрировать" Command="{Binding RegisterCommand}" />
             </StackLayout>
         </StackLayout>
     </ScrollView>
