@@ -74,13 +74,11 @@ namespace Libmemo {
 
         private static IEnumerable<MenuItem> GetMenuList() {
             yield return new MenuItem {
-                Id = MenuItemId.Map,
                 Title = "Карта",
                 Text = "карта",
                 Action = () => App.GlobalPage.PopToRootPage()
             };
             yield return new MenuItem {
-                Id = MenuItemId.ReloadDatabase,
                 Title = "Сбросить базу данных",
                 Text = "Полное обновление базы данных",
                 Action = () => Task.Run(() => {
@@ -92,52 +90,49 @@ namespace Libmemo {
             if (AuthHelper.IsLogged) {
                 if (AuthHelper.IsAdmin) {
                     yield return new MenuItem {
-                        Id = MenuItemId.AddAdmin,
                         Title = "Добавить/админ",
                         Text = "админ",
                         Action = () => App.GlobalPage.PushRoot(new AddPageAdmin())
                     };
                     yield return new MenuItem {
-                        Id = MenuItemId.RegisterAdmin,
                         Title = "Зарегистрировать пользователя",
                         Text = "Админ",
                         Action = () => App.GlobalPage.PushRoot(new RegisterAdminPage())
                     };
                     yield return new MenuItem {
-                        Id = MenuItemId.UserDataAdmin,
                         Title = "Редактировать данные",
                         Text = "Редактировать данные пользователей",
                         Action = () => App.GlobalPage.PushRoot(new PersonalDataPageAdmin())
                     };
                 } else {
                     yield return new MenuItem {
-                        Id = MenuItemId.Add,
                         Title = "Добавить",
                         Text = "добавить",
                         Action = () => App.GlobalPage.PushRoot(new AddPage())
                     };
                     yield return new MenuItem {
-                        Id = MenuItemId.UserData,
                         Title = "Редактировать данные",
                         Text = "Редактирование персональных данных",
                         Action = () => App.GlobalPage.PushRoot(new PersonalDataPage())
+                    };
+                    yield return new MenuItem {
+                        Title = "Древо",
+                        Text = "Редактирование генеологического древа",
+                        Action = () => App.GlobalPage.PushRoot(new TreePage())
                     };
                 }
 
 
                 yield return new MenuItem {
-                    Id = MenuItemId.Exit,
                     Title = "Выйти",
                     Action = () => AuthHelper.Logout()
                 };
             } else {
                 yield return new MenuItem {
-                    Id = MenuItemId.Login,
                     Title = "Авторизация",
                     Action = () => App.GlobalPage.PushRoot(new LoginPage())
                 };
                 yield return new MenuItem {
-                    Id = MenuItemId.Register,
                     Title = "Регистрация",
                     Action = () => App.GlobalPage.PushRoot(new RegisterPage())
                 };
@@ -147,13 +142,9 @@ namespace Libmemo {
     }
 
     public class MenuItem {
-        public MenuItemId Id { get; set; }
         public string Title { get; set; }
         public string Text { get; set; }
         public Func<Task> Action { get; set; }
     }
 
-    public enum MenuItemId {
-        Map, ReloadDatabase, Add, AddAdmin, UserData, UserDataAdmin, Exit, Login, Register, RegisterAdmin
-    }
 }
