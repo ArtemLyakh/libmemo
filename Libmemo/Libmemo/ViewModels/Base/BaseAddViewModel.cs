@@ -1,9 +1,12 @@
 ﻿using Plugin.Media;
 using Plugin.Media.Abstractions;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -166,6 +169,61 @@ namespace Libmemo {
         public string Longitude {
             get { return this.UserPosition?.Longitude.ToString() ?? char.ConvertFromUtf32(0x2014); }
         }
+
+
+        private double? _height;
+        public double? Height {
+            get { return _height; }
+            set {
+                if (_height != value) {
+                    _height = value;
+                    this.OnPropertyChanged(nameof(Height));
+                }
+            }
+        }
+        private double? _width;
+        public double? Width {
+            get { return _width; }
+            set {
+                if (_width != value) {
+                    _width = value;
+                    this.OnPropertyChanged(nameof(Width));
+                }
+            }
+        }
+
+
+
+
+        public ICommand SelectSchemeCommand {
+            get => new Command(async () => {
+                var storage = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
+                if (storage != PermissionStatus.Granted) {
+                    var results = await CrossPermissions.Current.RequestPermissionsAsync(new[] { Permission.Storage });
+                    var status = results[Permission.Storage];
+                    if (status != PermissionStatus.Granted) {
+                        Device.BeginInvokeOnMainThread(async () =>
+                            await App.Current.MainPage.DisplayAlert("Ошибка", "Необходимо разрешение для чтения файла", "Ок"));
+                    }
+                }
+
+                try {
+                    var file = await Plugin.FilePicker.CrossFilePicker.Current.PickFile();
+                    var path = file.FilePath;
+
+                    var stram = DependencyService.Get<IFileStreamPicker>().GetStream(path);
+                    var q = 1;
+                } catch (Exception e) {
+                    Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Ошибка", "Возникла ошибка при выборе файла", "Ок"));
+                }
+
+            });
+        }
+
+
+
+
+
 
 
 
