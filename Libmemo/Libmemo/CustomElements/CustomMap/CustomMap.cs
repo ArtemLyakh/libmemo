@@ -287,6 +287,18 @@ namespace Libmemo {
             false);
         #endregion
 
+        #region CustomMapType
+        public MapType CustomMapType {
+            get { return (MapType)this.GetValue(CustomMapTypeProperty); }
+            set { this.SetValue(CustomMapTypeProperty, value); }
+        }
+        public static readonly BindableProperty CustomMapTypeProperty = BindableProperty.Create(
+            nameof(CustomMapType),
+            typeof(MapType),
+            typeof(CustomMap),
+            MapType.Street);
+        #endregion
+
         #endregion
 
         #region Commands

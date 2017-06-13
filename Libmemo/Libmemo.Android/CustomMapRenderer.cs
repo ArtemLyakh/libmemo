@@ -591,6 +591,20 @@ namespace Libmemo.Droid {
             } else if (e.PropertyName == CustomMap.MyLocationEnabledProperty.PropertyName) {
                 this._myLocationEnabled = ((CustomMap)sender).MyLocationEnabled;
                 _googleMap.MyLocationEnabled = this._myLocationEnabled;
+            } else if (e.PropertyName == CustomMap.CustomMapTypeProperty.PropertyName) {
+                this._mapType = ((CustomMap)sender).CustomMapType;
+                switch (this._mapType) {
+                    case MapType.Street:
+                    default:
+                        _googleMap.MapType = GoogleMap.MapTypeNormal;
+                        break;
+                    case MapType.Satellite:
+                        _googleMap.MapType = GoogleMap.MapTypeSatellite;
+                        break;
+                    case MapType.Hybrid:
+                        _googleMap.MapType = GoogleMap.MapTypeHybrid;
+                        break;
+                }
             }
 
         }

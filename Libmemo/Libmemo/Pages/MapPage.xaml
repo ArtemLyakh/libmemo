@@ -67,7 +67,7 @@
                      >
             <RelativeLayout VerticalOptions="Fill" HorizontalOptions="Fill">
                 <local:CustomMap x:Name="mainMap"
-                                 MapType="Street"
+                                 CustomMapType="{Binding MapType}"
                                  RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent ,Property=Width,Factor=1,Constant=0}"
                                  RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent ,Property=Height,Factor=1,Constant=0}"
                         
@@ -193,6 +193,41 @@
                             Command="{Binding DeleteRouteCommand}"
                             />
                     </StackLayout>
+                </StackLayout>
+
+                <StackLayout x:Name="leftStackLayout"
+                             Orientation="Vertical"
+                             VerticalOptions="FillAndExpand"
+                             HorizontalOptions="FillAndExpand" 
+                             Spacing="0"
+                             
+                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0, Constant=50}"
+                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
+                             RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0,Constant=0}"
+                             RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"
+                             >
+
+                    <StackLayout x:Name="mapTypeGroup"
+                                 VerticalOptions="EndAndExpand"
+                                 HorizontalOptions="FillAndExpand"
+                                 Spacing="0"
+                                 >
+                        <Button x:Name="streetTypeButton"
+                            Text="Street"
+                            FontSize="Large"
+                            WidthRequest="50"
+                            HeightRequest="50"
+                            Command="{Binding StreetMapCommand}"
+                            />
+                        <Button x:Name="spaceTypeButton"
+                            Text="Space"
+                            FontSize="Large"
+                            WidthRequest="50"
+                            HeightRequest="50"
+                            Command="{Binding SpaceMapCommand}"
+                            />
+                    </StackLayout>
+
                 </StackLayout>
 
             </RelativeLayout>

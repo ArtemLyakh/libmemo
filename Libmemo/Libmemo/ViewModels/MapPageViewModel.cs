@@ -532,6 +532,33 @@ namespace Libmemo {
 
         #endregion
 
+
+
+
+
+        private MapType _mapType = MapType.Street;
+        public MapType MapType {
+            get => this._mapType;
+            set {
+                if (this._mapType != value) {
+                    this._mapType = value;
+                    this.OnPropertyChanged(nameof(MapType));
+                }
+            }
+        }
+
+        public ICommand SpaceMapCommand {
+            get => new Command(() => {
+                this.MapType = MapType.Hybrid;
+            });
+        }
+
+        public ICommand StreetMapCommand {
+            get => new Command(() => {
+                this.MapType = MapType.Street;
+            });
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         void OnPropertyChanged(string propertyName = "") =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
