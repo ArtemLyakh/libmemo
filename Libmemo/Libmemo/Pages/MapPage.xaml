@@ -207,6 +207,29 @@
                              RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"
                              >
 
+                    <StackLayout x:Name="showHidePinsGroup"
+                                 VerticalOptions="StartAndExpand"
+                                 HorizontalOptions="FillAndExpand"
+                                 Spacing="0"
+                                 >
+                        <Button x:Name="showPinsButton"
+                            Text="Show"
+                            FontSize="Large"
+                            WidthRequest="50"
+                            HeightRequest="50"
+                            IsVisible="{Binding IsShowOnlySelected}"
+                            Command="{Binding ShowPinsCommand}"
+                            />
+                        <Button x:Name="hidePinsButton"
+                            Text="Hide"
+                            FontSize="Large"
+                            WidthRequest="50"
+                            HeightRequest="50"
+                            IsVisible="{Binding IsShowHideAnotherButton}"
+                            Command="{Binding HidePinsCommand}"
+                            />
+                    </StackLayout>
+
                     <StackLayout x:Name="mapTypeGroup"
                                  VerticalOptions="EndAndExpand"
                                  HorizontalOptions="FillAndExpand"

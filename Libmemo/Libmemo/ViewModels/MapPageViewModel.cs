@@ -76,7 +76,8 @@ namespace Libmemo {
             set {
                 if (_selectedPin != value) {
                     _selectedPin = value;
-                    this.OnPropertyChanged(nameof(SelectedPin));
+                    OnPropertyChanged(nameof(SelectedPin));
+                    OnPropertyChanged(nameof(IsShowHideAnotherButton));
                 }
             }
         }
@@ -419,6 +420,7 @@ namespace Libmemo {
             var pin = _customPins.FirstOrDefault(e => e.Id == id.ToString());
 
             if (pin != null) {
+                ShowAllPins();
                 this.SelectedPin = pin;
                 this.FollowUser = false;
                 MoveCameraToPosition(pin.Position);
@@ -558,6 +560,55 @@ namespace Libmemo {
                 this.MapType = MapType.Street;
             });
         }
+
+
+
+
+
+
+        private void HideAllPinsExcept(string id) {
+            IsShowOnlySelected = true;
+            foreach (var pin in CustomPins) {
+                if (pin.Id == id) pin.Visible = true;
+                else pin.Visible = false;
+            }
+        }
+        private void ShowAllPins() {
+            IsShowOnlySelected = false;
+            foreach (var pin in CustomPins) {
+                pin.Visible = true;
+            }
+        }
+
+        private bool _isShowOnlySelected = false;
+        public bool IsShowOnlySelected {
+            get => _isShowOnlySelected;
+            set {
+                if (_isShowOnlySelected != value) {
+                    _isShowOnlySelected = value;
+                    OnPropertyChanged(nameof(IsShowOnlySelected));
+                    OnPropertyChanged(nameof(IsShowHideAnotherButton));
+                }
+            }
+        }
+
+        public bool IsShowHideAnotherButton {
+            get => SelectedPin != null && !IsShowOnlySelected;
+        }
+
+        public ICommand HidePinsCommand {
+            get => new Command(() => {           
+                if (SelectedPin != null) HideAllPinsExcept(SelectedPin.Id);
+                else ShowAllPins();
+            });
+        }
+
+        public ICommand ShowPinsCommand {
+            get => new Command(() => {
+                ShowAllPins();
+            });
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         void OnPropertyChanged(string propertyName = "") =>
