@@ -20,7 +20,7 @@ namespace Libmemo {
         protected const double DEFAULT_LATITUDE = 47.23135;
         protected const double DEFAULT_LONGITUDE = 39.72328;
         protected const float DEFAULT_ZOOM = 18;
-
+        protected const long schedule_FILE_MAX_SIZE = 10;
 
         public BaseAddViewModel() {
             GetGPSPermission();
@@ -193,6 +193,21 @@ namespace Libmemo {
         }
 
 
+        protected Stream scheduleStream { get; set; }
+        private string _scheduleName;
+        public string scheduleName {
+            get => string.IsNullOrWhiteSpace(_scheduleName) ? "Не выбрано" : _scheduleName;
+            private set {
+                if (_scheduleName != value) {
+                    _scheduleName = value;
+                    OnPropertyChanged(nameof(scheduleName));
+                }
+            }
+        }
+        private void Setschedule(string name, Stream stream) {
+            scheduleName = name;
+            scheduleStream = stream;
+        }
 
 
         public ICommand SelectSchemeCommand {
@@ -204,17 +219,22 @@ namespace Libmemo {
                     if (status != PermissionStatus.Granted) {
                         Device.BeginInvokeOnMainThread(async () =>
                             await App.Current.MainPage.DisplayAlert("Ошибка", "Необходимо разрешение для чтения файла", "Ок"));
+                        return;
                     }
                 }
 
                 try {
                     var file = await Plugin.FilePicker.CrossFilePicker.Current.PickFile();
-                    var path = file.FilePath;
-
-                    var stram = DependencyService.Get<IFileStreamPicker>().GetStream(path);
-                    var q = 1;
-                } catch (Exception e) {
-                    Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Ошибка", "Возникла ошибка при выборе файла", "Ок"));
+                    var stream = DependencyService.Get<IFileStreamPicker>().GetStream(file.FilePath);
+                    if (stream.Length > schedule_FILE_MAX_SIZE * 1024 * 1024) {
+                        Device.BeginInvokeOnMainThread(async () =>
+                            await App.Current.MainPage.DisplayAlert("Ошибка", $"Размер файла не должен превышать {schedule_FILE_MAX_SIZE} МБ", "Ок"));
+                        return;
+                    }
+                    Setschedule(file.FileName, stream);
+                } catch {
+                    Device.BeginInvokeOnMainThread(async () => 
+                        await App.Current.MainPage.DisplayAlert("Ошибка", "Возникла ошибка при выборе файла", "Ок"));
                 }
 
             });
@@ -304,6 +324,17 @@ namespace Libmemo {
             }
             if (this.PhotoSource != null) {
                 await uploader.SetFile(this.PhotoSource);
+            }
+
+            if (this.Height.HasValue) {
+                uploader.Params.Add("height", this.Height.Value.ToString(CultureInfo.InvariantCulture));
+            }
+            if (this.Width.HasValue) {
+                uploader.Params.Add("width", this.Width.Value.ToString(CultureInfo.InvariantCulture));
+            }
+
+            if (this.scheduleStream != null) {
+                uploader.Files.Add("schedule", Tuple.Create(this.scheduleName, this.scheduleStream));
             }
         }
 

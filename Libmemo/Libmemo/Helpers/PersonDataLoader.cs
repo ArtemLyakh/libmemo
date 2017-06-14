@@ -24,6 +24,11 @@ namespace Libmemo {
             get { return _params; }
         }
 
+        private Dictionary<string, Tuple<string, Stream>> _files = new Dictionary<string, Tuple<string, Stream>>();
+        public Dictionary<string, Tuple<string, Stream>> Files {
+            get => _files;
+        }
+
         private byte[] _fileData = null;
         public async Task SetFile(ImageSource source) {
             this._fileData = await DependencyService.Get<IImageFileToByteArrayConverter>().Get(source);
@@ -37,6 +42,10 @@ namespace Libmemo {
                 using (var content = new MultipartFormDataContent(String.Format("----------{0:N}", Guid.NewGuid()))) {
                     foreach (var item in this.Params) {
                         content.Add(new StringContent(item.Value), item.Key);
+                    }
+
+                    foreach (var item in Files) {
+                        content.Add(new StreamContent(item.Value.Item2), item.Key, item.Value.Item1);
                     }
 
                     if (this._fileData != null) {
