@@ -1,10 +1,13 @@
 ﻿using Plugin.Media;
 using Plugin.Media.Abstractions;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,6 +45,8 @@ namespace Libmemo {
             DateBirth = person.DateBirth;
             DateDeath = person.DateDeath;
             Text = person.Text;
+            Height = person.Height;
+            Width = person.Width;
             if (Uri.TryCreate(person.ImageUrl, UriKind.Absolute, out Uri imageUrl))
                 PhotoSource = new UriImageSource() { CachingEnabled = true, Uri = imageUrl };
 
@@ -307,6 +312,91 @@ namespace Libmemo {
         protected abstract void Send();
 
 
+
+
+        private double? _height;
+        public double? Height {
+            get { return _height; }
+            set {
+                if (_height != value) {
+                    _height = value;
+                    this.OnPropertyChanged(nameof(Height));
+                }
+            }
+        }
+        private double? _width;
+        public double? Width {
+            get { return _width; }
+            set {
+                if (_width != value) {
+                    _width = value;
+                    this.OnPropertyChanged(nameof(Width));
+                }
+            }
+        }
+
+
+        protected Stream SchemeStream { get; set; }
+        private string _schemeName;
+        public string SchemeName {
+            get => string.IsNullOrWhiteSpace(_schemeName) ? "Не выбрано" : _schemeName;
+            private set {
+                if (_schemeName != value) {
+                    _schemeName = value;
+                    OnPropertyChanged(nameof(SchemeName));
+                }
+            }
+        }
+        private void SetScheme(string name, Stream stream) {
+            SchemeName = name;
+            SchemeStream = stream;
+        }
+        private void ResetScheme() {
+            SchemeName = null;
+
+            SchemeStream?.Dispose();
+            SchemeStream = null;
+        }
+        protected const long SCHEME_FILE_MAX_SIZE = 2;
+        public ICommand SelectSchemeCommand {
+            get => new Command(async () => {
+                var storage = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Storage);
+                if (storage != PermissionStatus.Granted) {
+                    var results = await CrossPermissions.Current.RequestPermissionsAsync(new[] { Permission.Storage });
+                    var status = results[Permission.Storage];
+                    if (status != PermissionStatus.Granted) {
+                        Device.BeginInvokeOnMainThread(async () =>
+                            await App.Current.MainPage.DisplayAlert("Ошибка", "Необходимо разрешение для чтения файла", "Ок"));
+                        return;
+                    }
+                }
+
+                try {
+                    var file = await Plugin.FilePicker.CrossFilePicker.Current.PickFile();
+                    SchemeStream?.Dispose();
+
+                    var stream = DependencyService.Get<IFileStreamPicker>().GetStream(file.FilePath);
+                    if (stream.Length > SCHEME_FILE_MAX_SIZE * 1024 * 1024) {
+                        Device.BeginInvokeOnMainThread(async () =>
+                            await App.Current.MainPage.DisplayAlert("Ошибка", $"Размер файла не должен превышать {SCHEME_FILE_MAX_SIZE} МБ ({stream.Length / 1024 / 1024} МБ)", "Ок"));
+                        return;
+                    }
+                    SetScheme(file.FileName, stream);
+                } catch {
+                    Device.BeginInvokeOnMainThread(async () =>
+                        await App.Current.MainPage.DisplayAlert("Ошибка", "Возникла ошибка при выборе файла", "Ок"));
+                }
+
+            });
+        }
+
+
+
+
+
+
+
+
         protected virtual IEnumerable<string> Validate() {
             if (String.IsNullOrWhiteSpace(this.FirstName)) yield return "Поле \"Имя\" не заполнено";
         }
@@ -338,6 +428,17 @@ namespace Libmemo {
             }
             if (this.PhotoSource != null && this.PhotoSource is FileImageSource) {
                 await uploader.SetFile(this.PhotoSource);
+            }
+
+            if (this.Height.HasValue) {
+                uploader.Params.Add("height", this.Height.Value.ToString(CultureInfo.InvariantCulture));
+            }
+            if (this.Width.HasValue) {
+                uploader.Params.Add("width", this.Width.Value.ToString(CultureInfo.InvariantCulture));
+            }
+
+            if (this.SchemeStream != null) {
+                uploader.Files.Add("scheme", Tuple.Create(this.SchemeName, this.SchemeStream));
             }
         }
 

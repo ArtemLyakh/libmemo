@@ -169,6 +169,43 @@
                         />
                 </StackLayout>
 
+                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10">
+                    <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
+                        <Label Text="Длина: "
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="Start"
+                           WidthRequest="{StaticResource titleWidth}"
+                           />
+                        <Entry Keyboard="Numeric"
+                           Text="{Binding Path=Height, Converter={StaticResource NullableDoubleConverter}}"
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="FillAndExpand"
+                           HorizontalTextAlignment="Center"
+                           />
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
+                        <Label Text="Ширина: "
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="Start"
+                           WidthRequest="{StaticResource titleWidth}"
+                           />
+                        <Entry Keyboard="Numeric"
+                           Text="{Binding Path=Width, Converter={StaticResource NullableDoubleConverter}}"
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="FillAndExpand"
+                           HorizontalTextAlignment="Center"
+                           />
+                    </StackLayout>
+                </StackLayout>
+
+                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10">
+                    <Label Text="Схема захоронения" HorizontalOptions="CenterAndExpand" FontSize="Large" />
+                    <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="FillAndExpand">
+                        <Button Text="Выбрать" Command="{Binding SelectSchemeCommand}" VerticalOptions="CenterAndExpand" HorizontalOptions="Start" />
+                        <Label Text="{Binding SchemeName}" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center" />
+                    </StackLayout>
+                </StackLayout>
+
             </StackLayout>
         </ScrollView>
     </StackLayout>

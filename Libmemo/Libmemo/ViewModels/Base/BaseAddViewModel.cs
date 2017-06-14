@@ -217,7 +217,7 @@ namespace Libmemo {
 
         public ICommand SelectSchemeCommand {
             get => new Command(async () => {
-                var storage = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
+                var storage = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Storage);
                 if (storage != PermissionStatus.Granted) {
                     var results = await CrossPermissions.Current.RequestPermissionsAsync(new[] { Permission.Storage });
                     var status = results[Permission.Storage];
