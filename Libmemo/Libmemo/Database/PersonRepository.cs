@@ -100,7 +100,11 @@ namespace Libmemo {
                 Longitude = double.Parse(i.longitude, NumberStyles.Any, CultureInfo.InvariantCulture),
                 Text = string.IsNullOrWhiteSpace(i.text) ? null : i.text.Trim(),
                 Icon = string.IsNullOrWhiteSpace(i.icon) ? null : i.icon,
-                ImageUrl = string.IsNullOrWhiteSpace(i.image_url) ? null : i.image_url
+                ImageUrl = i.image_url,
+
+                Height = double.TryParse(i.height, NumberStyles.Any, CultureInfo.InvariantCulture, out double height) ? (double?)height : null,
+                Width = double.TryParse(i.width, NumberStyles.Any, CultureInfo.InvariantCulture, out double width) ? (double?)width : null,
+                SchemeUrl = i.scheme_url
             })
         );
 

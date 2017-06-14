@@ -25,6 +25,9 @@ namespace Libmemo {
         public string Text { get; set; }
         public string Icon { get; set; }
         public string ImageUrl { get; set; }
+        public double? Height { get; set; }
+        public double? Width { get; set; }
+        public string SchemeUrl { get; set; }
     }
 
     [Table("Users")]

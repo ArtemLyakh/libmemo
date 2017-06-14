@@ -35,6 +35,9 @@ namespace Libmemo {
         public string icon { get; set; }
         public string image_url { get; set; }
         public string text { get; set; }
+        public string height { get; set; }
+        public string width { get; set; }
+        public string scheme_url { get; set; }
     }
 
     public class PersonJsonDelete {

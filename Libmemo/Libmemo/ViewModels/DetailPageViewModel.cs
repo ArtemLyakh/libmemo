@@ -11,6 +11,7 @@ namespace Libmemo {
     public class DetailPageViewModel : INotifyPropertyChanged {
 
         private int id;
+        
         public DetailPageViewModel(int id) {
             this.id = id;
         }
@@ -21,9 +22,8 @@ namespace Libmemo {
                 this.FIO = person.FIO;
                 this.LatLon = $"{person.Latitude.ToString(CultureInfo.InvariantCulture)}, {person.Longitude.ToString(CultureInfo.InvariantCulture)}";
 
-                if (!string.IsNullOrWhiteSpace(person.ImageUrl) && Uri.TryCreate(person.ImageUrl, UriKind.Absolute, out Uri uri)) {
-                    this.ImageUri = uri;
-                }
+                if (Uri.TryCreate(person.ImageUrl, UriKind.Absolute, out Uri imageUrl))
+                    this.ImageUri = imageUrl;
 
                 if (!string.IsNullOrWhiteSpace(person.Text)) {
                     this.Text = person.Text;
@@ -31,6 +31,29 @@ namespace Libmemo {
 
                 if (AuthHelper.IsAdmin || AuthHelper.CurrentUserId == person.Owner) {
                     CanEdit = true;
+                }
+
+                if (person.Height.HasValue) {
+                    this.IsHeightShow = true;
+                    this.Height = person.Height.Value.ToString(CultureInfo.InvariantCulture);
+                } else {
+                    this.IsHeightShow = false;
+                    this.Height = string.Empty;
+                }
+
+                if (person.Width.HasValue) {
+                    this.IsWidthShow = true;
+                    this.Width = person.Width.Value.ToString(CultureInfo.InvariantCulture);
+                } else {
+                    this.IsWidthShow = false;
+                    this.Width = string.Empty;
+                }
+
+                
+                if (Uri.TryCreate(person.SchemeUrl, UriKind.Absolute, out Uri schemeUrl)) {
+                    this.IsSchemeShow = true;
+                } else {
+                    this.IsSchemeShow = false;
                 }
             }
         }
@@ -106,7 +129,67 @@ namespace Libmemo {
         }
 
 
+        private bool _isHeightShow;
+        public bool IsHeightShow {
+            get { return this._isHeightShow; }
+            set {
+                if (this._isHeightShow != value) {
+                    this._isHeightShow = value;
+                    this.OnPropertyChanged(nameof(IsHeightShow));
+                }
+            }
+        }
+        private string _height;
+        public string Height {
+            get { return this._height; }
+            set {
+                if (this._height != value) {
+                    this._height = value;
+                    this.OnPropertyChanged(nameof(Height));
+                }
+            }
+        }
 
+        private bool _isWidthShow;
+        public bool IsWidthShow {
+            get { return this._isWidthShow; }
+            set {
+                if (this._isWidthShow != value) {
+                    this._isWidthShow = value;
+                    this.OnPropertyChanged(nameof(IsWidthShow));
+                }
+            }
+        }
+        private string _width;
+        public string Width {
+            get { return this._width; }
+            set {
+                if (this._width != value) {
+                    this._width = value;
+                    this.OnPropertyChanged(nameof(Width));
+                }
+            }
+        }
+
+        private bool _isSchemeShow;
+        public bool IsSchemeShow {
+            get { return this._isSchemeShow; }
+            set {
+                if (this._isSchemeShow != value) {
+                    this._isSchemeShow = value;
+                    this.OnPropertyChanged(nameof(IsSchemeShow));
+                }
+            }
+        }
+
+        public ICommand SchemeDownloadCommand {
+            get => new Command(async () => {
+                var person = await App.Database.GetById<Person>(id);
+                if (Uri.TryCreate(person.SchemeUrl, UriKind.Absolute, out Uri schemeUrl)) {
+                    Device.OpenUri(schemeUrl);
+                }
+            });
+        }
 
 
 

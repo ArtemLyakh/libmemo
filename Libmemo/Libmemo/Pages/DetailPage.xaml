@@ -24,6 +24,44 @@
             </Image>
             <Label Text="{Binding Text}" HorizontalOptions="FillAndExpand" LineBreakMode="WordWrap" />
 
+            <StackLayout Orientation="Horizontal" 
+                         HorizontalOptions="FillAndExpand"
+                         Spacing="10"
+                         IsVisible="{Binding IsHeightShow}"
+                         >
+                <Label Text="Длина:"
+                       HorizontalOptions="StartAndExpand"
+                       WidthRequest="100" />
+                <Label Text="{Binding Height}"
+                       HorizontalOptions="FillAndExpand" />
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" 
+                         HorizontalOptions="FillAndExpand"
+                         Spacing="10"
+                         IsVisible="{Binding IsWidthShow}"
+                         >
+                <Label Text="Ширина:"
+                       HorizontalOptions="StartAndExpand"
+                       WidthRequest="100" />
+                <Label Text="{Binding Width}"
+                       HorizontalOptions="FillAndExpand" />
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" 
+                         HorizontalOptions="FillAndExpand"
+                         Spacing="10"
+                         IsVisible="{Binding IsSchemeShow}"
+                         >
+                <Label Text="Схема захоронения:"
+                       HorizontalOptions="Start"
+                       VerticalOptions="CenterAndExpand"
+                       />
+                <Button Text="Скачать"
+                        Command="{Binding SchemeDownloadCommand}"
+                        HorizontalOptions="CenterAndExpand" />
+            </StackLayout>
+
         </StackLayout>
     </ScrollView>
 

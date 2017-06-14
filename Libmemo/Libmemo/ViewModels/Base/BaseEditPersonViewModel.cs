@@ -42,8 +42,8 @@ namespace Libmemo {
             DateBirth = person.DateBirth;
             DateDeath = person.DateDeath;
             Text = person.Text;
-            if (Uri.TryCreate(person.ImageUrl, UriKind.Absolute, out Uri imageUri))
-                PhotoSource = new UriImageSource() { CachingEnabled = true, Uri = imageUri };
+            if (Uri.TryCreate(person.ImageUrl, UriKind.Absolute, out Uri imageUrl))
+                PhotoSource = new UriImageSource() { CachingEnabled = true, Uri = imageUrl };
 
             PersonPosition = new Position(person.Latitude, person.Longitude);
         }
