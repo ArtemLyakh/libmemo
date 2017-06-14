@@ -20,7 +20,7 @@ namespace Libmemo {
         protected const double DEFAULT_LATITUDE = 47.23135;
         protected const double DEFAULT_LONGITUDE = 39.72328;
         protected const float DEFAULT_ZOOM = 18;
-        protected const long schedule_FILE_MAX_SIZE = 10;
+        protected const long SCHEME_FILE_MAX_SIZE = 2;
 
         public BaseAddViewModel() {
             GetGPSPermission();
@@ -193,22 +193,27 @@ namespace Libmemo {
         }
 
 
-        protected Stream scheduleStream { get; set; }
-        private string _scheduleName;
-        public string scheduleName {
-            get => string.IsNullOrWhiteSpace(_scheduleName) ? "Не выбрано" : _scheduleName;
+        protected Stream SchemeStream { get; set; }
+        private string _schemeName;
+        public string SchemeName {
+            get => string.IsNullOrWhiteSpace(_schemeName) ? "Не выбрано" : _schemeName;
             private set {
-                if (_scheduleName != value) {
-                    _scheduleName = value;
-                    OnPropertyChanged(nameof(scheduleName));
+                if (_schemeName != value) {
+                    _schemeName = value;
+                    OnPropertyChanged(nameof(SchemeName));
                 }
             }
         }
-        private void Setschedule(string name, Stream stream) {
-            scheduleName = name;
-            scheduleStream = stream;
+        private void SetScheme(string name, Stream stream) {
+            SchemeName = name;
+            SchemeStream = stream;
         }
+        private void ResetScheme() {
+            SchemeName = null;
 
+            SchemeStream?.Dispose();
+            SchemeStream = null;
+        }
 
         public ICommand SelectSchemeCommand {
             get => new Command(async () => {
@@ -225,13 +230,15 @@ namespace Libmemo {
 
                 try {
                     var file = await Plugin.FilePicker.CrossFilePicker.Current.PickFile();
+                    SchemeStream?.Dispose();
+
                     var stream = DependencyService.Get<IFileStreamPicker>().GetStream(file.FilePath);
-                    if (stream.Length > schedule_FILE_MAX_SIZE * 1024 * 1024) {
+                    if (stream.Length > SCHEME_FILE_MAX_SIZE * 1024 * 1024) {
                         Device.BeginInvokeOnMainThread(async () =>
-                            await App.Current.MainPage.DisplayAlert("Ошибка", $"Размер файла не должен превышать {schedule_FILE_MAX_SIZE} МБ", "Ок"));
+                            await App.Current.MainPage.DisplayAlert("Ошибка", $"Размер файла не должен превышать {SCHEME_FILE_MAX_SIZE} МБ ({stream.Length/1024/1024} МБ)", "Ок"));
                         return;
                     }
-                    Setschedule(file.FileName, stream);
+                    SetScheme(file.FileName, stream);
                 } catch {
                     Device.BeginInvokeOnMainThread(async () => 
                         await App.Current.MainPage.DisplayAlert("Ошибка", "Возникла ошибка при выборе файла", "Ок"));
@@ -287,6 +294,10 @@ namespace Libmemo {
 
             this.Text = null;
             this.PhotoSource = null;
+
+            this.Height = null;
+            this.Width = null;
+            ResetScheme();
         }
 
         public ICommand SendCommand {
@@ -324,6 +335,8 @@ namespace Libmemo {
             }
             if (this.PhotoSource != null) {
                 await uploader.SetFile(this.PhotoSource);
+                //var path = ((FileImageSource)PhotoSource).File;
+                //uploader.Files.Add("photo", Tuple.Create(Path.GetFileName(path), DependencyService.Get<IFileStreamPicker>().GetStream(path)));
             }
 
             if (this.Height.HasValue) {
@@ -333,8 +346,8 @@ namespace Libmemo {
                 uploader.Params.Add("width", this.Width.Value.ToString(CultureInfo.InvariantCulture));
             }
 
-            if (this.scheduleStream != null) {
-                uploader.Files.Add("schedule", Tuple.Create(this.scheduleName, this.scheduleStream));
+            if (this.SchemeStream != null) {
+                uploader.Files.Add("scheme", Tuple.Create(this.SchemeName, this.SchemeStream));
             }
         }
 

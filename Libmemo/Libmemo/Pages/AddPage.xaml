@@ -184,7 +184,7 @@
                     <Label Text="Схема захоронения" HorizontalOptions="CenterAndExpand" FontSize="Large" />
                     <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="FillAndExpand">
                         <Button Text="Выбрать" Command="{Binding SelectSchemeCommand}" VerticalOptions="CenterAndExpand" HorizontalOptions="Start" />
-                        <Label Text="{Binding scheduleName}" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center" />
+                        <Label Text="{Binding SchemeName}" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center" />
                     </StackLayout>
                 </StackLayout>
 
