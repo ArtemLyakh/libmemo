@@ -81,10 +81,10 @@ namespace Libmemo {
             yield return new MenuItem {
                 Title = "Сбросить базу данных",
                 Text = "Полное обновление базы данных",
-                Action = () => Task.Run(() => {
+                Action = () => Task.Run(() => Device.BeginInvokeOnMainThread(() => {
                     App.ToastNotificator.Show("Скачивание данных");
                     App.Database.Load(true);
-                })
+                }))                   
             };
 
             if (AuthHelper.IsLogged) {
