@@ -5,6 +5,7 @@ namespace Libmemo {
     public interface IDatabaseSavable {
         int Id { get; set; }
         string FIO { get; }
+        string Icon { get; }
     }
 
     [Table("Persons")]

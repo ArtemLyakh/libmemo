@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,46 +16,83 @@ namespace Libmemo {
             Init();
         }
 
-        private void Init() {
-            absolute.Children.Clear();
+        private IEnumerable<IDatabaseSavable> db;
+
+
+        private double x = 0;
+        private double y = 0;
+        private double z = 0;
+
+
+        private async void Init() {
+            db = Enumerable.Empty<IDatabaseSavable>()
+                    .Concat(await App.Database.GetItems<User>())
+                    .Concat(await App.Database.GetItems<Person>());
+
             absolute.WidthRequest = 1000;
             absolute.HeightRequest = 1000;
 
-            BoxView b1 = new BoxView {
-                BackgroundColor = Color.Red,
-                HeightRequest = 100,
-                WidthRequest = 200,
-            };
-            absolute.Children.Add(b1, new Point(10, 10));
 
-            BoxView b2 = new BoxView {
-                BackgroundColor = Color.Green,
-                HeightRequest = 100,
-                WidthRequest = 200
+            TreeItem user = new TreeItem(db.ElementAt(5)) {
+                Mother = new TreeItem(db.ElementAt(1)),
+                Father = new TreeItem(db.ElementAt(2))
             };
-            absolute.Children.Add(b2, new Point(50, 200));
 
-            BoxView b3 = new BoxView {
-                BackgroundColor = Color.Blue,
-                HeightRequest = 100,
-                WidthRequest = 200
+            
+
+            var item = GetElementView(user.Current);
+            absolute.Children.Add(item, new Point(200, 200));
+
+            var btn = GetAddNewButton(() => AddNewItem());
+            absolute.Children.Add(btn, new Point(400, 225));
+
+
+
+            var p1 = new Point(500, 500);
+            var p2 = new Point(600, 400);
+            absolute.Children.Add(new BoxView {
+                WidthRequest = 5,
+                HeightRequest = 5,
+                BackgroundColor = Color.Blue
+            }, p1);
+            absolute.Children.Add(new BoxView {
+                WidthRequest = 5,
+                HeightRequest = 5,
+                BackgroundColor = Color.Blue
+            }, p2);
+
+            var line = new BoxView {
+                WidthRequest = 50,
+                HeightRequest = 50,
+                BackgroundColor = Color.Green
             };
-            absolute.Children.Add(b3, new Point(100, 400));
+            absolute.Children.Add(line, new Point(500, 500));
 
-            absolute.Children.Add(GetButton(), new Point(250, 250));
+            //var line = GetLine(p1, p2);
+            //absolute.Children.Add(line.Item1, line.Item2);
+
+            new Task(() => {
+                while (true) {
+                    Task.WaitAll(new Task[] {
+                        line.RotateTo(line.Rotation + z, 500),
+                        line.RotateXTo(line.RotationX + x, 500),
+                        line.RotateYTo(line.RotationY + y, 500)
+                    });
+                }
+            }).Start();
+
+
+            var q = 1;
+        }
+
+        private void AddNewItem() {
+            var item = GetElementView(db.ElementAt(10));
+            absolute.Children.Add(item, new Point(400, 400));
         }
 
 
-        private View GetButton() {
-            var b = new Button();
-            b.Text = "text";
-            b.Clicked += B_Clicked;
-            return b;
-        }
 
-        private void B_Clicked(object sender, EventArgs e) {
-            throw new NotImplementedException();
-        }
+
 
         private void Search_Button_Clicked(object sender, EventArgs e) {
 
@@ -64,5 +102,123 @@ namespace Libmemo {
 
         }
         
+
+
+
+
+
+
+
+
+        private void DeleteItem(int id) {
+            var q = 1;
+        }
+
+
+
+
+
+
+
+        private View GetElementView(IDatabaseSavable person) {
+            var stack = new StackLayout {
+                HeightRequest = 150,
+                WidthRequest = 100,
+                BackgroundColor = Color.LightGray
+            };
+
+            var stackTop = new StackLayout {
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                Orientation = StackOrientation.Horizontal,
+                HeightRequest = 25,
+            };
+            var deleteButton = new Button {
+                Text = "x",
+                BackgroundColor = Color.Red,
+                TextColor = Color.White,
+                FontSize = Device.GetNamedSize(NamedSize.Default, typeof(Button)),
+                HorizontalOptions = LayoutOptions.EndAndExpand,
+                HeightRequest = 25,
+                WidthRequest = 25
+            };
+            deleteButton.Clicked += (object sender, EventArgs e) => DeleteItem(person.Id);
+            stackTop.Children.Add(deleteButton);
+            stack.Children.Add(stackTop);
+
+            var image = new Image {
+                HeightRequest = 75,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                Source = string.IsNullOrWhiteSpace(person.Icon) 
+                    ? ImageSource.FromResource("Libmemo.Tree.Images.no_photo.jpg") 
+                    : ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(person.Icon)))
+            };
+            stack.Children.Add(image);
+
+            var fio = new Label {
+                Text = person.FIO,
+                HeightRequest = 50,
+                FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)),
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                HorizontalTextAlignment = TextAlignment.Center,
+                VerticalTextAlignment = TextAlignment.Center,
+                LineBreakMode = LineBreakMode.WordWrap
+            };
+            stack.Children.Add(fio);
+
+            return stack;
+        }
+
+        private View GetAddNewButton(Action action) {
+            var button = new Image {
+                WidthRequest = 75,
+                HeightRequest = 75,
+                Source = ImageSource.FromResource("Libmemo.Tree.Images.add_button.jpg")
+            };
+            button.GestureRecognizers.Add(new TapGestureRecognizer() {
+                Command = new Command(() => action.Invoke())
+            });
+
+            //button.Clicked += (object sender, EventArgs e) => action.Invoke();
+
+            return button;
+        }
+
+        private Tuple<View, Point> GetLine(Point a, Point b) {
+            var length = Math.Pow(Math.Pow(a.Y - b.Y, 2) + Math.Pow(a.X - b.X, 2), 0.5);
+            var rot = Math.Atan((b.X - a.X) / (a.Y - b.Y)) * 180 / Math.PI;
+
+            return Tuple.Create(new BoxView {
+                HeightRequest = length,
+                WidthRequest = 5,
+                BackgroundColor = Color.Black,
+                Rotation = rot
+            } as View, new Point((a.X + b.X) / 2 - 5 / 2, (a.Y + b.Y) / 2 - length / 2));
+        }
+
+        private void Slider1_ValueChanged(object sender, ValueChangedEventArgs e) {
+            x = e.NewValue;
+        }
+
+        private void Slider2_ValueChanged(object sender, ValueChangedEventArgs e) {
+            y = e.NewValue;
+        }
+
+        private void Slider3_ValueChanged(object sender, ValueChangedEventArgs e) {
+            z = e.NewValue;
+        }
+    }
+
+
+
+
+    class TreeItem {
+        public TreeItem(IDatabaseSavable person) {
+            Current = person;
+        }
+
+        public IDatabaseSavable Current { get; private set; }
+        public TreeItem Mother { get; set; }
+        public TreeItem Father { get; set; }
+        public List<TreeItem> Siblings { get; set; }
     }
 }

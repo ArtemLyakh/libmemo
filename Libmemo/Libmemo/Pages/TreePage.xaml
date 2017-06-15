@@ -16,6 +16,11 @@
                     HorizontalOptions="FillAndExpand"
                     />
             </StackLayout>
+            <StackLayout>
+                <Slider Minimum="0" Maximum="100" Value="0" ValueChanged="Slider1_ValueChanged"/>
+                <Slider Minimum="0" Maximum="100" Value="0" ValueChanged="Slider2_ValueChanged"/>
+                <Slider Minimum="0" Maximum="100" Value="0" ValueChanged="Slider3_ValueChanged"/>
+            </StackLayout>
             <ScrollView x:Name="scroll" Orientation="Both">
                 <AbsoluteLayout x:Name="absolute" />
             </ScrollView>
