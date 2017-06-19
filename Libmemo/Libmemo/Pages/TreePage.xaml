@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Libmemo.TreePage"
+             xmlns:local="clr-namespace:Libmemo"
              NavigationPage.HasNavigationBar="False"
              >
     <ContentPage.Content>
@@ -17,13 +18,11 @@
                     />
             </StackLayout>
             <StackLayout>
-                <Slider Minimum="0" Maximum="100" Value="0" ValueChanged="Slider1_ValueChanged"/>
-                <Slider Minimum="0" Maximum="100" Value="0" ValueChanged="Slider2_ValueChanged"/>
-                <Slider Minimum="0" Maximum="100" Value="0" ValueChanged="Slider3_ValueChanged"/>
+                <Slider Minimum="0" Maximum="100" Value="100" ValueChanged="Slider1_ValueChanged"/>
             </StackLayout>
-            <ScrollView x:Name="scroll" Orientation="Both">
+            <local:CustomScrollView x:Name="scroll" Orientation="Both" MaximumZoom="1" MinimumZoom="0.05">
                 <AbsoluteLayout x:Name="absolute" />
-            </ScrollView>
+            </local:CustomScrollView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

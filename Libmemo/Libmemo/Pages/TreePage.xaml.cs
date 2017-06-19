@@ -13,77 +13,84 @@ namespace Libmemo {
     public partial class TreePage : ContentPage {
         public TreePage() {
             InitializeComponent();
-            Init();
+
+
+            int id = Settings.CurrentUser;
+            Init(id);
         }
+
 
         private IEnumerable<IDatabaseSavable> db;
 
+        private async void Init(int id) {
 
-        private double x = 0;
-        private double y = 0;
-        private double z = 0;
-
-
-        private async void Init() {
-            db = Enumerable.Empty<IDatabaseSavable>()
-                    .Concat(await App.Database.GetItems<User>())
-                    .Concat(await App.Database.GetItems<Person>());
-
-            absolute.WidthRequest = 1000;
-            absolute.HeightRequest = 1000;
+            try {
 
 
-            TreeItem user = new TreeItem(db.ElementAt(5)) {
-                Mother = new TreeItem(db.ElementAt(1)),
-                Father = new TreeItem(db.ElementAt(2))
-            };
 
+
+                var user = await App.Database.GetById<User>(id);
+               // if (user == null) throw new NullReferenceException();
+
+                var tree = new Tree(user);
+                await tree.Calculate();
+
+            } catch (Exception e) {
+                var q = 1;
+            }
             
 
-            var item = GetElementView(user.Current);
-            absolute.Children.Add(item, new Point(200, 200));
-
-            var btn = GetAddNewButton(() => AddNewItem());
-            absolute.Children.Add(btn, new Point(400, 225));
-
-
-
-            var p1 = new Point(500, 500);
-            var p2 = new Point(600, 400);
-            absolute.Children.Add(new BoxView {
-                WidthRequest = 5,
-                HeightRequest = 5,
-                BackgroundColor = Color.Blue
-            }, p1);
-            absolute.Children.Add(new BoxView {
-                WidthRequest = 5,
-                HeightRequest = 5,
-                BackgroundColor = Color.Blue
-            }, p2);
-
-            var line = new BoxView {
-                WidthRequest = 50,
-                HeightRequest = 50,
-                BackgroundColor = Color.Green
-            };
-            absolute.Children.Add(line, new Point(500, 500));
-
-            //var line = GetLine(p1, p2);
-            //absolute.Children.Add(line.Item1, line.Item2);
-
-            new Task(() => {
-                while (true) {
-                    Task.WaitAll(new Task[] {
-                        line.RotateTo(line.Rotation + z, 500),
-                        line.RotateXTo(line.RotationX + x, 500),
-                        line.RotateYTo(line.RotationY + y, 500)
-                    });
-                }
-            }).Start();
-
-
-            var q = 1;
+           
         }
+
+        //private async void Init() {
+
+
+
+        //    db = Enumerable.Empty<IDatabaseSavable>()
+        //            .Concat(await App.Database.GetItems<User>())
+        //            .Concat(await App.Database.GetItems<Person>());
+
+        //    absolute.WidthRequest = 1500;
+        //    absolute.HeightRequest = 1500;
+
+
+        //    TreeItem user = new TreeItem(db.ElementAt(5)) {
+        //        Mother = new TreeItemView(db.ElementAt(1)),
+        //        Father = new TreeItemView(db.ElementAt(2))
+        //    };
+
+        //    var item = GetElementView(user.Current);
+        //    absolute.Children.Add(item, new Point(200, 200));
+
+        //    var btn = GetAddNewButton(() => AddNewItem());
+        //    absolute.Children.Add(btn, new Point(400, 225));
+
+
+
+        //    var p1 = new Point(500, 500);
+        //    var p2 = new Point(600, 400);
+        //    absolute.Children.Add(new BoxView {
+        //        WidthRequest = 5,
+        //        HeightRequest = 5,
+        //        BackgroundColor = Color.Blue
+        //    }, p1);
+        //    absolute.Children.Add(new BoxView {
+        //        WidthRequest = 5,
+        //        HeightRequest = 5,
+        //        BackgroundColor = Color.Blue
+        //    }, p2);
+
+        //    var line = new BoxView {
+        //        WidthRequest = 50,
+        //        HeightRequest = 50,
+        //        BackgroundColor = Color.Green
+        //    };
+        //    absolute.Children.Add(line, new Point(500, 500));
+
+
+        //    var q = 1;
+        //}
 
         private void AddNewItem() {
             var item = GetElementView(db.ElementAt(10));
@@ -99,7 +106,7 @@ namespace Libmemo {
         }
 
         private void Reset_Button_Clicked(object sender, EventArgs e) {
-
+            var q = 1;
         }
         
 
@@ -195,30 +202,18 @@ namespace Libmemo {
             } as View, new Point((a.X + b.X) / 2 - 5 / 2, (a.Y + b.Y) / 2 - length / 2));
         }
 
-        private void Slider1_ValueChanged(object sender, ValueChangedEventArgs e) {
-            x = e.NewValue;
+        private async void Slider1_ValueChanged(object sender, ValueChangedEventArgs e) {
+            await absolute.ScaleTo(e.NewValue / 100);         
+
+
+            var q = 1;
         }
 
-        private void Slider2_ValueChanged(object sender, ValueChangedEventArgs e) {
-            y = e.NewValue;
-        }
 
-        private void Slider3_ValueChanged(object sender, ValueChangedEventArgs e) {
-            z = e.NewValue;
-        }
     }
 
 
 
 
-    class TreeItem {
-        public TreeItem(IDatabaseSavable person) {
-            Current = person;
-        }
 
-        public IDatabaseSavable Current { get; private set; }
-        public TreeItem Mother { get; set; }
-        public TreeItem Father { get; set; }
-        public List<TreeItem> Siblings { get; set; }
-    }
 }

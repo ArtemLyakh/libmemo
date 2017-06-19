@@ -64,6 +64,7 @@
     <Compile Include="CustomElements\CustomMap\IMapFunctions.cs" />
     <Compile Include="CustomElements\CustomMap\INativeMapFunctions.cs" />
     <Compile Include="CustomElements\CustomMap\PinImageEnum.cs" />
+    <Compile Include="CustomElements\CustomScrollView\CustomScrollView.cs" />
     <Compile Include="Database\JsonData.cs" />
     <Compile Include="Database\Classes.cs" />
     <Compile Include="Database\PersonRepository.cs" />
@@ -126,7 +127,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextToSpeech\TextToSpeech.cs" />
     <Compile Include="ToastNotificator\ToastNotificator.cs" />
+    <Compile Include="Tree\Tree.cs" />
+    <Compile Include="Tree\TreeDataBuilder.cs" />
     <Compile Include="Tree\TreeItem.cs" />
+    <Compile Include="Tree\TreeJson.cs" />
     <Compile Include="ViewModels\AddPageAdminViewModel.cs" />
     <Compile Include="ViewModels\AddPageViewModel.cs" />
     <Compile Include="ViewModels\Base\BaseAddViewModel.cs" />

@@ -7,12 +7,12 @@ using System.Text;
 
 using Xamarin.Forms;
 
-namespace Libmemo.Tree {
-    public class TreeItem : ContentView {
+namespace Libmemo {
+    public class TreeItemView : ContentView {
 
         public event EventHandler<int> DeleteClicked;
 
-        public TreeItem(IDatabaseSavable person) {
+        public TreeItemView(IDatabaseSavable person) {
             var stack = new StackLayout {
                 HeightRequest = 200,
                 WidthRequest = 100

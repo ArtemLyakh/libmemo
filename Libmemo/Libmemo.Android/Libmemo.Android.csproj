@@ -167,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomMapRenderer.cs" />
+    <Compile Include="CustomScrollViewRenderer.cs" />
     <Compile Include="Dependencies\ICloseApplicationImplementation.cs" />
     <Compile Include="Dependencies\IFilePickerImplementation.cs" />
     <Compile Include="Dependencies\IImageFileToByteArrayConverterImplementation.cs" />
