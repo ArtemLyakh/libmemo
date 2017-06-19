@@ -28,7 +28,15 @@
         <ScrollView>
             <StackLayout Spacing="50" Padding="10">
 
-                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10">
+                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Spacing="10">
+                    <Label VerticalOptions="CenterAndExpand" Text="Тип" HorizontalOptions="Start" />
+                    <Picker ItemsSource="{Binding PersonTypeList}"
+                            SelectedIndex="{Binding PersonTypeIndex}"
+                            HorizontalOptions="FillAndExpand"
+                            />
+                </StackLayout>
+
+                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" IsVisible="{Binding IsDeadPerson}">
                     <Label Text="Координаты" HorizontalOptions="CenterAndExpand" FontSize="Large" />
                     <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="FillAndExpand" HeightRequest="200">
                         <StackLayout Orientation="Vertical" Spacing="10" HorizontalOptions="Start" WidthRequest="{StaticResource titleWidth}" >
@@ -115,7 +123,7 @@
                                 HorizontalOptions="EndAndExpand"
                                 />
                     </StackLayout>
-                    <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
+                    <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand" IsVisible="{Binding IsDeadPerson}">
                         <Label Text="Дата смерти: "
                            VerticalOptions="CenterAndExpand"
                            HorizontalOptions="Start"
@@ -142,7 +150,7 @@
                     <Image Source="{Binding PhotoSource}"/>
                 </StackLayout>
 
-                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10">
+                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" IsVisible="{Binding IsDeadPerson}">
                     <Label Text="Биография" FontSize="Large" HorizontalOptions="CenterAndExpand"/>
                     <Editor Text="{Binding Text}"
                         HeightRequest="400"
@@ -151,7 +159,7 @@
                         />
                 </StackLayout>
 
-                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10">
+                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" IsVisible="{Binding IsDeadPerson}">
                     <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
                         <Label Text="Длина: "
                            VerticalOptions="CenterAndExpand"
@@ -180,7 +188,7 @@
                     </StackLayout>
                 </StackLayout>
 
-                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10">
+                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" IsVisible="{Binding IsDeadPerson}">
                     <Label Text="Схема захоронения" HorizontalOptions="CenterAndExpand" FontSize="Large" />
                     <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="FillAndExpand">
                         <Button Text="Выбрать" Command="{Binding SelectSchemeCommand}" VerticalOptions="CenterAndExpand" HorizontalOptions="Start" />

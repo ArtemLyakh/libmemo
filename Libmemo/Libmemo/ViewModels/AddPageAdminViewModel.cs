@@ -57,7 +57,7 @@ namespace Libmemo {
 
             App.ToastNotificator.Show("Отправка на сервер");
 
-            var uploader = new PersonDataLoader(Settings.AddPersonUrlAdmin);
+            var uploader = new PersonDataLoader(Settings.ADD_PERSON_URL_ADMIN);
             await AddParams(uploader);
 
             try {

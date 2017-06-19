@@ -13,7 +13,7 @@ using Xamarin.Forms.Maps;
 namespace Libmemo {
     class AddPageViewModel : BaseAddViewModel {
 
-        public AddPageViewModel() :base() { }
+        public AddPageViewModel() : base() { }
 
         protected override async void Send() {
             var errors = Validate();
@@ -24,7 +24,7 @@ namespace Libmemo {
 
             App.ToastNotificator.Show("Отправка на сервер");
 
-            var uploader = new PersonDataLoader(Settings.AddPersonUrl);
+            var uploader = new PersonDataLoader(Settings.ADD_PERSON_URL);
             await AddParams(uploader);
 
             try {

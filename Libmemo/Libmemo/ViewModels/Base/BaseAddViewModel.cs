@@ -24,6 +24,7 @@ namespace Libmemo {
 
         public BaseAddViewModel() {
             GetGPSPermission();
+            PersonTypeIndex = 0;
         }
 
         private bool _gpsPermissionsGained = false;
@@ -38,6 +39,51 @@ namespace Libmemo {
                 this.MyLocationEnabled = track;
             }
         }
+
+
+
+        private enum PersonType {
+            Live, Dead
+        }
+        private Dictionary<string, PersonType> personTypeDictionary = new Dictionary<string, PersonType> {
+            { "Мертвый", PersonType.Dead },
+            { "Живой", PersonType.Live }
+        };
+        public List<string> PersonTypeList {
+            get => personTypeDictionary.Select(i => i.Key).ToList();
+        }
+
+        private int _personTypeIndex;
+        public int PersonTypeIndex {
+            get => _personTypeIndex;
+            set {
+                _personTypeIndex = value;
+                PersonTypeSelected(value);
+            }
+        }
+
+        private void PersonTypeSelected(int index) {
+            var type = personTypeDictionary[PersonTypeList[index]];
+            switch (type) {
+                case PersonType.Live:
+                    IsDeadPerson = false;
+                    break;
+                case PersonType.Dead: default:
+                    IsDeadPerson = true;
+                    break;
+            }
+        }
+
+
+        private bool _isDeadPerson = true;
+        public bool IsDeadPerson {
+            get => _isDeadPerson;
+            set {
+                _isDeadPerson = value;
+                OnPropertyChanged(nameof(IsDeadPerson));
+            }
+        }
+
 
 
         private string _firstName;
@@ -308,13 +354,18 @@ namespace Libmemo {
 
 
         protected virtual IEnumerable<string> Validate() {
-            if (!this.UserPosition.HasValue) yield return "Ошибка определения местоположения";
+            if (this.IsDeadPerson && !this.UserPosition.HasValue) yield return "Ошибка определения местоположения";
             if (String.IsNullOrWhiteSpace(this.FirstName)) yield return "Поле \"Имя\" не заполнено";
         }
 
         protected virtual async Task AddParams(PersonDataLoader uploader) {
-            uploader.Params.Add("latitude", this.UserPosition.Value.Latitude.ToString(CultureInfo.InvariantCulture));
-            uploader.Params.Add("longitude", this.UserPosition.Value.Longitude.ToString(CultureInfo.InvariantCulture));
+            uploader.Params.Add("type", this.IsDeadPerson ? "dead" : "live");
+
+            if (this.IsDeadPerson) {
+                uploader.Params.Add("latitude", this.UserPosition.Value.Latitude.ToString(CultureInfo.InvariantCulture));
+                uploader.Params.Add("longitude", this.UserPosition.Value.Longitude.ToString(CultureInfo.InvariantCulture));
+            }        
+
             uploader.Params.Add("first_name", this.FirstName.ToString());
 
             if (!string.IsNullOrWhiteSpace(this.SecondName)) {
@@ -330,25 +381,29 @@ namespace Libmemo {
             if (this.DateDeath.HasValue) {
                 uploader.Params.Add("date_death", this.DateDeath.Value.ToString("yyyy-MM-dd"));
             }
-            if (!string.IsNullOrWhiteSpace(this.Text)) {
-                uploader.Params.Add("text", this.Text.ToString());
-            }
+
             if (this.PhotoSource != null) {
                 await uploader.SetFile(this.PhotoSource);
                 //var path = ((FileImageSource)PhotoSource).File;
                 //uploader.Files.Add("photo", Tuple.Create(Path.GetFileName(path), DependencyService.Get<IFileStreamPicker>().GetStream(path)));
             }
 
-            if (this.Height.HasValue) {
-                uploader.Params.Add("height", this.Height.Value.ToString(CultureInfo.InvariantCulture));
-            }
-            if (this.Width.HasValue) {
-                uploader.Params.Add("width", this.Width.Value.ToString(CultureInfo.InvariantCulture));
+            if (this.IsDeadPerson) {
+                if (!string.IsNullOrWhiteSpace(this.Text)) {
+                    uploader.Params.Add("text", this.Text.ToString());
+                }
+                if (this.Height.HasValue) {
+                    uploader.Params.Add("height", this.Height.Value.ToString(CultureInfo.InvariantCulture));
+                }
+                if (this.Width.HasValue) {
+                    uploader.Params.Add("width", this.Width.Value.ToString(CultureInfo.InvariantCulture));
+                }
+
+                if (this.SchemeStream != null) {
+                    uploader.Files.Add("scheme", Tuple.Create(this.SchemeName, this.SchemeStream));
+                }
             }
 
-            if (this.SchemeStream != null) {
-                uploader.Files.Add("scheme", Tuple.Create(this.SchemeName, this.SchemeStream));
-            }
         }
 
 

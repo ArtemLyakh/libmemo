@@ -24,7 +24,8 @@ namespace Libmemo {
         public const string PERSONAL_DATA_URL = SERVER_URL + "/api/personal/personal_data.php";
         public const string PERSONAL_DATA_URL_ADMIN = SERVER_URL + "/api/personal/personal_data_admin.php";
 
-
+        public const string ADD_PERSON_URL = SERVER_URL + "/api/database/add.php";
+        public const string ADD_PERSON_URL_ADMIN = SERVER_URL + "/api/database/add_admin.php";
 
 
 
@@ -33,8 +34,7 @@ namespace Libmemo {
         
 
 
-        private const string ADD_PERSON_URL = SERVER_URL + "/api/add.php";
-        private const string ADD_PERSON_URL_ADMIN = SERVER_URL + "/api/admin/add.php";
+        
 
         private const string EDIT_PERSON_URL = SERVER_URL + "/api/edit.php";
         private const string EDIT_PERSON_URL_ADMIN = SERVER_URL + "/api/admin/edit.php";
@@ -118,8 +118,7 @@ namespace Libmemo {
         public static string DataUrl { get; } = DATABASE_URL;
 
 
-        public static string AddPersonUrl { get; } = ADD_PERSON_URL;
-        public static string AddPersonUrlAdmin { get; } = ADD_PERSON_URL_ADMIN;
+
 
         public static string EditPersonUrl { get; } = EDIT_PERSON_URL;
         public static string EditPersonUrlAdmin { get; } = EDIT_PERSON_URL_ADMIN;
