@@ -19,7 +19,7 @@ namespace Libmemo {
         protected override PersonData PersonData { get; set; } = null;
 
         protected async void LoadData() {
-            var loader = new PersonDataLoader(Settings.PersonalDataUrl);
+            var loader = new PersonDataLoader(Settings.PERSONAL_DATA_URL);
 
             try {
                 PersonData = await loader.GetPersonData();
@@ -38,7 +38,7 @@ namespace Libmemo {
         }
 
         protected override async void Send() {
-            PersonDataLoader uploader = new PersonDataLoader(Settings.PersonalDataUrl);
+            PersonDataLoader uploader = new PersonDataLoader(Settings.PERSONAL_DATA_URL);
             await AddParams(uploader);
 
             try {

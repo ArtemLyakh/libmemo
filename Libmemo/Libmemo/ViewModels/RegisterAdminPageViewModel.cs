@@ -16,16 +16,15 @@ namespace Libmemo {
 
         public ICommand RegisterCommand {
             get => new Command(async () => {
+                var errors = this.Validate();
+                if (errors.Count() > 0) {
+                    App.ToastNotificator.Show(string.Join("\n", errors));
+                    return;
+                }
 
-            var errors = this.Validate();
-            if (errors.Count() > 0) {
-                App.ToastNotificator.Show(string.Join("\n", errors));
-                return;
-            }
-
-            try {
-                    using (var handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
-                    using (var request = new HttpRequestMessage(HttpMethod.Post, Settings.RegisterUrl) {
+                try {
+                    using (var handler = new HttpClientHandler { CookieContainer = Settings.AuthCookies })
+                    using (var request = new HttpRequestMessage(HttpMethod.Post, Settings.REGISTER_URL_ADMIN) {
                         Content = new FormUrlEncodedContent(new Dictionary<string, string> {
                             {"email", this.Email },
                             {"password", this.Password },
@@ -44,18 +43,16 @@ namespace Libmemo {
 
                         App.ToastNotificator.Show("Регистрация успешно завершена");
 
-                        //TODO переход на страницу редактирования данных пользователя
-
                         var id = int.Parse(JsonConvert.DeserializeObject<JsonMessage>(str).message);
                         await App.GlobalPage.PushRoot(new PersonalDataPageAdmin(id));
                     }
+                } catch (UnauthorizedAccessException) {
+                    await AuthHelper.ReloginAsync();
                 } catch {
                     App.ToastNotificator.Show("Ошибка регистрации");
                 }
             });
-
         }
-
 
     }
 }

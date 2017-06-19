@@ -16,12 +16,22 @@ namespace Libmemo {
         #region Setting Constants
         private const string SERVER_URL = "http://libmemo.com";
 
+        public const string LOGIN_URL = SERVER_URL + "/api/auth/login.php";
+
+        public const string REGISTER_URL = SERVER_URL + "/api/auth/register.php";
+        public const string REGISTER_URL_ADMIN = SERVER_URL + "/api/auth/register_admin.php";
+
+        public const string PERSONAL_DATA_URL = SERVER_URL + "/api/personal/personal_data.php";
+        public const string PERSONAL_DATA_URL_ADMIN = SERVER_URL + "/api/personal/personal_data_admin.php";
+
+
+
+
+
         private const string DATABASE_URL = SERVER_URL + "/api/database.php";
 
-        private const string LOGIN_URL = SERVER_URL + "/api/login.php";
+        
 
-        private const string REGISTER_URL = SERVER_URL + "/api/register.php";
-        private const string REGISTER_URL_ADMIN = SERVER_URL + "/api/admin/register.php";
 
         private const string ADD_PERSON_URL = SERVER_URL + "/api/add.php";
         private const string ADD_PERSON_URL_ADMIN = SERVER_URL + "/api/admin/add.php";
@@ -29,8 +39,7 @@ namespace Libmemo {
         private const string EDIT_PERSON_URL = SERVER_URL + "/api/edit.php";
         private const string EDIT_PERSON_URL_ADMIN = SERVER_URL + "/api/admin/edit.php";
 
-        private const string PERSONAL_DATA_URL = SERVER_URL + "/api/personal_data.php";
-        private const string PERSONAL_DATA_URL_ADMIN = SERVER_URL + "/api/admin/personal_data.php";
+        
         #endregion
 
 
@@ -108,19 +117,12 @@ namespace Libmemo {
 
         public static string DataUrl { get; } = DATABASE_URL;
 
-        public static string LoginUrl { get; } = LOGIN_URL;
-
-        public static string RegisterUrl { get; } = REGISTER_URL;
-        public static string RegisterUrlAdmin { get; } = REGISTER_URL_ADMIN;
 
         public static string AddPersonUrl { get; } = ADD_PERSON_URL;
         public static string AddPersonUrlAdmin { get; } = ADD_PERSON_URL_ADMIN;
 
         public static string EditPersonUrl { get; } = EDIT_PERSON_URL;
         public static string EditPersonUrlAdmin { get; } = EDIT_PERSON_URL_ADMIN;
-
-        public static string PersonalDataUrl { get; } = PERSONAL_DATA_URL;
-        public static string PersonalDataUrlAdmin { get; } = PERSONAL_DATA_URL_ADMIN;
 
     }
 

@@ -70,7 +70,7 @@ namespace Libmemo {
 
 
 
-            var uri = new UriBuilder(Settings.PersonalDataUrlAdmin) { Query = $"id={id}" }.Uri;
+            var uri = new UriBuilder(Settings.PERSONAL_DATA_URL_ADMIN) { Query = $"id={id}" }.Uri;
 
             var loader = new PersonDataLoader(uri);
 
@@ -109,7 +109,7 @@ namespace Libmemo {
 
             App.ToastNotificator.Show("Отправка на сервер");
 
-            PersonDataLoader uploader = new PersonDataLoader(Settings.PersonalDataUrlAdmin);
+            PersonDataLoader uploader = new PersonDataLoader(Settings.PERSONAL_DATA_URL_ADMIN);
             await AddParams(uploader);
 
             try {
