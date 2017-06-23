@@ -29,7 +29,7 @@ namespace Libmemo {
 
 
 
-        private const string DATABASE_URL = SERVER_URL + "/api/database.php";
+        public const string DATABASE_URL = SERVER_URL + "/api/database/database.php";
 
         
 
@@ -114,8 +114,6 @@ namespace Libmemo {
 
 
 
-
-        public static string DataUrl { get; } = DATABASE_URL;
 
 
 

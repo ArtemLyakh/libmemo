@@ -16,25 +16,61 @@ using Newtonsoft.Json.Converters;
 namespace Libmemo {
     public class PersonRepository {
 
-        private const int DATA_LOAD_TIMEOUT = 20;
+        private const int DATA_LOAD_TIMEOUT = 30;
         private SQLiteConnection database;
 
         public PersonRepository() {
             string databasePath = DependencyService.Get<ISQLite>().GetDatabasePath("database.db");
-            database = new SQLiteConnection(databasePath);
+            database = new SQLiteConnection(databasePath);         
             database.CreateTable<Person>();
-            database.CreateTable<User>();
 
-            this.LoadSuccess += () => {
-                App.ToastNotificator.Show("База данных загружена");
-            };
-            this.LoadFail += () => {
-                App.ToastNotificator.Show("Ошибка загрузки данных с сервера");
-            };
+            this.LoadSuccess += () => App.ToastNotificator.Show("База данных загружена");
+            this.LoadFail += () => App.ToastNotificator.Show("Ошибка загрузки данных с сервера");
         }
 
         public event Action LoadSuccess;
         public event Action LoadFail;
+
+        #region CRUD
+
+        public async Task<Person> GetById(int id) => await Task.Run(() => {
+            lock (database) return database.Table<Person>().SingleOrDefault(i => i.Id == id);
+        });
+
+        public async Task<List<Person>> GetItems() => await Task.Run(() => {
+            lock (database) return database.Table<Person>().ToList();
+        });
+        public async Task<List<Person>> GetItems(PersonType type) => await Task.Run(() => {
+            lock (database) return database.Table<Person>().Where(i => i.PersonType == type).ToList();
+        });
+
+        public async Task SaveItems(IEnumerable<Person> items) => await Task.Run(() => {
+            lock (database)
+                foreach (var item in items)
+                    if (database.Update(item) == 0) database.Insert(item);
+        });
+
+        public async Task DeleteItems(IEnumerable<int> ids) => await Task.Run(() => {
+            lock (database)
+                foreach (var id in ids) database.Delete<Person>(id);
+        });
+
+        public async Task DeleteAllItems() => await Task.Run(() => {
+            lock (database) database.DeleteAll<Person>();
+        });
+
+        #endregion
+
+
+
+        private async Task<long?> GetLastModified() => await Task.Run(async () => Settings.LastModified ??
+            (await GetItems()).OrderByDescending(i => i.LastModified).FirstOrDefault()?.LastModified
+        );
+
+
+
+
+
 
         #region Load
         public async void Load(bool full = false) {
@@ -46,22 +82,24 @@ namespace Libmemo {
                 return;
             }
 
-            if (full) {
-                await DeleteAllItems<Person>();
-                await DeleteAllItems<User>();
-            }
+            if (full) await DeleteAllItems();
             await LoadDatabaseFromJson(result);
 
             LoadSuccess?.Invoke();
         }
 
         private async Task<JsonData> SendRequest(long? modified = null) {
-            HttpClient client = new HttpClient();
-            client.Timeout = new TimeSpan(0, 0, DATA_LOAD_TIMEOUT);
-            string request = Settings.DataUrl;
-            if (modified != null) request += "?from=" + modified.ToString();
+            HttpClient client = new HttpClient {
+                Timeout = TimeSpan.FromSeconds(DATA_LOAD_TIMEOUT)
+            };
+
+            var builder = new UriBuilder(Settings.DATABASE_URL);
+            if (modified.HasValue)
+                builder.Query = $"from={modified.Value.ToString()}";
+            var uri = builder.ToString();
+
             try {
-                var responce = await client.GetAsync(request);
+                var responce = await client.GetAsync(uri);
                 responce.EnsureSuccessStatusCode();
 
                 var content = await responce.Content.ReadAsStringAsync();
@@ -75,12 +113,61 @@ namespace Libmemo {
 
         //обработка полученных данных
         private async Task LoadDatabaseFromJson(JsonData result) {
+            await DeletePersons(result.delete);
+
             await AddNewUsers(result.users);
             await AddNewPersons(result.persons);
-            await DeletePersonsAndUsers(result.delete);
 
             SaveLastModified(result);
         }
+
+        private async Task DeletePersons(List<PersonJsonDelete> list) =>
+            await DeleteItems(list.Select(i => i.id));
+
+        private async Task UpdatePersons(List<PersonJsonUpdate> list) {
+            var update = new List<Person>();
+
+            foreach (var item in list) {
+                var person = new Person();
+
+                switch (item.type) {
+                    case "l": person.PersonType = PersonType.Alive; break;
+                    case "d": person.PersonType = PersonType.Dead; break;
+                    default: continue;
+                }
+
+                if (item.id.HasValue) person.Id = item.id.Value;
+                else continue;
+
+                if (item.modified.HasValue) person.LastModified = item.modified.Value;
+                else continue;
+
+                if (item.owner.HasValue) person.Owner = item.owner.Value;
+                else continue;
+
+                if (!string.IsNullOrWhiteSpace(item.first_name)) person.FirstName = item.first_name;
+                else continue;
+
+                if (!string.IsNullOrWhiteSpace(item.second_name)) person.SecondName = item.second_name;
+
+                if (!string.IsNullOrWhiteSpace(item.last_name)) person.LastName = item.last_name;
+
+                if (DateTime.TryParse(item.date_birth, out DateTime dBirth)) person.DateBirth = dBirth;
+
+                if (!string.IsNullOrWhiteSpace(item.icon)) person.Icon = item.icon;
+
+                if (!string.IsNullOrWhiteSpace(item.photo_url) && Uri.TryCreate(item.photo_url, UriKind.Absolute, out Uri photoUrl))
+                    person.ImageUrl = photoUrl;
+
+                if (person.PersonType == PersonType.Dead) {
+                    if ()
+                        //TODO доделать
+                }
+            }
+        }
+
+
+
 
         //сохранение в базу полученных пользователей
         private async Task AddNewPersons(List<PersonJsonAdd> list) => await SaveItems(
@@ -125,10 +212,7 @@ namespace Libmemo {
         );
 
         //удаляет устаревшие элементы
-        private async Task DeletePersonsAndUsers(List<PersonJsonDelete> list) {
-            await DeleteItems<Person>(list.Select(i => i.id));
-            await DeleteItems<User>(list.Select(i => i.id));
-        }
+
 
         //сохраняет последнюю дату синхронизации с сервером
         private void SaveLastModified(JsonData data) {
@@ -144,43 +228,8 @@ namespace Libmemo {
         #endregion
 
 
-        //выбирает объект из указанной таблицы по id
-        public async Task<T> GetById<T>(int id) where T : IDatabaseSavable, new() => await Task.Run(() => {
-            lock(database) return database.Table<T>().SingleOrDefault(i => i.Id == id);
-        });
-
-        //выбирает все объекты из указанной таблицы
-        public async Task<IEnumerable<T>> GetItems<T>() where T : IDatabaseSavable, new() => await Task.Run(() => {
-            lock (database) return database.Table<T>().ToList();
-        });
-
-        //сохраняет/обновляет данные
-        public async Task SaveItems<T>(IEnumerable<T> items) where T : IDatabaseSavable, new() => await Task.Run(() => {
-            lock (database) 
-                foreach (var item in items) if (database.Update(item) == 0) database.Insert(item);
-        });
-
-        //удаляет данные
-        public async Task DeleteItems<T>(IEnumerable<int> ids) where T : IDatabaseSavable, new() => await Task.Run(() => {
-            lock (database)
-                foreach (var id in ids) database.Delete<T>(id);
-        });
-
-        //удаляет все данные
-        public async Task DeleteAllItems<T>() where T : IDatabaseSavable, new() => await Task.Run(() => {
-            lock (database)
-                database.DeleteAll<T>();
-        });
 
 
-
-        private async Task<long?> GetLastModified() => await Task.Run(() => {
-            var last = Settings.LastModified ?? database.Table<Person>().Select(i => i.LastModified)
-                .Union(database.Table<User>().Select(i => i.LastModified))
-                .OrderByDescending(i => i)
-                .FirstOrDefault();
-            return last == default(long) ? null : (long?)last;
-        });
 
     }
 }
