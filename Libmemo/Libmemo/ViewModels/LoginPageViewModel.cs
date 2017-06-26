@@ -38,14 +38,6 @@ namespace Libmemo {
             }
         }
 
-
-        class LoginJson {
-            public int id { get; set; }
-            public bool is_admin { get; set; }
-            public int? person_id { get; set; }
-            public string fio { get; set; }
-            public string email { get; set; }
-        }
         public ICommand LoginCommand {
             get => new Command(async () => {
                 if (string.IsNullOrWhiteSpace(this.Email)) {
@@ -77,7 +69,7 @@ namespace Libmemo {
                         responce.EnsureSuccessStatusCode();
 
 
-                        var authJson = JsonConvert.DeserializeObject<LoginJson>(str);
+                        var authJson = JsonConvert.DeserializeObject<AuthJson>(str);
                         var authInfo = new AuthInfo(
                             UserId: authJson.id,
                             PersonId: authJson.person_id,

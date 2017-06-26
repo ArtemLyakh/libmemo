@@ -46,8 +46,21 @@ namespace Libmemo {
                         }
                         responce.EnsureSuccessStatusCode();
 
-                        throw new NotImplementedException();
-                        //AuthHelper.Login(this.Email, this.Password, JsonConvert.DeserializeObject<JsonMessage>(str).message, handler.CookieContainer);
+                        var authJson = JsonConvert.DeserializeObject<AuthJson>(str);
+                        var authInfo = new AuthInfo(
+                            UserId: authJson.id,
+                            PersonId: authJson.person_id,
+                            IsAdmin: authJson.is_admin,
+                            Email: authJson.email,
+                            Fio: authJson.fio,
+                            CookieContainer: handler.CookieContainer
+                        );
+                        var authCredentials = new AuthCredentials(
+                            Email: Email,
+                            Password: Password
+                        );
+
+                        AuthHelper.Login(authInfo, authCredentials);
 
                         App.ToastNotificator.Show("Регистрация успешно завершена");
                         await App.GlobalPage.PushRoot(new PersonalDataPage());
