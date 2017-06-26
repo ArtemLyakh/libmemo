@@ -32,10 +32,11 @@ namespace Libmemo {
 
         public ICommand SelectOwnerCommand {
             get => new Command(async () => {
-                var searchPage = new SearchPage(await App.Database.GetItems<User>());
+                //var searchPage = new SearchPage(await App.Database.GetItems<User>());
+                SearchPage searchPage = null;
                 searchPage.ItemSelected += async (sender, id) => {
-                    this.User = await App.Database.GetById<User>(id);
-                    LoadData(this.User.Owner);
+                    //this.User = await App.Database.GetById<User>(id);
+                    //LoadData(this.User.Owner);
                 };
 
                 await App.GlobalPage.Push(searchPage);
@@ -48,7 +49,7 @@ namespace Libmemo {
         private async void LoadSuccess() {
             App.Database.LoadSuccess -= LoadSuccess;
             App.Database.LoadFail -= LoadFail;
-            this.User = (await App.Database.GetItems<User>()).Where(i => i.Owner == _dbId).FirstOrDefault();         
+            //this.User = (await App.Database.GetItems<User>()).Where(i => i.Owner == _dbId).FirstOrDefault();         
         }
         private async void LoadFail() {
             App.Database.LoadSuccess -= LoadSuccess;
@@ -58,7 +59,8 @@ namespace Libmemo {
         }
 
         protected async void LoadData(int id) {
-            var user = (await App.Database.GetItems<User>()).Where(i => i.Owner == id).FirstOrDefault();
+            //var user = (await App.Database.GetItems<User>()).Where(i => i.Owner == id).FirstOrDefault();
+            User user = null;
             if (user != null) {
                 this.User = user;
             } else {

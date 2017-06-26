@@ -74,7 +74,9 @@
     <Compile Include="Dependencies\ISQLite.cs" />
     <Compile Include="Dependencies\ITextToSpeech.cs" />
     <Compile Include="Dependencies\IToastNotification.cs" />
+    <Compile Include="Helpers\Auth\AuthCredentials.cs" />
     <Compile Include="Helpers\Auth\AuthHelper.cs" />
+    <Compile Include="Helpers\Auth\AuthInfo.cs" />
     <Compile Include="Helpers\ImageResourseExtension.cs" />
     <Compile Include="Helpers\PersonDataLoader.cs" />
     <Compile Include="Helpers\Settings.cs" />

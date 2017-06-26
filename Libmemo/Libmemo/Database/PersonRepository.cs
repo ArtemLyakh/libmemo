@@ -61,18 +61,12 @@ namespace Libmemo {
 
         #endregion
 
-
+        #region Load
 
         private async Task<long?> GetLastModified() => await Task.Run(async () => Settings.LastModified ??
             (await GetItems()).OrderByDescending(i => i.LastModified).FirstOrDefault()?.LastModified
         );
 
-
-
-
-
-
-        #region Load
         public async void Load(bool full = false) {
             long? lastModified = full ? null : await GetLastModified();
 
@@ -111,27 +105,30 @@ namespace Libmemo {
             }
         }
 
-        //обработка полученных данных
         private async Task LoadDatabaseFromJson(JsonData result) {
-            await DeletePersons(result.delete);
+            var pList = GetPersonsList(result.update);
+            var dList = GetDeleteList(result.delete);
 
-            await AddNewUsers(result.users);
-            await AddNewPersons(result.persons);
+            var deleteIdList = pList.Select(i => i.Id).Concat(dList.Select(i => i.Item1));
+            await DeleteItems(deleteIdList);
 
-            SaveLastModified(result);
+            await SaveItems(pList);
+
+            var lastModified = pList.Select(i => new long?(i.LastModified)).Concat(dList.Select(i => new long?(i.Item2))).OrderByDescending(i => i.Value).FirstOrDefault();
+            if (lastModified.HasValue) Settings.LastModified = lastModified;
         }
 
-        private async Task DeletePersons(List<PersonJsonDelete> list) =>
-            await DeleteItems(list.Select(i => i.id));
+        private IEnumerable<Tuple<int, long>> GetDeleteList(IEnumerable<PersonJsonDelete> list) =>
+            list.Where(i => i.id.HasValue && i.modified.HasValue).Select(i => Tuple.Create(i.id.Value, i.modified.Value));
 
-        private async Task UpdatePersons(List<PersonJsonUpdate> list) {
+        private IEnumerable<Person> GetPersonsList(List<PersonJsonUpdate> list) {
             var update = new List<Person>();
 
             foreach (var item in list) {
                 var person = new Person();
 
                 switch (item.type) {
-                    case "l": person.PersonType = PersonType.Alive; break;
+                    case "a": person.PersonType = PersonType.Alive; break;
                     case "d": person.PersonType = PersonType.Dead; break;
                     default: continue;
                 }
@@ -144,6 +141,7 @@ namespace Libmemo {
 
                 if (item.owner.HasValue) person.Owner = item.owner.Value;
                 else continue;
+
 
                 if (!string.IsNullOrWhiteSpace(item.first_name)) person.FirstName = item.first_name;
                 else continue;
@@ -159,77 +157,38 @@ namespace Libmemo {
                 if (!string.IsNullOrWhiteSpace(item.photo_url) && Uri.TryCreate(item.photo_url, UriKind.Absolute, out Uri photoUrl))
                     person.ImageUrl = photoUrl;
 
+
                 if (person.PersonType == PersonType.Dead) {
-                    if ()
-                        //TODO доделать
+                    if (double.TryParse(item.latitude, NumberStyles.Any, CultureInfo.InvariantCulture, out double latitude)) {
+                        person.Latitude = latitude;
+                    } else continue;
+
+                    if (double.TryParse(item.longitude, NumberStyles.Any, CultureInfo.InvariantCulture, out double longitude)) {
+                        person.Longitude = longitude;
+                    } else continue;
+
+                    if (DateTime.TryParse(item.date_death, out DateTime dDeath)) person.DateDeath = dDeath;
+
+                    if (!string.IsNullOrWhiteSpace(item.text)) person.Text = item.text;
+
+                    if (double.TryParse(item.height, NumberStyles.Any, CultureInfo.InvariantCulture, out double height)) {
+                        person.Height = height;
+                    }
+
+                    if (double.TryParse(item.width, NumberStyles.Any, CultureInfo.InvariantCulture, out double width)) {
+                        person.Width = width;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(item.scheme_url) && Uri.TryCreate(item.scheme_url, UriKind.Absolute, out Uri schemeUrl))
+                        person.SchemeUrl = schemeUrl;
                 }
+
+                update.Add(person);
             }
+
+            return update;
         }
-
-
-
-
-        //сохранение в базу полученных пользователей
-        private async Task AddNewPersons(List<PersonJsonAdd> list) => await SaveItems(
-            list.Where(i => !string.IsNullOrWhiteSpace(i.first_name)
-                && double.TryParse(i.latitude, NumberStyles.Any, CultureInfo.InvariantCulture, out double lat)
-                && double.TryParse(i.longitude, NumberStyles.Any, CultureInfo.InvariantCulture, out double lon))
-            .Select(i => new Person {
-                Id = i.id,
-                LastModified = i.modified,
-                Owner = i.owner,
-                FirstName = i.first_name.Trim(),
-                SecondName = string.IsNullOrWhiteSpace(i.second_name) ? null : i.second_name.Trim(),
-                LastName = string.IsNullOrWhiteSpace(i.last_name) ? null : i.last_name.Trim(),
-                DateBirth = DateTime.TryParse(i.date_birth, out DateTime dBirth) ? (DateTime?)dBirth : null,
-                DateDeath = DateTime.TryParse(i.date_death, out DateTime dDeath) ? (DateTime?)dDeath : null,
-                Latitude = double.Parse(i.latitude, NumberStyles.Any, CultureInfo.InvariantCulture),
-                Longitude = double.Parse(i.longitude, NumberStyles.Any, CultureInfo.InvariantCulture),
-                Text = string.IsNullOrWhiteSpace(i.text) ? null : i.text.Trim(),
-                Icon = string.IsNullOrWhiteSpace(i.icon) ? null : i.icon,
-                ImageUrl = i.image_url,
-
-                Height = double.TryParse(i.height, NumberStyles.Any, CultureInfo.InvariantCulture, out double height) ? (double?)height : null,
-                Width = double.TryParse(i.width, NumberStyles.Any, CultureInfo.InvariantCulture, out double width) ? (double?)width : null,
-                SchemeUrl = i.scheme_url
-            })
-        );
-
-        //сохранение в базу полученных пользователей
-        private async Task AddNewUsers(List<UserJsonAdd> list) => await SaveItems(
-            list.Where(i => !string.IsNullOrWhiteSpace(i.first_name))
-            .Select(i => new User {
-                Id = i.id,
-                LastModified = i.modified,
-                Owner = i.owner,
-                FirstName = i.first_name.Trim(),
-                SecondName = string.IsNullOrWhiteSpace(i.second_name) ? null : i.second_name.Trim(),
-                LastName = string.IsNullOrWhiteSpace(i.last_name) ? null : i.last_name.Trim(),
-                DateBirth = DateTime.TryParse(i.date_birth, out DateTime dBirth) ? (DateTime?)dBirth : null,
-                Icon = string.IsNullOrWhiteSpace(i.icon) ? null : i.icon,
-                ImageUrl = string.IsNullOrWhiteSpace(i.image_url) ? null : i.image_url
-            })
-        );
-
-        //удаляет устаревшие элементы
-
-
-        //сохраняет последнюю дату синхронизации с сервером
-        private void SaveLastModified(JsonData data) {
-            var modified = data.users.Select(i => i.modified)
-                .Concat(data.persons.Select(i => i.modified))
-                .Concat(data.delete.Select(i => i.modified))
-                .DefaultIfEmpty(0)
-                .Max();
-                
-            if (modified != default(long)) Settings.LastModified = modified;
-        }
-
+        
         #endregion
-
-
-
-
-
     }
 }

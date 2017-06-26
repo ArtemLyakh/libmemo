@@ -28,7 +28,7 @@ namespace Libmemo {
     }
 
     public class PersonJsonDelete {
-        public int id { get; set; }
-        public long modified { get; set; }
+        public int? id { get; set; }
+        public long? modified { get; set; }
     }
 }

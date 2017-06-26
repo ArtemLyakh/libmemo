@@ -46,7 +46,8 @@ namespace Libmemo {
                         }
                         responce.EnsureSuccessStatusCode();
 
-                        AuthHelper.Login(this.Email, this.Password, JsonConvert.DeserializeObject<JsonMessage>(str).message, handler.CookieContainer);
+                        throw new NotImplementedException();
+                        //AuthHelper.Login(this.Email, this.Password, JsonConvert.DeserializeObject<JsonMessage>(str).message, handler.CookieContainer);
 
                         App.ToastNotificator.Show("Регистрация успешно завершена");
                         await App.GlobalPage.PushRoot(new PersonalDataPage());

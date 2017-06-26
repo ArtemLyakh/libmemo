@@ -6,6 +6,7 @@ using System.Text;
 using Xamarin.Forms;
 
 namespace Libmemo {
+
     public partial class App : Application {
 
         #region Services
