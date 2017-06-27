@@ -60,7 +60,7 @@ namespace Libmemo {
 
         public void SetMenuPage() {
 
-            UserEmail = Settings.Email;
+            UserEmail = AuthHelper.UserEmail;
             IsUserEmailVisible = AuthHelper.IsLogged;
             IsUserAdminVisible = AuthHelper.IsAdmin;
 

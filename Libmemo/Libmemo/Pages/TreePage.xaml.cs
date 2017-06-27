@@ -15,12 +15,12 @@ namespace Libmemo {
             InitializeComponent();
 
 
-            int id = Settings.CurrentUser;
-            Init(id);
+            //int id = Settings.CurrentUser;
+            //Init(id);
         }
 
 
-        private IEnumerable<IDatabaseSavable> db;
+        //private IEnumerable<IDatabaseSavable> db;
 
         private async void Init(int id) {
 
@@ -29,11 +29,11 @@ namespace Libmemo {
 
 
 
-                var user = await App.Database.GetById<User>(id);
+                //var user = await App.Database.GetById<User>(id);
                // if (user == null) throw new NullReferenceException();
 
-                var tree = new Tree(user);
-                await tree.Calculate();
+                //var tree = new Tree(user);
+                //await tree.Calculate();
 
             } catch (Exception e) {
                 var q = 1;
@@ -92,10 +92,10 @@ namespace Libmemo {
         //    var q = 1;
         //}
 
-        private void AddNewItem() {
-            var item = GetElementView(db.ElementAt(10));
-            absolute.Children.Add(item, new Point(400, 400));
-        }
+        //private void AddNewItem() {
+        //    var item = GetElementView(db.ElementAt(10));
+        //    absolute.Children.Add(item, new Point(400, 400));
+        //}
 
 
 
@@ -127,53 +127,53 @@ namespace Libmemo {
 
 
 
-        private View GetElementView(IDatabaseSavable person) {
-            var stack = new StackLayout {
-                HeightRequest = 150,
-                WidthRequest = 100,
-                BackgroundColor = Color.LightGray
-            };
+        //private View GetElementView(IDatabaseSavable person) {
+        //    var stack = new StackLayout {
+        //        HeightRequest = 150,
+        //        WidthRequest = 100,
+        //        BackgroundColor = Color.LightGray
+        //    };
 
-            var stackTop = new StackLayout {
-                HorizontalOptions = LayoutOptions.FillAndExpand,
-                Orientation = StackOrientation.Horizontal,
-                HeightRequest = 25,
-            };
-            var deleteButton = new Button {
-                Text = "x",
-                BackgroundColor = Color.Red,
-                TextColor = Color.White,
-                FontSize = Device.GetNamedSize(NamedSize.Default, typeof(Button)),
-                HorizontalOptions = LayoutOptions.EndAndExpand,
-                HeightRequest = 25,
-                WidthRequest = 25
-            };
-            deleteButton.Clicked += (object sender, EventArgs e) => DeleteItem(person.Id);
-            stackTop.Children.Add(deleteButton);
-            stack.Children.Add(stackTop);
+        //    var stackTop = new StackLayout {
+        //        HorizontalOptions = LayoutOptions.FillAndExpand,
+        //        Orientation = StackOrientation.Horizontal,
+        //        HeightRequest = 25,
+        //    };
+        //    var deleteButton = new Button {
+        //        Text = "x",
+        //        BackgroundColor = Color.Red,
+        //        TextColor = Color.White,
+        //        FontSize = Device.GetNamedSize(NamedSize.Default, typeof(Button)),
+        //        HorizontalOptions = LayoutOptions.EndAndExpand,
+        //        HeightRequest = 25,
+        //        WidthRequest = 25
+        //    };
+        //    deleteButton.Clicked += (object sender, EventArgs e) => DeleteItem(person.Id);
+        //    stackTop.Children.Add(deleteButton);
+        //    stack.Children.Add(stackTop);
 
-            var image = new Image {
-                HeightRequest = 75,
-                HorizontalOptions = LayoutOptions.FillAndExpand,
-                Source = string.IsNullOrWhiteSpace(person.Icon) 
-                    ? ImageSource.FromResource("Libmemo.Tree.Images.no_photo.jpg") 
-                    : ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(person.Icon)))
-            };
-            stack.Children.Add(image);
+        //    var image = new Image {
+        //        HeightRequest = 75,
+        //        HorizontalOptions = LayoutOptions.FillAndExpand,
+        //        Source = string.IsNullOrWhiteSpace(person.Icon) 
+        //            ? ImageSource.FromResource("Libmemo.Tree.Images.no_photo.jpg") 
+        //            : ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(person.Icon)))
+        //    };
+        //    stack.Children.Add(image);
 
-            var fio = new Label {
-                Text = person.FIO,
-                HeightRequest = 50,
-                FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)),
-                HorizontalOptions = LayoutOptions.FillAndExpand,
-                HorizontalTextAlignment = TextAlignment.Center,
-                VerticalTextAlignment = TextAlignment.Center,
-                LineBreakMode = LineBreakMode.WordWrap
-            };
-            stack.Children.Add(fio);
+        //    var fio = new Label {
+        //        Text = person.FIO,
+        //        HeightRequest = 50,
+        //        FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)),
+        //        HorizontalOptions = LayoutOptions.FillAndExpand,
+        //        HorizontalTextAlignment = TextAlignment.Center,
+        //        VerticalTextAlignment = TextAlignment.Center,
+        //        LineBreakMode = LineBreakMode.WordWrap
+        //    };
+        //    stack.Children.Add(fio);
 
-            return stack;
-        }
+        //    return stack;
+        //}
 
         private View GetAddNewButton(Action action) {
             var button = new Image {

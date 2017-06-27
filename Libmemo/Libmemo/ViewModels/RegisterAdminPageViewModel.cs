@@ -23,7 +23,7 @@ namespace Libmemo {
                 }
 
                 try {
-                    using (var handler = new HttpClientHandler { CookieContainer = Settings.AuthCookies })
+                    using (var handler = new HttpClientHandler { CookieContainer = AuthHelper.CookieContainer })
                     using (var request = new HttpRequestMessage(HttpMethod.Post, Settings.REGISTER_URL_ADMIN) {
                         Content = new FormUrlEncodedContent(new Dictionary<string, string> {
                             {"email", this.Email },

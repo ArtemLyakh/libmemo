@@ -16,7 +16,7 @@ namespace Libmemo {
 
         }
 
-        private string _email = Settings.Email;
+        private string _email = AuthHelper.UserEmail;
         public string Email {
             get { return this._email; }
             set {
@@ -27,7 +27,7 @@ namespace Libmemo {
             }
         }
 
-        private string _password = Settings.Password;
+        private string _password = AuthHelper.UserPassword;
         public string Password {
             get { return this._password; }
             set {
@@ -39,45 +39,58 @@ namespace Libmemo {
         }
 
         public ICommand LoginCommand {
-            get {
-                return new Command(async () => {
-                    if (string.IsNullOrWhiteSpace(this.Email)) {
-                        App.ToastNotificator.Show("Не заполнен email");
-                        return;
-                    }
-                    if (string.IsNullOrWhiteSpace(this.Password)) {
-                        App.ToastNotificator.Show("Не заполнен пароль");
-                        return;
-                    }
+            get => new Command(async () => {
+                if (string.IsNullOrWhiteSpace(this.Email)) {
+                    App.ToastNotificator.Show("Не заполнен email");
+                    return;
+                }
+                if (string.IsNullOrWhiteSpace(this.Password)) {
+                    App.ToastNotificator.Show("Не заполнен пароль");
+                    return;
+                }
 
-                    try {
-                        using (var handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
-                        using (var request = new HttpRequestMessage(HttpMethod.Post, Settings.LOGIN_URL) {
-                            Content = new FormUrlEncodedContent(new Dictionary<string, string> {
-                                {"email", this.Email },
-                                {"password", this.Password }
-                            })
+                try {
+                    using (var handler = new HttpClientHandler { CookieContainer = new CookieContainer() })
+                    using (var request = new HttpRequestMessage(HttpMethod.Post, Settings.LOGIN_URL) {
+                        Content = new FormUrlEncodedContent(new Dictionary<string, string> {
+                            {"email", this.Email },
+                            {"password", this.Password }
                         })
-                        using (HttpClient client = new HttpClient(handler) { Timeout = new TimeSpan(0, 0, 5) })
-                        using (var responce = await client.SendAsync(request)) {
-                            var str = await responce.Content.ReadAsStringAsync();
-                            if (responce.StatusCode == HttpStatusCode.BadRequest) {
-                                JsonSerializerSettings settings = new JsonSerializerSettings();
-                                var error = JsonConvert.DeserializeObject<JsonMessage>(str).message;
-                                App.ToastNotificator.Show(error);
-                                return;
-                            }
-                            responce.EnsureSuccessStatusCode();
-
-                            AuthHelper.Login(Email, Password, JsonConvert.DeserializeObject<JsonMessage>(str).message, handler.CookieContainer);
-
-                            await App.GlobalPage.PopToRootPage();
+                    })
+                    using (HttpClient client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(5) })
+                    using (var responce = await client.SendAsync(request)) {
+                        var str = await responce.Content.ReadAsStringAsync();
+                        if (responce.StatusCode == HttpStatusCode.BadRequest) {
+                            JsonSerializerSettings settings = new JsonSerializerSettings();
+                            var error = JsonConvert.DeserializeObject<JsonMessage>(str).message;
+                            App.ToastNotificator.Show(error);
+                            return;
                         }
-                    } catch {
-                        App.ToastNotificator.Show("Ошибка авторизации");
+                        responce.EnsureSuccessStatusCode();
+
+
+                        var authJson = JsonConvert.DeserializeObject<AuthJson>(str);
+                        var authInfo = new AuthInfo(
+                            UserId: authJson.id,
+                            PersonId: authJson.person_id,
+                            IsAdmin: authJson.is_admin,
+                            Email: authJson.email,
+                            Fio: authJson.fio,
+                            CookieContainer: handler.CookieContainer
+                        );
+                        var authCredentials = new AuthCredentials(
+                            Email: Email,
+                            Password: Password
+                        );
+
+                        AuthHelper.Login(authInfo, authCredentials);
+
+                        await App.GlobalPage.PopToRootPage();
                     }
-                });
-            }
+                } catch {
+                    App.ToastNotificator.Show("Ошибка авторизации");
+                }
+            });
         }
 
         public ICommand RegisterCommand {
@@ -92,4 +105,9 @@ namespace Libmemo {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
     }
+
+
+
+
+
 }

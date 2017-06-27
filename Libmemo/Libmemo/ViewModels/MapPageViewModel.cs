@@ -16,7 +16,6 @@ namespace Libmemo {
         #endregion
 
         public MapPageViewModel() {
-
             InitPinsFromMemory();
 
             GetGPSPermission();
@@ -68,8 +67,6 @@ namespace Libmemo {
 
         #region Pins
 
-        #region Properties
-
         private CustomPin _selectedPin = null;
         public CustomPin SelectedPin {
             get { return _selectedPin; }
@@ -93,10 +90,6 @@ namespace Libmemo {
             }
         }
 
-        #endregion
-
-        #region Commands
-
         public ICommand InfoWindowClickedCommand {
             get => new Command<CustomPin>(async (CustomPin pin) => {
                 if (int.TryParse(pin.Id, out int id)) {
@@ -107,25 +100,19 @@ namespace Libmemo {
 
         }
 
-        #endregion
-
-        private CustomPin CreatePin(Person person) {
-            return new CustomPin() {
-                Id = person.Id.ToString(),
-                PinImage = string.IsNullOrWhiteSpace(person.Text) ? PinImage.Default : PinImage.Speaker,
-                Position = new Position(person.Latitude, person.Longitude),
-                Title = person.FIO,
-                Text = person.DateBirth.HasValue && person.DateDeath.HasValue ? $"{person.DateBirth.Value.Date.ToString("dd.MM.yyyy")}\u2014{person.DateDeath.Value.ToString("dd.MM.yyyy")}" : "",
-                Visible = true,
-                Base64 = person.Icon
-            };
-        }
+        private CustomPin CreatePin(Person person) => new CustomPin() {
+            Id = person.Id.ToString(),
+            PinImage = string.IsNullOrWhiteSpace(person.Text) ? PinImage.Default : PinImage.Speaker,
+            Position = new Position(person.Latitude, person.Longitude),
+            Title = person.FIO,
+            Text = person.DateBirth.HasValue && person.DateDeath.HasValue ? $"{person.DateBirth.Value.Date.ToString("dd.MM.yyyy")}\u2014{person.DateDeath.Value.ToString("dd.MM.yyyy")}" : "",
+            Visible = true,
+            Base64 = person.Icon
+        };
 
         #endregion
 
         #region Camera
-
-        #region Properties
 
         private Position _mapCenter;
         public Position MapCenter {
@@ -204,8 +191,6 @@ namespace Libmemo {
             }
         }
 
-        #endregion
-
         private void MoveCameraToUserPosition() {
             MoveCameraToPosition(this.UserPosition);
         }
@@ -219,8 +204,6 @@ namespace Libmemo {
         #region GPS
 
         private Position UserPosition { get; set; }
-
-        #region Properties
 
         private bool _mLocationEnabled = false;
         public bool MyLocationEnabled {
@@ -246,47 +229,35 @@ namespace Libmemo {
             }
         }
 
-        #endregion
-
-        #region Commands
-
         private bool firstCamera = true;
         public ICommand UserPositionChangedCommand {
-            get {
-                return new Command<Position>((Position position) => {
-                    this.UserPosition = position;
+            get => new Command<Position>((Position position) => {
+                this.UserPosition = position;
 
-                    if (this.FollowUser) {
-                        if (firstCamera) {
-                            this.IsCameraAnimated = true;
-                            firstCamera = false;
-                        }
-                        MoveCameraToUserPosition();
+                if (this.FollowUser) {
+                    if (firstCamera) {
+                        this.IsCameraAnimated = true;
+                        firstCamera = false;
                     }
-                });
-            }
+                    MoveCameraToUserPosition();
+                }
+            });
         }
 
         public ICommand FollowUserToogleCommand {
-            get {
-                return new Command(() => {
-                    if (FollowUser) {
-                        FollowUser = false;
-                    } else {
-                        FollowUser = true;
-                        MoveCameraToUserPosition();
-                    }
-                });
-            }
+            get => new Command(() => {
+                if (FollowUser) {
+                    FollowUser = false;
+                } else {
+                    FollowUser = true;
+                    MoveCameraToUserPosition();
+                }
+            });
         }
-
-        #endregion
 
         #endregion
 
         #region Routes
-
-        #region Properties
 
         private bool _isRouteActive = false;
         public bool IsRouteActive {
@@ -299,79 +270,61 @@ namespace Libmemo {
             }
         }
 
-        #endregion
-
         private Position? RouteFrom { get; set; }
         private Position? RouteTo { get; set; }
-
-        #region Commands
 
         private bool _routeProcessing = false;
 
         public Command SetLinearRouteCommand {
-            get {
-                return new Command(() => {
-                    if (this._routeProcessing) return;
-                    if (this.UserPosition != default(Position) && this.SelectedPin != null) {
-                        this.RouteFrom = this.UserPosition;
-                        this.RouteTo = this.SelectedPin.Position;
-                        this._routeProcessing = true;
-                        this.MapFunctions.SetLinearRoute(this.UserPosition, this.SelectedPin.Position);
-                    }
-                });
-            }
+            get => new Command(() => {
+                if (this._routeProcessing) return;
+                if (this.UserPosition != default(Position) && this.SelectedPin != null) {
+                    this.RouteFrom = this.UserPosition;
+                    this.RouteTo = this.SelectedPin.Position;
+                    this._routeProcessing = true;
+                    this.MapFunctions.SetLinearRoute(this.UserPosition, this.SelectedPin.Position);
+                }
+            });
         }
 
         public Command SetCalculatedRouteCommand {
-            get {
-                return new Command(() => {
-                    if (this._routeProcessing) return;
-                    if (this.UserPosition != default(Position) && this.SelectedPin != null) {
-                        this.RouteFrom = this.UserPosition;
-                        this.RouteTo = this.SelectedPin.Position;
-                        this._routeProcessing = true;
-                        this.MapFunctions.SetCalculatedRoute(this.UserPosition, this.SelectedPin.Position);
-                    }
-                });
-            }
+            get => new Command(() => {
+                if (this._routeProcessing) return;
+                if (this.UserPosition != default(Position) && this.SelectedPin != null) {
+                    this.RouteFrom = this.UserPosition;
+                    this.RouteTo = this.SelectedPin.Position;
+                    this._routeProcessing = true;
+                    this.MapFunctions.SetCalculatedRoute(this.UserPosition, this.SelectedPin.Position);
+                }
+            });
         }
 
         public ICommand DeleteRouteCommand {
-            get {
-                return new Command(() => {
-                    this.MapFunctions.DeleteRoute();
-                    this.IsRouteActive = false;
-                    this._routeProcessing = false; //на всякий случай
-                });
-            }
+            get => new Command(() => {
+                this.MapFunctions.DeleteRoute();
+                this.IsRouteActive = false;
+                this._routeProcessing = false; //на всякий случай
+            });
         }
 
         public ICommand RouteInitializingSucceedCommand {
-            get {
-                return new Command(() => {
-                    this.IsRouteActive = true;
-                    this._routeProcessing = false;
-                });
-            }
+            get => new Command(() => {
+                this.IsRouteActive = true;
+                this._routeProcessing = false;
+            });
         }
 
         public ICommand RouteInitializingFailedCommand {
-            get {
-                return new Command<CustomPin>(pin => {
-                    this._routeProcessing = false;
-                    this.IsRouteActive = false;
-                    App.ToastNotificator.Show("Ошибка построения маршрута");
-                });
-            }
+            get => new Command<CustomPin>(pin => {
+                this._routeProcessing = false;
+                this.IsRouteActive = false;
+                App.ToastNotificator.Show("Ошибка построения маршрута");
+            });
         }
-
-        #endregion
 
         #endregion
 
         #region Search
-
-        #region Properties
 
         private string _searchText;
         public string SearchText {
@@ -384,33 +337,24 @@ namespace Libmemo {
             }
         }
 
-        #endregion
-
-        #region Commands
-
         public ICommand SearchCommand {
-            get => new Command(async () => {
-                var searchPage = new SearchPage(await App.Database.GetItems<Person>(), this.SearchText);
-                searchPage.ItemSelected += OnSearchItemSelected;
-                searchPage.SearchTextChanged += OnSearchChanged;
- 
-                this.SelectedPin = null;
-                await App.GlobalPage.Push(searchPage);
+            get => new Command(() => {
+                throw new NotImplementedException();
+                //var searchPage = new SearchPage(await App.Database.GetItems<Person>(), this.SearchText);
+                //searchPage.ItemSelected += OnSearchItemSelected;
+                //searchPage.SearchTextChanged += OnSearchChanged;
+
+                //this.SelectedPin = null;
+                //await App.GlobalPage.Push(searchPage);
             });
 
         }
 
         public ICommand ResetCommand {
-            get {
-                return new Command(() => {
-                    this.SearchText = string.Empty;
-                });
-            }
+            get => new Command(() => {
+                this.SearchText = string.Empty;
+            }); 
         }
-
-        #endregion
-
-        #region Event Handlers
 
         private void OnSearchChanged(object sender, string e) {
             this.SearchText = e;
@@ -429,11 +373,7 @@ namespace Libmemo {
 
         #endregion
 
-        #endregion
-
         #region TTS
-
-        #region Properties
 
         private int? _currentPlayed = null;
         public int? CurrentPlayed {
@@ -446,31 +386,17 @@ namespace Libmemo {
             }
         }
 
-        #endregion
-
-        #region Commands
-
         public ICommand StartTTSOnSelectedPinCommand {
-            get {
-                return new Command(async () => {
-                    if (this._ttsStarted) return;
-                    this._ttsStarted = true;
-                    var person = await App.Database.GetById<Person>(int.Parse(this.SelectedPin.Id));
-                    SpeakPersonText(person);
-                });
-            }
+            get => new Command(async () => {
+                if (this._ttsStarted) return;
+                this._ttsStarted = true;
+                var person = await App.Database.GetById(int.Parse(this.SelectedPin.Id));
+                SpeakPersonText(person);
+            });
         }
         public ICommand StopTTSCommand {
-            get {
-                return new Command(() => {
-                    StopSpeakPersonText();
-                });
-            }
+            get => new Command(() => StopSpeakPersonText());        
         }
-
-        #endregion
-
-        #region Event listeners
 
         private void TextToSpeech_OnStart(object sender, string e) {
             _ttsStarted = false;
@@ -482,8 +408,6 @@ namespace Libmemo {
             CurrentPlayed = null;
         }
 
-        #endregion
-
         private bool _ttsStarted = false;
 
         private void SpeakPersonText(Person person) {
@@ -494,24 +418,18 @@ namespace Libmemo {
             App.TextToSpeech.Stop();
         }
 
-
         #endregion
 
         #region Database
 
         private async void InitPinsFromMemory() {
-            var list = await App.Database.GetItems<Person>();
+            var list = await App.Database.GetItems(PersonType.Dead);
 
-            if (list.Count() > 0) {
-                var buf = new ObservableCollection<CustomPin>();
-
-                foreach (var item in list) {
-                    var pin = CreatePin(item);
-                    buf.Add(pin);
-                }
-
-                CustomPins = buf;
-            }
+            CustomPins.Clear();
+            foreach (var item in list) {
+                var pin = CreatePin(item);
+                CustomPins.Add(pin);
+            }      
         }
 
         private void Database_LoadSuccess() {
@@ -523,13 +441,11 @@ namespace Libmemo {
         #region SideMenu
 
         public ICommand OpenMenuCommand {
-            get {
-                return new Command(() => {
-                    if (Application.Current.MainPage is MainPage) {
-                        App.SetShowMenu(true);
-                    }
-                });
-            }
+            get => new Command(() => {
+                if (Application.Current.MainPage is MainPage) {
+                    App.SetShowMenu(true);
+                }
+            });
         }
 
         #endregion

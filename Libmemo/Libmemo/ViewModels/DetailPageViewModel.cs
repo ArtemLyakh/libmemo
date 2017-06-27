@@ -17,13 +17,14 @@ namespace Libmemo {
         }
 
         public async void Init() {
-            var person = await App.Database.GetById<Person>(id);
+            //var person = await App.Database.GetById<Person>(id);
+            Person person = null;
             if (person != null) {
                 this.FIO = person.FIO;
                 this.LatLon = $"{person.Latitude.ToString(CultureInfo.InvariantCulture)}, {person.Longitude.ToString(CultureInfo.InvariantCulture)}";
 
-                if (Uri.TryCreate(person.ImageUrl, UriKind.Absolute, out Uri imageUrl))
-                    this.ImageUri = imageUrl;
+                //if (Uri.TryCreate(person.ImageUrl, UriKind.Absolute, out Uri imageUrl))
+                //    this.ImageUri = imageUrl;
 
                 if (!string.IsNullOrWhiteSpace(person.Text)) {
                     this.Text = person.Text;
@@ -50,11 +51,11 @@ namespace Libmemo {
                 }
 
                 
-                if (Uri.TryCreate(person.SchemeUrl, UriKind.Absolute, out Uri schemeUrl)) {
-                    this.IsSchemeShow = true;
-                } else {
-                    this.IsSchemeShow = false;
-                }
+                //if (Uri.TryCreate(person.SchemeUrl, UriKind.Absolute, out Uri schemeUrl)) {
+                //    this.IsSchemeShow = true;
+                //} else {
+                //    this.IsSchemeShow = false;
+                //}
             }
         }
 
@@ -184,10 +185,10 @@ namespace Libmemo {
 
         public ICommand SchemeDownloadCommand {
             get => new Command(async () => {
-                var person = await App.Database.GetById<Person>(id);
-                if (Uri.TryCreate(person.SchemeUrl, UriKind.Absolute, out Uri schemeUrl)) {
-                    Device.OpenUri(schemeUrl);
-                }
+                //var person = await App.Database.GetById<Person>(id);
+                //if (Uri.TryCreate(person.SchemeUrl, UriKind.Absolute, out Uri schemeUrl)) {
+                //    Device.OpenUri(schemeUrl);
+                //}
             });
         }
 

@@ -37,7 +37,7 @@ namespace Libmemo {
 
         public async Task<bool> Upload() {
             try {
-                using (var handler = new HttpClientHandler { CookieContainer = Settings.AuthCookies })
+                using (var handler = new HttpClientHandler { CookieContainer = AuthHelper.CookieContainer })
                 using (var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(20) })
                 using (var content = new MultipartFormDataContent(String.Format("----------{0:N}", Guid.NewGuid()))) {
                     foreach (var item in this.Params) {
@@ -72,7 +72,7 @@ namespace Libmemo {
 
         public async Task<PersonData> GetPersonData() {
             try {
-                using (var handler = new HttpClientHandler { CookieContainer = Settings.AuthCookies })
+                using (var handler = new HttpClientHandler { CookieContainer = AuthHelper.CookieContainer })
                 using (var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(5) })
                 using (var responce = await client.GetAsync(uri)) {
 

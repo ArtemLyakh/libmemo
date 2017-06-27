@@ -209,7 +209,8 @@ namespace Libmemo.Droid {
                 throw new NotImplementedException();
             }
 
-            _customPinsBindings.Add(pin, _googleMap.AddMarker(marker));
+            if (_googleMap != null)
+                _customPinsBindings.Add(pin, _googleMap.AddMarker(marker));
         }
 
         private void DeletePin(CustomPin pin) {

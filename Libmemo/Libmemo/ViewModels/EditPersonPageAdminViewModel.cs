@@ -27,22 +27,22 @@ namespace Libmemo {
 
         public ICommand SelectOwnerCommand {
             get => new Command(async () => {
-                var searchPage = new SearchPage(await App.Database.GetItems<User>());
-                searchPage.ItemSelected += async (sender, id) => {
-                    this.Owner = await App.Database.GetById<User>(id);
-                };
+                //var searchPage = new SearchPage(await App.Database.GetItems<User>());
+                //searchPage.ItemSelected += async (sender, id) => {
+                //    this.Owner = await App.Database.GetById<User>(id);
+                //};
 
-                await App.GlobalPage.Push(searchPage);
+                //await App.GlobalPage.Push(searchPage);
             });
         }
 
 
         protected override async void InitFields(Person person) {
-            base.InitFields(person);
-            var owner = (await App.Database.GetItems<User>()).FirstOrDefault(i => i.Owner == person.Owner);
-            if (owner != null) {
-                Owner = owner;
-            }
+            //base.InitFields(person);
+            //var owner = (await App.Database.GetItems<User>()).FirstOrDefault(i => i.Owner == person.Owner);
+            //if (owner != null) {
+            //    Owner = owner;
+            //}
         }
 
         protected override async Task AddParams(PersonDataLoader uploader) {

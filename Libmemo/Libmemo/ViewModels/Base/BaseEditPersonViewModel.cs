@@ -35,8 +35,8 @@ namespace Libmemo {
         }
 
         public async void Init() {
-            var person = await App.Database.GetById<Person>(Id);
-            InitFields(person);
+            //var person = await App.Database.GetById<Person>(Id);
+            //InitFields(person);
         }
         protected virtual void InitFields(Person person) {
             FirstName = person.FirstName;
@@ -47,8 +47,8 @@ namespace Libmemo {
             Text = person.Text;
             Height = person.Height;
             Width = person.Width;
-            if (Uri.TryCreate(person.ImageUrl, UriKind.Absolute, out Uri imageUrl))
-                PhotoSource = new UriImageSource() { CachingEnabled = true, Uri = imageUrl };
+            //if (Uri.TryCreate(person.ImageUrl, UriKind.Absolute, out Uri imageUrl))
+            //    PhotoSource = new UriImageSource() { CachingEnabled = true, Uri = imageUrl };
 
             PersonPosition = new Position(person.Latitude, person.Longitude);
         }

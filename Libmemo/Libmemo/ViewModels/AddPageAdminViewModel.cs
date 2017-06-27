@@ -26,9 +26,10 @@ namespace Libmemo {
 
         public ICommand SelectOwnerCommand {
             get => new Command(async () => {
-                var searchPage = new SearchPage(await App.Database.GetItems<User>());
-                searchPage.ItemSelected += async (sender, id) => 
-                    this.Owner = await App.Database.GetById<User>(id);
+                //var searchPage = new SearchPage(await App.Database.GetItems<User>());
+                SearchPage searchPage = null;
+                //searchPage.ItemSelected += async (sender, id) => 
+                //    this.Owner = await App.Database.GetById<User>(id);
 
                 await App.GlobalPage.Push(searchPage);
             });
