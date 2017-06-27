@@ -205,6 +205,67 @@ namespace Libmemo {
         }
 
 
+
+
+
+
+
+
+
+        private enum PersonType {
+            Live, Dead
+        }
+        private Dictionary<string, PersonType> personTypeDictionary = new Dictionary<string, PersonType> {
+            { "Мертвый", PersonType.Dead },
+            { "Живой", PersonType.Live }
+        };
+        public List<string> PersonTypeList {
+            get => personTypeDictionary.Select(i => i.Key).ToList();
+        }
+
+        private int _personTypeIndex;
+        public int PersonTypeIndex {
+            get => _personTypeIndex;
+            set {
+                _personTypeIndex = value;
+                PersonTypeSelected(value);
+            }
+        }
+
+        private void PersonTypeSelected(int index) {
+            var type = personTypeDictionary[PersonTypeList[index]];
+            switch (type) {
+                case PersonType.Live:
+                    IsDeadPerson = false;
+                    break;
+                case PersonType.Dead:
+                default:
+                    IsDeadPerson = true;
+                    break;
+            }
+        }
+
+        private bool _isDeadPerson = true;
+        public bool IsDeadPerson {
+            get => _isDeadPerson;
+            set {
+                _isDeadPerson = value;
+                OnPropertyChanged(nameof(IsDeadPerson));
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
         private string _firstName;
         public string FirstName {
             get { return _firstName; }
