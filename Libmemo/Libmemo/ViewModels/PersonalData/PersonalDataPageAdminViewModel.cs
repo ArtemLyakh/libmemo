@@ -15,7 +15,7 @@ namespace Libmemo {
             LoadData(id);
         }
 
-        protected override PersonData PersonData { get; set; } = null;
+        protected PersonData PersonData { get; set; } = null;
 
         private User _user;
         public User User {
@@ -103,7 +103,7 @@ namespace Libmemo {
 
 
 
-        protected override async void Send() {
+        protected override async Task Send() {
             if (this.User == null) {
                 Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Ошибка", "Не указан пользователь", "ОК"));
                 return;
@@ -126,6 +126,10 @@ namespace Libmemo {
             } catch (UnauthorizedAccessException) {
                 await AuthHelper.ReloginAsync();
             }
+        }
+
+        protected override Task Reset() {
+            throw new NotImplementedException();
         }
     }
 }

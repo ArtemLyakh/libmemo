@@ -14,8 +14,6 @@ namespace Libmemo {
 
         public BasePersonalDataViewModel() { }
 
-        protected abstract PersonData PersonData { get; set; }
-
         private string _firstName;
         public string FirstName {
             get { return _firstName; }
@@ -93,41 +91,16 @@ namespace Libmemo {
         }
 
         public ICommand ResetCommand {
-            get => new Command(Reset);
+            get => new Command(async () => await Reset());
         }
-        protected virtual void Reset() {
-            this.FirstName = PersonData?.FirstName;
-            this.SecondName = PersonData?.SecondName;
-            this.LastName = PersonData?.LastName;
-            this.DateBirth = PersonData?.DateBirth;
-
-            this.PhotoSource = PersonData?.PhotoUri == null ? null : new UriImageSource() { CachingEnabled = true, Uri = PersonData.PhotoUri };
-        }
+        protected abstract Task Reset();
 
         public ICommand SendCommand {
-            get => new Command(Send);
+            get => new Command(async () => await Send());
         }
-        protected abstract void Send();
+        protected abstract Task Send();
 
 
-
-        protected virtual async Task AddParams(PersonDataLoader uploader) {
-            if (!String.IsNullOrWhiteSpace(this.SecondName)) {
-                uploader.Params.Add("first_name", this.FirstName.ToString());
-            }
-            if (!String.IsNullOrWhiteSpace(this.SecondName)) {
-                uploader.Params.Add("second_name", this.SecondName.ToString());
-            }
-            if (!String.IsNullOrWhiteSpace(this.LastName)) {
-                uploader.Params.Add("last_name", this.LastName.ToString());
-            }
-            if (this.DateBirth.HasValue) {
-                uploader.Params.Add("date_birth", this.DateBirth.Value.ToString("yyyy-MM-dd"));
-            }
-            if (this.PhotoSource != null && this.PhotoSource is FileImageSource) {
-                await uploader.SetFile(this.PhotoSource);
-            }
-        }
 
 
         public event PropertyChangedEventHandler PropertyChanged;

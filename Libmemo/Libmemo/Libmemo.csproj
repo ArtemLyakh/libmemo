@@ -139,14 +139,14 @@
     <Compile Include="ViewModels\Base\BaseAddViewModel.cs" />
     <Compile Include="ViewModels\Base\BaseEditPersonViewModel.cs" />
     <Compile Include="ViewModels\Base\BaseRegisterViewModel.cs" />
-    <Compile Include="ViewModels\Base\BasePersonalDataViewModel.cs" />
+    <Compile Include="ViewModels\PersonalData\BasePersonalDataViewModel.cs" />
     <Compile Include="ViewModels\DetailPageViewModel.cs" />
     <Compile Include="ViewModels\EditPersonPageAdminViewModel.cs" />
     <Compile Include="ViewModels\EditPersonPageViewModel.cs" />
     <Compile Include="ViewModels\LoginPageViewModel.cs" />
     <Compile Include="ViewModels\MapPageViewModel.cs" />
-    <Compile Include="ViewModels\PersonalDataPageAdminViewModel.cs" />
-    <Compile Include="ViewModels\PersonalDataPageViewModel.cs" />
+    <Compile Include="ViewModels\PersonalData\PersonalDataPageAdminViewModel.cs" />
+    <Compile Include="ViewModels\PersonalData\PersonalDataPageViewModel.cs" />
     <Compile Include="ViewModels\RegisterAdminPageViewModel.cs" />
     <Compile Include="ViewModels\RegisterPageViewModel.cs" />
     <Compile Include="ViewModels\SearchPageViewModel.cs" />
