@@ -41,10 +41,11 @@ namespace Libmemo {
                         }
                         responce.EnsureSuccessStatusCode();
 
-                        App.ToastNotificator.Show("Регистрация успешно завершена");
+                        var authJson = JsonConvert.DeserializeObject<AuthJson>(str);
 
-                        var id = int.Parse(JsonConvert.DeserializeObject<JsonMessage>(str).message);
-                        await App.GlobalPage.PushRoot(new PersonalDataPageAdmin(id));
+                        App.ToastNotificator.Show("Пользователь зарегистрирован");
+
+                        await App.GlobalPage.PushRoot(new PersonalDataPageAdmin(authJson.id));
                     }
                 } catch (UnauthorizedAccessException) {
                     await AuthHelper.ReloginAsync();

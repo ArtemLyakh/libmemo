@@ -72,7 +72,6 @@ namespace Libmemo {
                         var authJson = JsonConvert.DeserializeObject<AuthJson>(str);
                         var authInfo = new AuthInfo(
                             UserId: authJson.id,
-                            PersonId: authJson.person_id,
                             IsAdmin: authJson.is_admin,
                             Email: authJson.email,
                             Fio: authJson.fio,

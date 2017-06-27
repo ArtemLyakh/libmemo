@@ -9,10 +9,9 @@ using System.Threading.Tasks;
 namespace Libmemo {
     public class AuthInfo {
 
-        public AuthInfo(bool IsAdmin, int UserId, int? PersonId, string Email, string Fio, CookieContainer CookieContainer) {
+        public AuthInfo(bool IsAdmin, int UserId, string Email, string Fio, CookieContainer CookieContainer) {
             this.IsAdmin = IsAdmin;
             this.UserId = UserId;
-            this.PersonId = PersonId;
             this.Email = Email;
             this.Fio = Fio;
             this.CookieContainer = CookieContainer;
@@ -20,7 +19,6 @@ namespace Libmemo {
 
         public bool IsAdmin { get; set; }
         public int UserId { get; set; }
-        public int? PersonId { get; set; }
         public string Email { get; set; }
         public string Fio { get; set; }
         public CookieContainer CookieContainer { get; set; }
@@ -29,7 +27,6 @@ namespace Libmemo {
             public string is_admin { get; set; }
             public string user_id { get; set; }
             public string email { get; set; }
-            public string person_id { get; set; }
             public string fio { get; set; }
             public string cookie_container { get; set; }
         }
@@ -39,8 +36,7 @@ namespace Libmemo {
                 is_admin = IsAdmin.ToString(),
                 user_id = UserId.ToString(),
                 email = Email,
-                fio = Fio,
-                person_id = PersonId.ToString()
+                fio = Fio
             };
 
             if (CookieContainer != null) {
@@ -76,7 +72,6 @@ namespace Libmemo {
             return new AuthInfo(
                 IsAdmin: bool.Parse(deserialized.is_admin),
                 UserId: int.Parse(deserialized.user_id),
-                PersonId: int.TryParse(deserialized.person_id, out int personId) ? (int?)personId : null,
                 Fio: deserialized.fio,
                 Email: deserialized.email,
                 CookieContainer: cookieContainer
