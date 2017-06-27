@@ -16,7 +16,7 @@ namespace Libmemo {
 
         public const string DATABASE_URL = SERVER_URL + "/api/database/database.php";
 
-
+        public const string USER_LIST_URL = SERVER_URL + "/api/admin/user_list.php";
 
 
         public const string LOGIN_URL = SERVER_URL + "/api/auth/login.php";

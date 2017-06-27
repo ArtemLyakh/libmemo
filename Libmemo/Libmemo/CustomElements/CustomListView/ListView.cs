@@ -8,7 +8,7 @@ namespace Libmemo {
 
         public static readonly BindableProperty ItemClickCommandProperty = BindableProperty.Create(
             nameof(ItemClickCommand),
-            typeof(Command<Tuple<int, string>>),
+            typeof(Command<object>),
             typeof(CustomListView));
 
         public ICommand ItemClickCommand {

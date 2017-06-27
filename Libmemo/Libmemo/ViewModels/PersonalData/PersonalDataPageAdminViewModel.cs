@@ -96,10 +96,10 @@ namespace Libmemo {
 
 
 
-        protected override async Task AddParams(PersonDataLoader uploader) {
-            await base.AddParams(uploader);
-            uploader.Params.Add("id", this.User.Owner.ToString());
-        }
+        //protected override async Task AddParams(PersonDataLoader uploader) {
+        //    await base.AddParams(uploader);
+        //    uploader.Params.Add("id", this.User.Owner.ToString());
+        //}
 
 
 
@@ -112,7 +112,7 @@ namespace Libmemo {
             App.ToastNotificator.Show("Отправка на сервер");
 
             PersonDataLoader uploader = new PersonDataLoader(Settings.PERSONAL_DATA_URL_ADMIN);
-            await AddParams(uploader);
+            //await AddParams(uploader);
 
             try {
                 var success = await uploader.Upload();

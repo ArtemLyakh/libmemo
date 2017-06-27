@@ -104,6 +104,11 @@ namespace Libmemo {
                         Text = "Редактировать данные пользователей",
                         Action = () => App.GlobalPage.PushRoot(new PersonalDataPageAdmin())
                     };
+                    yield return new MenuItem {
+                        Title = "Список пользователей",
+                        Text = "Список пользователей",
+                        Action = () => App.GlobalPage.PushRoot(new UserListPageAdmin())
+                    };
                 } else {
                     yield return new MenuItem {
                         Title = "Добавить",
