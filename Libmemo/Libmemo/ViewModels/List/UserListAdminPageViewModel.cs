@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Libmemo {
-    class UserListAdminPageViewModel : BaseSearchViewModel<UserListAdminPageViewModel.User> {
+    class UserListAdminPageViewModel : BaseListViewModel<UserListAdminPageViewModel.User> {
         public class User : ISearchFiltrable {
             public string FilterString => Email;
             public string ShowString => $"{Id}: {Email}";

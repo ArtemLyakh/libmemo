@@ -8,7 +8,7 @@ using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Libmemo {
-    abstract class BaseSearchViewModel<T> : INotifyPropertyChanged where T : ISearchFiltrable {
+    abstract class BaseListViewModel<T> : INotifyPropertyChanged where T : ISearchFiltrable {
 
         private IEnumerable<T> _data = null;
         protected IEnumerable<T> Data {
@@ -20,8 +20,8 @@ namespace Libmemo {
             }
         }
 
-        public BaseSearchViewModel() { }
-        public BaseSearchViewModel(IEnumerable<T> data, string search = "") {
+        public BaseListViewModel() { }
+        public BaseListViewModel(IEnumerable<T> data, string search = "") {
             this.Data = data;
             this.Search = search;
 
