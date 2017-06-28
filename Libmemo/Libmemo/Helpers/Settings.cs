@@ -7,9 +7,7 @@ using System.Collections.Generic;
 
 namespace Libmemo {
     public static class Settings {
-        private static ISettings AppSettings {
-            get => CrossSettings.Current;
-        }
+        private static ISettings AppSettings => CrossSettings.Current;
 
         #region Setting Constants
         public const string SERVER_URL = "http://libmemo.com";

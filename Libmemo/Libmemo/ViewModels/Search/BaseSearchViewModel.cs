@@ -10,11 +10,19 @@ using Xamarin.Forms;
 namespace Libmemo {
     abstract class BaseSearchViewModel<T> : INotifyPropertyChanged where T : ISearchFiltrable {
 
-        protected IEnumerable<T> data = null;
+        private IEnumerable<T> _data = null;
+        protected IEnumerable<T> Data {
+            get => _data;
+            set {
+                _data = value;
+                this.SearchList = value;
+                this.Search = null;
+            }
+        }
 
         public BaseSearchViewModel() { }
         public BaseSearchViewModel(IEnumerable<T> data, string search = "") {
-            this.data = data;
+            this.Data = data;
             this.Search = search;
 
             this.SearchCommand.Execute(null);
@@ -40,7 +48,7 @@ namespace Libmemo {
         private IEnumerable<T> _searchList = null;
         public IEnumerable<T> SearchList {
             get => _searchList;
-            set {
+            private set {
                 if (_searchList != value) {
                     _searchList = value;
                     OnPropertyChanged(nameof(SearchList));
@@ -50,10 +58,10 @@ namespace Libmemo {
 
         public ICommand SearchCommand {
             get => new Command(() => {
-                if (this.data == null) return;
-                var data = !string.IsNullOrWhiteSpace(this.Search) 
-                    ? this.data.AsEnumerable() 
-                    : this.data.Where(i => i.FilterString.ToLowerInvariant().IndexOf(this.Search.ToLowerInvariant()) != 1);
+                if (this.Data == null) return;
+                var data = string.IsNullOrWhiteSpace(this.Search) 
+                    ? this.Data.AsEnumerable() 
+                    : this.Data.Where(i => i.FilterString.ToLowerInvariant().IndexOf(this.Search.ToLowerInvariant()) != -1);
                 this.SearchList = data.OrderBy(i => i.FilterString);
             });
         }

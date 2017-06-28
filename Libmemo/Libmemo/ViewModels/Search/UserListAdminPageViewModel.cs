@@ -45,7 +45,7 @@ namespace Libmemo {
                     var str = await responce.Content.ReadAsStringAsync();
                     var data = JsonConvert.DeserializeObject<List<JsonData>>(str);
 
-                    this.SearchList = data.Select(i => new User { Id = i.id, Fio = i.fio, Email = i.email });
+                    this.Data = data.Select(i => new User { Id = i.id, Fio = i.fio, Email = i.email });
                 }
             } catch (Exception) {
                 App.ToastNotificator.Show("Ошибка загрузки данных");
