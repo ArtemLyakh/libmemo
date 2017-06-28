@@ -82,19 +82,19 @@
     <Compile Include="Helpers\PersonDataLoader.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Helpers\UtilsFunctions.cs" />
-    <Compile Include="Pages\AddPage.xaml.cs">
+    <Compile Include="Pages\PersonsManage\Add\AddPage.xaml.cs">
       <DependentUpon>AddPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\AddPageAdmin.xaml.cs">
+    <Compile Include="Pages\PersonsManage\Add\AddPageAdmin.xaml.cs">
       <DependentUpon>AddPageAdmin.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\DetailPage.xaml.cs">
       <DependentUpon>DetailPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\EditPersonPage.xaml.cs">
+    <Compile Include="Pages\PersonsManage\Edit\EditPersonPage.xaml.cs">
       <DependentUpon>EditPersonPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\EditPersonPageAdmin.xaml.cs">
+    <Compile Include="Pages\PersonsManage\Edit\EditPersonPageAdmin.xaml.cs">
       <DependentUpon>EditPersonPageAdmin.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Auth\Login\LoginPage.xaml.cs">
@@ -137,15 +137,15 @@
     <Compile Include="Tree\TreeDataBuilder.cs" />
     <Compile Include="Tree\TreeItem.cs" />
     <Compile Include="Tree\TreeJson.cs" />
-    <Compile Include="ViewModels\AddPageAdminViewModel.cs" />
-    <Compile Include="ViewModels\AddPageViewModel.cs" />
-    <Compile Include="ViewModels\Base\BaseAddViewModel.cs" />
-    <Compile Include="ViewModels\Base\BaseEditPersonViewModel.cs" />
+    <Compile Include="ViewModels\PersonsManage\Add\AddPageAdminViewModel.cs" />
+    <Compile Include="ViewModels\PersonsManage\Add\AddPageViewModel.cs" />
+    <Compile Include="ViewModels\PersonsManage\Add\BaseAddViewModel.cs" />
+    <Compile Include="ViewModels\PersonsManage\Edit\BaseEditPersonViewModel.cs" />
     <Compile Include="ViewModels\Auth\Register\BaseRegisterViewModel.cs" />
     <Compile Include="ViewModels\PersonalData\BasePersonalDataViewModel.cs" />
     <Compile Include="ViewModels\DetailPageViewModel.cs" />
-    <Compile Include="ViewModels\EditPersonPageAdminViewModel.cs" />
-    <Compile Include="ViewModels\EditPersonPageViewModel.cs" />
+    <Compile Include="ViewModels\PersonsManage\Edit\EditPersonPageAdminViewModel.cs" />
+    <Compile Include="ViewModels\PersonsManage\Edit\EditPersonPageViewModel.cs" />
     <Compile Include="ViewModels\Auth\Login\LoginPageViewModel.cs" />
     <Compile Include="ViewModels\MapPageViewModel.cs" />
     <Compile Include="ViewModels\PersonalData\PersonalDataPageAdminViewModel.cs" />
@@ -234,7 +234,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\AddPage.xaml">
+    <EmbeddedResource Include="Pages\PersonsManage\Add\AddPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -273,7 +273,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\AddPageAdmin.xaml">
+    <EmbeddedResource Include="Pages\PersonsManage\Add\AddPageAdmin.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -285,7 +285,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\EditPersonPage.xaml">
+    <EmbeddedResource Include="Pages\PersonsManage\Edit\EditPersonPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -297,7 +297,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\EditPersonPageAdmin.xaml">
+    <EmbeddedResource Include="Pages\PersonsManage\Edit\EditPersonPageAdmin.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
