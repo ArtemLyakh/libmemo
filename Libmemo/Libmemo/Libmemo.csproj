@@ -148,6 +148,7 @@
     <Compile Include="ViewModels\PersonsManage\Add\AddPageAdminViewModel.cs" />
     <Compile Include="ViewModels\PersonsManage\Add\AddPageViewModel.cs" />
     <Compile Include="ViewModels\PersonsManage\Add\BaseAddViewModel.cs" />
+    <Compile Include="ViewModels\PersonsManage\BaseManagePersonViewModel.cs" />
     <Compile Include="ViewModels\PersonsManage\Edit\BaseEditPersonViewModel.cs" />
     <Compile Include="ViewModels\Auth\Register\BaseRegisterViewModel.cs" />
     <Compile Include="ViewModels\PersonalData\BasePersonalDataViewModel.cs" />

@@ -18,31 +18,32 @@ namespace Libmemo {
         public EditPersonPageViewModel(int id) : base(id) { }
 
         protected override async void Send() {
-            var errors = Validate();
-            if (errors.Count() > 0) {
-                Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Ошибка", string.Join("\n", errors), "ОК"));
-                return;
-            }
+            throw new NotImplementedException();
+            //var errors = Validate();
+            //if (errors.Count() > 0) {
+            //    Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Ошибка", string.Join("\n", errors), "ОК"));
+            //    return;
+            //}
 
-            App.ToastNotificator.Show("Отправка на сервер");
+            //App.ToastNotificator.Show("Отправка на сервер");
 
-            PersonDataLoader uploader = new PersonDataLoader(Settings.EditPersonUrl);
+            //PersonDataLoader uploader = new PersonDataLoader(Settings.EditPersonUrl);
 
-            await AddParams(uploader);
+            ////await AddParams(uploader);
 
-            try {
-                var success = await uploader.Upload();
+            //try {
+            //    var success = await uploader.Upload();
 
-                if (success) {
-                    App.ToastNotificator.Show("Данные успешно отправлены");
-                    App.Database.Load();
-                    await App.GlobalPage.PopToRootPage();
-                } else {
-                    Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка отправки данных", "ОК"));
-                }
-            } catch (UnauthorizedAccessException) {
-                await AuthHelper.ReloginAsync();
-            }
+            //    if (success) {
+            //        App.ToastNotificator.Show("Данные успешно отправлены");
+            //        App.Database.Load();
+            //        await App.GlobalPage.PopToRootPage();
+            //    } else {
+            //        Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка отправки данных", "ОК"));
+            //    }
+            //} catch (UnauthorizedAccessException) {
+            //    await AuthHelper.ReloginAsync();
+            //}
         }  
 
     }

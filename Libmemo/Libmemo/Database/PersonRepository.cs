@@ -22,7 +22,7 @@ namespace Libmemo {
         public PersonRepository() {
             string databasePath = DependencyService.Get<ISQLite>().GetDatabasePath("database.db");
             database = new SQLiteConnection(databasePath);         
-            database.CreateTable<Person>();
+            database.CreateTable<Person.PersonDB>();
 
             this.LoadSuccess += () => App.ToastNotificator.Show("База данных загружена");
             this.LoadFail += () => App.ToastNotificator.Show("Ошибка загрузки данных с сервера");
@@ -34,29 +34,54 @@ namespace Libmemo {
         #region CRUD
 
         public async Task<Person> GetById(int id) => await Task.Run(() => {
-            lock (database) return database.Table<Person>().SingleOrDefault(i => i.Id == id);
+            lock (database) {
+                var item = database.Table<Person.PersonDB>().SingleOrDefault(i => i._Id == id);
+                return Person.ConvertFromDatabase(item);
+            }
         });
 
         public async Task<List<Person>> GetItems() => await Task.Run(() => {
-            lock (database) return database.Table<Person>().ToList();
+            lock (database) {
+                var list = new List<Person>();
+                foreach (var item in database.Table<Person.PersonDB>()) {
+                    var person = Person.ConvertFromDatabase(item);
+                    list.Add(person);
+                }
+                return list;
+            }
         });
         public async Task<List<Person>> GetItems(PersonType type) => await Task.Run(() => {
-            lock (database) return database.Table<Person>().Where(i => i.PersonType == type).ToList();
+            lock (database) {
+                var list = new List<Person>();
+                foreach (var item in database.Table<Person.PersonDB>()) {
+                    if (item._PersonType != type) continue;
+                    var person = Person.ConvertFromDatabase(item);
+                    list.Add(person);
+                }
+                return list;
+            }
         });
 
         public async Task SaveItems(IEnumerable<Person> items) => await Task.Run(() => {
-            lock (database)
-                foreach (var item in items)
-                    if (database.Update(item) == 0) database.Insert(item);
+            lock (database) {
+                foreach (var item in items) {
+                    var save = Person.ConvertToDatabase(item);
+                    if (database.Update(save) == 0) database.Insert(save);
+                }
+            }              
         });
 
         public async Task DeleteItems(IEnumerable<int> ids) => await Task.Run(() => {
-            lock (database)
-                foreach (var id in ids) database.Delete<Person>(id);
+            lock (database) {
+                foreach (var id in ids)
+                    database.Delete<Person.PersonDB>(id);
+            }
         });
 
         public async Task DeleteAllItems() => await Task.Run(() => {
-            lock (database) database.DeleteAll<Person>();
+            lock (database) {
+                database.DeleteAll<Person.PersonDB>();
+            }    
         });
 
         #endregion
