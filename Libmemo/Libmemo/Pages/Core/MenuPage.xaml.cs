@@ -121,6 +121,16 @@ namespace Libmemo {
                         Action = () => App.GlobalPage.PushRoot(new PersonalDataPage())
                     };
                     yield return new MenuItem {
+                        Title = "Коллекция",
+                        Text = "Коллекция",
+                        Action = () => {
+                            var page = new PersonCollectionPage();
+                            page.ItemSelected += async (object sender, PersonCollectionPageViewModel.Person item) =>
+                                await App.GlobalPage.Push(new EditPersonPage(item.Id));
+                            return App.GlobalPage.PushRoot(page);
+                        }
+                    };
+                    yield return new MenuItem {
                         Title = "Древо",
                         Text = "Редактирование генеалогического древа",
                         Action = () => App.GlobalPage.PushRoot(new TreePage())

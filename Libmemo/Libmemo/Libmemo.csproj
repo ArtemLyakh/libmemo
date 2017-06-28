@@ -82,6 +82,9 @@
     <Compile Include="Helpers\PersonDataLoader.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Helpers\UtilsFunctions.cs" />
+    <Compile Include="Pages\PersonCollectionPage.xaml.cs">
+      <DependentUpon>PersonCollectionPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\PersonsManage\Add\AddPage.xaml.cs">
       <DependentUpon>AddPage.xaml</DependentUpon>
     </Compile>
@@ -137,6 +140,7 @@
     <Compile Include="Tree\TreeDataBuilder.cs" />
     <Compile Include="Tree\TreeItem.cs" />
     <Compile Include="Tree\TreeJson.cs" />
+    <Compile Include="ViewModels\List\PersonCollectionPageViewModel.cs" />
     <Compile Include="ViewModels\PersonsManage\Add\AddPageAdminViewModel.cs" />
     <Compile Include="ViewModels\PersonsManage\Add\AddPageViewModel.cs" />
     <Compile Include="ViewModels\PersonsManage\Add\BaseAddViewModel.cs" />
@@ -326,7 +330,12 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\PersonCollectionPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Forms.2.3.4.231\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.3.4.231\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

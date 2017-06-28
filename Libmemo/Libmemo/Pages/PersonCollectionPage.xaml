@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Libmemo"
+             x:Class="Libmemo.PersonCollectionPage"
+             NavigationPage.HasNavigationBar="False"
+             >
+    <ContentPage.Content>
+        <StackLayout>
+
+            <StackLayout Orientation="Horizontal" Padding="10,0,10,0" Spacing="1" VerticalOptions="Start">
+                <Entry Text="{Binding Search}"
+                   VerticalOptions="Center"
+                   HorizontalOptions="FillAndExpand"
+                   >
+                    <Entry.Behaviors>
+                        <local:EntrySelectedBehavior SelectedCommand="{Binding SearchCommand}" />
+                        <local:EntryChangedBehavior ChangedCommand="{Binding SearchCommand}" />
+                    </Entry.Behaviors>
+                </Entry>
+                <Button x:Name="searchButton"
+                    Text="&#x1F50D;"
+                    FontSize="Default"
+                    Command="{Binding SearhCommand}"
+                    VerticalOptions="FillAndExpand"
+                    WidthRequest="{Binding Source={x:Reference Name=searchButton}, Path=Height}"
+                    />
+            </StackLayout>
+
+            <local:CustomListView x:Name="ShowList" 
+                                  HasUnevenRows="True"
+                                  ItemsSource="{Binding SearchList}"
+                                  ItemClickCommand="{Binding ItemSelectedCommand}"
+                                  >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <StackLayout Orientation="Horizontal" Padding="10" Spacing="5">
+                                    <Label Text="D" IsVisible="{Binding IsDead}" VerticalOptions="CenterAndExpand" />
+                                    <Image Source="{Binding Image}" />
+                                    <Label Text="{Binding Id}" VerticalOptions="CenterAndExpand" />
+                                    <Label Text="{Binding Fio}" VerticalOptions="CenterAndExpand" />
+                                </StackLayout>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </local:CustomListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -15,14 +15,11 @@ namespace Libmemo {
 
             var model = new UserListAdminPageViewModel();
             model.ItemSelected += (object sender, UserListAdminPageViewModel.User e) => this.ItemSelected?.Invoke(this, e);
-            model.SearchChanged += (object sender, string e) => this.SearchChanged?.Invoke(this, e);
 
             BindingContext = model;
         }
-
-
+ 
         public event EventHandler<UserListAdminPageViewModel.User> ItemSelected;
-        public event EventHandler<string> SearchChanged;
 
     }
 }
