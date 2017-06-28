@@ -8,7 +8,7 @@ using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Libmemo {
-    abstract class BaseListViewModel<T> : INotifyPropertyChanged where T : ISearchFiltrable {
+    public abstract class BaseListViewModel<T> : INotifyPropertyChanged where T : ISearchFiltrable {
 
         private IEnumerable<T> _data = null;
         protected IEnumerable<T> Data {

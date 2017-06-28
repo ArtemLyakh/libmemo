@@ -127,7 +127,7 @@
     <Compile Include="Pages\TreePage.xaml.cs">
       <DependentUpon>TreePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\PersonalData\UserListPageAdmin.xaml.cs">
+    <Compile Include="Pages\UserListPageAdmin.xaml.cs">
       <DependentUpon>UserListPageAdmin.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -321,7 +321,7 @@
     <EmbeddedResource Include="Tree\Images\add_button.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\PersonalData\UserListPageAdmin.xaml">
+    <EmbeddedResource Include="Pages\UserListPageAdmin.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

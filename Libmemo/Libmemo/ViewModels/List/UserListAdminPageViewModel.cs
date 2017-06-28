@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Libmemo {
-    class UserListAdminPageViewModel : BaseListViewModel<UserListAdminPageViewModel.User> {
+    public class UserListAdminPageViewModel : BaseListViewModel<UserListAdminPageViewModel.User> {
         public class User : ISearchFiltrable {
             public string FilterString => Email;
             public string ShowString => $"{Id}: {Email}";
@@ -19,9 +19,6 @@ namespace Libmemo {
 
         public UserListAdminPageViewModel() : base() {
             Task.Run(async () => await Load());
-
-            this.ItemSelected += async (object sender, User item) => 
-                await App.GlobalPage.Push(new PersonalDataPageAdmin(item.Id));
         }
 
 

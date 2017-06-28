@@ -49,9 +49,9 @@ namespace Libmemo {
             { "Мертвый", PersonType.Dead },
             { "Живой", PersonType.Live }
         };
-        public List<string> PersonTypeList {
-            get => personTypeDictionary.Select(i => i.Key).ToList();
-        }
+        public List<string> PersonTypeList =>
+            personTypeDictionary.Select(i => i.Key).ToList();
+
 
         private int _personTypeIndex;
         public int PersonTypeIndex {
@@ -269,15 +269,16 @@ namespace Libmemo {
                     var status = results[Permission.Storage];
                     if (status != PermissionStatus.Granted) {
                         Device.BeginInvokeOnMainThread(async () =>
-                            await App.Current.MainPage.DisplayAlert("Ошибка", "Необходимо разрешение для чтения файла", "Ок"));
+                            await App.Current.MainPage.DisplayAlert("Ошибка", "Необходимо разрешение на чтение файла", "Ок"));
                         return;
                     }
                 }
 
                 try {
                     var file = await Plugin.FilePicker.CrossFilePicker.Current.PickFile();
-                    SchemeStream?.Dispose();
+                    if (file == null) return;
 
+                    ResetScheme();
                     var stream = DependencyService.Get<IFileStreamPicker>().GetStream(file.FilePath);
                     if (stream.Length > SCHEME_FILE_MAX_SIZE * 1024 * 1024) {
                         Device.BeginInvokeOnMainThread(async () =>
@@ -328,9 +329,9 @@ namespace Libmemo {
         }
 
         public ICommand ResetCommand {
-            get => new Command(ResetFields);
+            get => new Command(Reset);
         }
-        protected virtual void ResetFields() {
+        protected virtual void Reset() {
             this.LastName = null;
             this.FirstName = null;
             this.SecondName = null;
@@ -351,60 +352,6 @@ namespace Libmemo {
         }
         protected abstract void Send();
 
-
-
-        protected virtual IEnumerable<string> Validate() {
-            if (this.IsDeadPerson && !this.UserPosition.HasValue) yield return "Ошибка определения местоположения";
-            if (String.IsNullOrWhiteSpace(this.FirstName)) yield return "Поле \"Имя\" не заполнено";
-        }
-
-        protected virtual async Task AddParams(PersonDataLoader uploader) {
-            uploader.Params.Add("type", this.IsDeadPerson ? "dead" : "live");
-
-            if (this.IsDeadPerson) {
-                uploader.Params.Add("latitude", this.UserPosition.Value.Latitude.ToString(CultureInfo.InvariantCulture));
-                uploader.Params.Add("longitude", this.UserPosition.Value.Longitude.ToString(CultureInfo.InvariantCulture));
-            }        
-
-            uploader.Params.Add("first_name", this.FirstName.ToString());
-
-            if (!string.IsNullOrWhiteSpace(this.SecondName)) {
-                uploader.Params.Add("second_name", this.SecondName.ToString());
-            }
-            if (!string.IsNullOrWhiteSpace(this.LastName)) {
-                uploader.Params.Add("last_name", this.LastName.ToString());
-            }
-
-            if (this.DateBirth.HasValue) {
-                uploader.Params.Add("date_birth", this.DateBirth.Value.ToString("yyyy-MM-dd"));
-            }
-            if (this.DateDeath.HasValue) {
-                uploader.Params.Add("date_death", this.DateDeath.Value.ToString("yyyy-MM-dd"));
-            }
-
-            if (this.PhotoSource != null) {
-                await uploader.SetFile(this.PhotoSource);
-                //var path = ((FileImageSource)PhotoSource).File;
-                //uploader.Files.Add("photo", Tuple.Create(Path.GetFileName(path), DependencyService.Get<IFileStreamPicker>().GetStream(path)));
-            }
-
-            if (this.IsDeadPerson) {
-                if (!string.IsNullOrWhiteSpace(this.Text)) {
-                    uploader.Params.Add("text", this.Text.ToString());
-                }
-                if (this.Height.HasValue) {
-                    uploader.Params.Add("height", this.Height.Value.ToString(CultureInfo.InvariantCulture));
-                }
-                if (this.Width.HasValue) {
-                    uploader.Params.Add("width", this.Width.Value.ToString(CultureInfo.InvariantCulture));
-                }
-
-                if (this.SchemeStream != null) {
-                    uploader.Files.Add("scheme", Tuple.Create(this.SchemeName, this.SchemeStream));
-                }
-            }
-
-        }
 
 
 

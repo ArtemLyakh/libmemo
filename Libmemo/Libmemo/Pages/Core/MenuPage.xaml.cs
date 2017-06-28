@@ -102,7 +102,12 @@ namespace Libmemo {
                     yield return new MenuItem {
                         Title = "Список пользователей",
                         Text = "Список пользователей",
-                        Action = () => App.GlobalPage.PushRoot(new UserListPageAdmin())
+                        Action = () => {
+                            var page = new UserListPageAdmin();
+                            page.ItemSelected += async (object sender, UserListAdminPageViewModel.User item) =>
+                                await App.GlobalPage.Push(new PersonalDataPageAdmin(item.Id));
+                            return App.GlobalPage.PushRoot(page);
+                        }
                     };
                 } else {
                     yield return new MenuItem {
