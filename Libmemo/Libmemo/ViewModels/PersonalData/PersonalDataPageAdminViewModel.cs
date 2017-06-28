@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -9,127 +11,103 @@ using Xamarin.Forms;
 namespace Libmemo {
     public class PersonalDataPageAdminViewModel : BasePersonalDataViewModel {
 
-        public PersonalDataPageAdminViewModel() : base() { }
-
-        public PersonalDataPageAdminViewModel(int id) : base() {
-            LoadData(id);
+        private int Id { get; set; }
+        public PersonalDataPageAdminViewModel(int id) {
+            this.Id = id;
+            this.ResetCommand.Execute(null);
         }
 
-        protected PersonData PersonData { get; set; } = null;
-
-        private User _user;
-        public User User {
-            get => _user;
+        private string _email;
+        public string Email {
+            get => _email;
             set {
-                if (_user != value) {
-                    _user = value;
-                    this.OnPropertyChanged(nameof(User));
-                    this.OnPropertyChanged(nameof(OwnerText));
+                if (_email != value) {
+                    _email = value;
+                    this.OnPropertyChanged(nameof(Email));
                 }
             }
         }
-        public string OwnerText { get => this.User == null ? "Не выбрано" : $"{this.User.Id}: {this.User.FIO}"; }
 
-        public ICommand SelectOwnerCommand {
-            get => new Command(async () => {
-                //var searchPage = new SearchPage(await App.Database.GetItems<User>());
-                SearchPage searchPage = null;
-                searchPage.ItemSelected += async (sender, id) => {
-                    //this.User = await App.Database.GetById<User>(id);
-                    //LoadData(this.User.Owner);
-                };
 
-                await App.GlobalPage.Push(searchPage);
-            });
+        class JsonData {
+            public int id { get; set; }
+            public string email { get; set; }
+            public string first_name { get; set; }
+            public string second_name { get; set; }
+            public string last_name { get; set; }
+            public string date_birth { get; set; }
+            public string photo_url { get; set; }
         }
-
-
-
-        private int _dbId = default(int);
-        private async void LoadSuccess() {
-            App.Database.LoadSuccess -= LoadSuccess;
-            App.Database.LoadFail -= LoadFail;
-            //this.User = (await App.Database.GetItems<User>()).Where(i => i.Owner == _dbId).FirstOrDefault();         
-        }
-        private async void LoadFail() {
-            App.Database.LoadSuccess -= LoadSuccess;
-            App.Database.LoadFail -= LoadFail;
-            Device.BeginInvokeOnMainThread(() => App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка синхронизации", "ОК"));
-            await App.GlobalPage.PopToRootPage();
-        }
-
-        protected async void LoadData(int id) {
-            //var user = (await App.Database.GetItems<User>()).Where(i => i.Owner == id).FirstOrDefault();
-            User user = null;
-            if (user != null) {
-                this.User = user;
-            } else {
-                _dbId = id;
-                App.Database.LoadSuccess += LoadSuccess;
-                App.Database.LoadFail += LoadFail;
-                App.Database.Load();
-            }
-
-
-
-            var uri = new UriBuilder(Settings.PERSONAL_DATA_URL_ADMIN) { Query = $"id={id}" }.Uri;
-
-            var loader = new PersonDataLoader(uri);
+        protected async Task LoadData() {
+            var builder = new UriBuilder(Settings.PERSONAL_DATA_URL_ADMIN);
+            builder.Query = $"id={this.Id}";
+            var uri = builder.ToString();
 
             try {
-                PersonData = await loader.GetPersonData();
-            } catch (UnauthorizedAccessException) {
-                await AuthHelper.ReloginAsync();
-                return;
-            }
+                using (var handler = new HttpClientHandler { CookieContainer = AuthHelper.CookieContainer })
+                using (var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(5) })
+                using (var responce = await client.GetAsync(uri)) {
 
-            if (PersonData == null) {
-                App.ToastNotificator.Show("Ошибка загрузки текущих данных");
-            } else {
-                App.ToastNotificator.Show("Данные с сервера получены");
-                this.ResetCommand.Execute(null);
+                    if (responce.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
+                        await AuthHelper.ReloginAsync();
+                        return;
+                    }
+
+                    responce.EnsureSuccessStatusCode();
+                    var str = await responce.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<JsonData>(str);
+
+                    this.Email = data.email;
+                    this.FirstName = data.first_name;
+                    this.SecondName = data.second_name;
+                    this.LastName = data.last_name;
+                    this.DateBirth = DateTime.TryParse(data.date_birth, out DateTime dateBirth) ? (DateTime?)dateBirth : null;
+                    this.PhotoSource = Uri.TryCreate(data.photo_url, UriKind.Absolute, out Uri photoUri)
+                        ? new UriImageSource { CachingEnabled = true, Uri = photoUri }
+                        : null;
+
+                    App.ToastNotificator.Show("Данные получены");
+                }
+            } catch {
+                App.ToastNotificator.Show("Ошибка загрузки данных");
             }
 
         }
-
-
-
-
-
-        //protected override async Task AddParams(PersonDataLoader uploader) {
-        //    await base.AddParams(uploader);
-        //    uploader.Params.Add("id", this.User.Owner.ToString());
-        //}
-
-
+        protected override async Task Reset() => await LoadData();
 
         protected override async Task Send() {
-            if (this.User == null) {
-                Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Ошибка", "Не указан пользователь", "ОК"));
-                return;
-            }
-
-            App.ToastNotificator.Show("Отправка на сервер");
-
-            PersonDataLoader uploader = new PersonDataLoader(Settings.PERSONAL_DATA_URL_ADMIN);
-            //await AddParams(uploader);
-
             try {
-                var success = await uploader.Upload();
+                using (var handler = new HttpClientHandler { CookieContainer = AuthHelper.CookieContainer })
+                using (var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(15) })
+                using (var content = new MultipartFormDataContent(String.Format("----------{0:N}", Guid.NewGuid()))) {
+                    content.Add(new StringContent(this.Id.ToString()), "id");
+                    content.Add(new StringContent(this.FirstName), "first_name");
+                    content.Add(new StringContent(this.SecondName), "second_name");
+                    content.Add(new StringContent(this.LastName), "last_name");
+                    if (this.DateBirth.HasValue) {
+                        content.Add(new StringContent(this.DateBirth.Value.ToString("yyyy-MM-dd")), "date_birth");
+                    }
+                    if (this.PhotoSource != null && this.PhotoSource is FileImageSource) {
+                        var result = await DependencyService.Get<IImageFileToByteArrayConverter>().Get(this.PhotoSource);
+                        content.Add(new ByteArrayContent(result), "photo", "photo.jpg");
+                    }
 
-                if (success) {
-                    App.ToastNotificator.Show("Данные успешно отправлены");
-                    LoadData(this.User.Owner);
-                } else {
-                    Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка отправки данных", "ОК"));
+                    using (var message = await client.PostAsync(Settings.PERSONAL_DATA_URL_ADMIN, content)) {
+                        if (message.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
+                            await AuthHelper.ReloginAsync();
+                            return;
+                        }
+
+                        message.EnsureSuccessStatusCode();
+                        App.ToastNotificator.Show("Данные успешно отправлены");
+                        this.ResetCommand.Execute(null);
+                    }
                 }
-            } catch (UnauthorizedAccessException) {
-                await AuthHelper.ReloginAsync();
+            } catch {
+                Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка отправки данных", "ОК"));
             }
+
         }
 
-        protected override Task Reset() {
-            throw new NotImplementedException();
-        }
     }
 }

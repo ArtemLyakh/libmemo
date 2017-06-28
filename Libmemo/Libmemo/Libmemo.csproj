@@ -97,28 +97,28 @@
     <Compile Include="Pages\EditPersonPageAdmin.xaml.cs">
       <DependentUpon>EditPersonPageAdmin.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\LoginPage.xaml.cs">
+    <Compile Include="Pages\Auth\Login\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\MainPage.xaml.cs">
+    <Compile Include="Pages\Core\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\MapPage.xaml.cs">
       <DependentUpon>MapPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\MenuPage.xaml.cs">
+    <Compile Include="Pages\Core\MenuPage.xaml.cs">
       <DependentUpon>MenuPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\PersonalDataPage.xaml.cs">
+    <Compile Include="Pages\PersonalData\PersonalDataPage.xaml.cs">
       <DependentUpon>PersonalDataPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\PersonalDataPageAdmin.xaml.cs">
+    <Compile Include="Pages\PersonalData\PersonalDataPageAdmin.xaml.cs">
       <DependentUpon>PersonalDataPageAdmin.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\RegisterAdminPage.xaml.cs">
+    <Compile Include="Pages\Auth\Register\RegisterAdminPage.xaml.cs">
       <DependentUpon>RegisterAdminPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\RegisterPage.xaml.cs">
+    <Compile Include="Pages\Auth\Register\RegisterPage.xaml.cs">
       <DependentUpon>RegisterPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\SearchPage.xaml.cs">
@@ -127,7 +127,7 @@
     <Compile Include="Pages\TreePage.xaml.cs">
       <DependentUpon>TreePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\UserListPageAdmin.xaml.cs">
+    <Compile Include="Pages\PersonalData\UserListPageAdmin.xaml.cs">
       <DependentUpon>UserListPageAdmin.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -141,20 +141,20 @@
     <Compile Include="ViewModels\AddPageViewModel.cs" />
     <Compile Include="ViewModels\Base\BaseAddViewModel.cs" />
     <Compile Include="ViewModels\Base\BaseEditPersonViewModel.cs" />
-    <Compile Include="ViewModels\Base\BaseRegisterViewModel.cs" />
+    <Compile Include="ViewModels\Auth\Register\BaseRegisterViewModel.cs" />
     <Compile Include="ViewModels\PersonalData\BasePersonalDataViewModel.cs" />
     <Compile Include="ViewModels\DetailPageViewModel.cs" />
     <Compile Include="ViewModels\EditPersonPageAdminViewModel.cs" />
     <Compile Include="ViewModels\EditPersonPageViewModel.cs" />
-    <Compile Include="ViewModels\LoginPageViewModel.cs" />
+    <Compile Include="ViewModels\Auth\Login\LoginPageViewModel.cs" />
     <Compile Include="ViewModels\MapPageViewModel.cs" />
     <Compile Include="ViewModels\PersonalData\PersonalDataPageAdminViewModel.cs" />
     <Compile Include="ViewModels\PersonalData\PersonalDataPageViewModel.cs" />
-    <Compile Include="ViewModels\RegisterAdminPageViewModel.cs" />
-    <Compile Include="ViewModels\RegisterPageViewModel.cs" />
+    <Compile Include="ViewModels\Auth\Register\RegisterAdminPageViewModel.cs" />
+    <Compile Include="ViewModels\Auth\Register\RegisterPageViewModel.cs" />
     <Compile Include="ViewModels\SearchPageViewModel.cs" />
-    <Compile Include="ViewModels\Search\BaseSearchViewModel.cs" />
-    <Compile Include="ViewModels\Search\UserListAdminPageViewModel.cs" />
+    <Compile Include="ViewModels\List\BaseListViewModel.cs" />
+    <Compile Include="ViewModels\List\UserListAdminPageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml">
@@ -240,13 +240,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\MainPage.xaml">
+    <EmbeddedResource Include="Pages\Core\MainPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\MenuPage.xaml">
+    <EmbeddedResource Include="Pages\Core\MenuPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -255,19 +255,19 @@
     <EmbeddedResource Include="Images\side-menu.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\LoginPage.xaml">
+    <EmbeddedResource Include="Pages\Auth\Login\LoginPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\RegisterPage.xaml">
+    <EmbeddedResource Include="Pages\Auth\Register\RegisterPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\PersonalDataPage.xaml">
+    <EmbeddedResource Include="Pages\PersonalData\PersonalDataPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -291,7 +291,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\RegisterAdminPage.xaml">
+    <EmbeddedResource Include="Pages\Auth\Register\RegisterAdminPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -303,7 +303,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\PersonalDataPageAdmin.xaml">
+    <EmbeddedResource Include="Pages\PersonalData\PersonalDataPageAdmin.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -321,11 +321,12 @@
     <EmbeddedResource Include="Tree\Images\add_button.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\UserListPageAdmin.xaml">
+    <EmbeddedResource Include="Pages\PersonalData\UserListPageAdmin.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Forms.2.3.4.231\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.3.4.231\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

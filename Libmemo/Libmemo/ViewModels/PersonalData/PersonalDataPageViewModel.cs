@@ -49,9 +49,9 @@ namespace Libmemo {
                         ? new UriImageSource { CachingEnabled = true, Uri = photoUri }
                         : null;
 
-                    App.ToastNotificator.Show("Данные обновлены");
+                    App.ToastNotificator.Show("Данные получены");
                 }
-            } catch (Exception) {
+            } catch {
                 App.ToastNotificator.Show("Ошибка загрузки данных");
             }
 

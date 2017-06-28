@@ -66,13 +66,9 @@ namespace Libmemo {
             });
         }
 
-        public ICommand ItemSelectedCommand {
-            get => new Command<object>(async (object selected) => {
-                T item = (T)selected;
-                await App.GlobalPage.Pop();
-                ItemSelected?.Invoke(this, item);
-            });
-        }
+        public ICommand ItemSelectedCommand => 
+            new Command<object>(selected => ItemSelected?.Invoke(this, (T)selected));
+        
 
 
 

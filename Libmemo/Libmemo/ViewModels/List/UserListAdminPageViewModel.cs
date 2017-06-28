@@ -19,9 +19,9 @@ namespace Libmemo {
 
         public UserListAdminPageViewModel() : base() {
             Task.Run(async () => await Load());
-            this.ItemSelected += (object sender, User item) => {
-                var q = 1;
-            };
+
+            this.ItemSelected += async (object sender, User item) => 
+                await App.GlobalPage.Push(new PersonalDataPageAdmin(item.Id));
         }
 
 
