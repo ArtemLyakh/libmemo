@@ -95,6 +95,16 @@ namespace Libmemo {
                         Action = () => App.GlobalPage.PushRoot(new AddPageAdmin())
                     };
                     yield return new MenuItem {
+                        Title = "Коллекция",
+                        Text = "Коллекция",
+                        Action = () => {
+                            var page = new PersonCollectionAdminPage();
+                            page.ItemSelected += async (object sender, PersonCollectionAdminPageViewModel.Person item) =>
+                                await App.GlobalPage.Push(new EditPersonPageAdmin(item.Id));
+                            return App.GlobalPage.PushRoot(page);
+                        }
+                    };
+                    yield return new MenuItem {
                         Title = "Зарегистрировать пользователя",
                         Text = "Админ",
                         Action = () => App.GlobalPage.PushRoot(new RegisterAdminPage())

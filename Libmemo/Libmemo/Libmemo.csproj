@@ -82,6 +82,9 @@
     <Compile Include="Helpers\PersonDataLoader.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Helpers\UtilsFunctions.cs" />
+    <Compile Include="Pages\PersonCollectionAdminPage.xaml.cs">
+      <DependentUpon>PersonCollectionAdminPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\PersonCollectionPage.xaml.cs">
       <DependentUpon>PersonCollectionPage.xaml</DependentUpon>
     </Compile>
@@ -140,6 +143,7 @@
     <Compile Include="Tree\TreeDataBuilder.cs" />
     <Compile Include="Tree\TreeItem.cs" />
     <Compile Include="Tree\TreeJson.cs" />
+    <Compile Include="ViewModels\List\PersonCollectionAdminPageViewModel.cs" />
     <Compile Include="ViewModels\List\PersonCollectionPageViewModel.cs" />
     <Compile Include="ViewModels\PersonsManage\Add\AddPageAdminViewModel.cs" />
     <Compile Include="ViewModels\PersonsManage\Add\AddPageViewModel.cs" />
@@ -332,6 +336,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Pages\PersonCollectionPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\PersonCollectionAdminPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
