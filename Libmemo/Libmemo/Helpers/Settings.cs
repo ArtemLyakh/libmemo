@@ -28,6 +28,7 @@ namespace Libmemo {
         public const string ADD_PERSON_URL = SERVER_URL + "/api/database/add.php";
         public const string ADD_PERSON_URL_ADMIN = SERVER_URL + "/api/database/add_admin.php";
 
+        public const string EDIT_PERSON_URL = SERVER_URL + "/api/database/edit.php";
 
 
         
@@ -37,7 +38,6 @@ namespace Libmemo {
 
         
 
-        private const string EDIT_PERSON_URL = SERVER_URL + "/api/edit.php";
         private const string EDIT_PERSON_URL_ADMIN = SERVER_URL + "/api/admin/edit.php";
 
 
@@ -99,9 +99,6 @@ namespace Libmemo {
             }
         }
 
-
-
-        public static string EditPersonUrl { get; } = EDIT_PERSON_URL;
         public static string EditPersonUrlAdmin { get; } = EDIT_PERSON_URL_ADMIN;
 
     }

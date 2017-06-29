@@ -16,13 +16,14 @@ namespace Libmemo {
         #endregion
 
         public MapPageViewModel() {
-            InitPinsFromMemory();
 
             GetGPSPermission();
 
             Zoom = DEFAULT_ZOOM;
             MapCenter = new Position(DEFAULT_LATITUDE, DEFAULT_LONGITUDE);
         }
+
+        public ICommand SetupPins => new Command(() => InitPinsFromMemory());
 
         public void StartListen() {
             //TTS listeners

@@ -30,8 +30,16 @@
         <StackLayout HorizontalOptions="FillAndExpand" Spacing="15" IsVisible="{Binding IsDeadPerson}">
             <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" Spacing="0">
                 <Label Text="{Binding PersonLatLon}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" />
-                <Button x:Name="geoButton"
+                <Button x:Name="goToGeoButton"
                         Text="&#x2295;"
+                        HorizontalOptions="End"
+                        Command="{Binding GoToGeoCommand}" 
+                        IsVisible="{Binding IsLatLonShow}"    
+                        VerticalOptions="FillAndExpand"
+                        WidthRequest="{Binding Source={x:Reference Name=goToGeoButton}, Path=Height}" 
+                        />                
+                <Button x:Name="geoButton"
+                        Text="C"
                         HorizontalOptions="End"
                         Command="{Binding CurrentGeoCommand}" 
                         IsVisible="{Binding IsLatLonShow}"    

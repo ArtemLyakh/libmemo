@@ -23,6 +23,8 @@ namespace Libmemo {
             base.OnAppearing();
             ((MapPageViewModel)BindingContext).SetGPSTracking(true);
             ((MapPageViewModel)BindingContext).StartListen();
+
+            ((MapPageViewModel)BindingContext).SetupPins.Execute(null);
         }
 
     }

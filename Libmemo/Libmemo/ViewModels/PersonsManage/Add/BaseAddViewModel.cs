@@ -35,5 +35,11 @@ namespace Libmemo {
             ResetScheme();
         }
 
+        protected override void UserPositionChanged(Position position) {
+            base.UserPositionChanged(position);
+            this.MapCenter = position;
+        }
+
+
     }
 }

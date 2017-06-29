@@ -29,7 +29,7 @@ namespace Libmemo {
                 Visible = true
             });
 
-            this.ResetCommand.Execute(null);
+            this.ResetCommand.Execute(null);     
         }
 
 
@@ -96,8 +96,19 @@ namespace Libmemo {
         }
 
 
+
         public ICommand ButtonShowHideClickCommand {
-            get => new Command(() => IsLatLonShow = !IsLatLonShow);
+            get => new Command(() => {
+                IsLatLonShow = !IsLatLonShow;
+                if (IsLatLonShow) {
+                    if (this.PersonPosition != default(Position))
+                        this.MapCenter = this.PersonPosition;
+                    else if (this.UserPosition.HasValue)
+                        this.MapCenter = this.UserPosition.Value;
+                    else
+                        this.UserPositionChangedFirstTime += (object sender, Position position) => this.MapCenter = position;
+                }
+            });
         }
 
 
@@ -119,10 +130,13 @@ namespace Libmemo {
             );
         }
 
+        
 
 
-
-
+        public ICommand GoToGeoCommand => new Command(() => {
+            if (this.UserPosition.HasValue)
+                this.MapCenter = this.UserPosition.Value;
+        });
 
 
 
@@ -132,7 +146,7 @@ namespace Libmemo {
 
 
         protected override async void Reset() {
-            var person = await App.Database.GetById(Id);          
+            var person = await App.Database.GetById(Id);
 
             this.Type = person.PersonType;
 
@@ -144,6 +158,7 @@ namespace Libmemo {
             
             if (person.PersonType == PersonType.Dead) {
                 this.PersonPosition = new Position(person.Latitude, person.Longitude);
+                this.MapCenter = this.PersonPosition;
 
                 this.DateDeath = person.DateDeath;
                 this.Text = person.Text;
@@ -155,7 +170,6 @@ namespace Libmemo {
         }
 
 
-  
 
 
 

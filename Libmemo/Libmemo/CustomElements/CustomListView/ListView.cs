@@ -28,17 +28,17 @@ namespace Libmemo {
         private object prevTapped = null;
         private void OnItemTapped(object sender, ItemTappedEventArgs e) {
 
-            if (this.prevTapped != e.Item) {
-                this.prevTapped = e.Item;
-                return;
-            } else {
+            //if (this.prevTapped != e.Item) {
+            //    this.prevTapped = e.Item;
+            //    return;
+            //} else {
                 if (e.Item != null && this.ItemClickCommand != null && this.ItemClickCommand.CanExecute(e.Item)) {
                     this.ItemClickCommand.Execute(e.Item);
                     this.SelectedItem = null;
                     this.prevTapped = null;
 
                 }
-            }
+            //}
 
         }
     }

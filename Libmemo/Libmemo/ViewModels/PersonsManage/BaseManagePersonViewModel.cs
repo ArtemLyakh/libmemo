@@ -40,7 +40,6 @@ namespace Libmemo {
         }
 
 
-
         private Dictionary<PersonType, string> personTypeDictionary = new Dictionary<PersonType, string> {
             { PersonType.Dead, "Мертвый" },
             { PersonType.Alive, "Живой" }
@@ -291,15 +290,21 @@ namespace Libmemo {
 
 
 
-
-
-
         public ICommand UserPositionChangedCommand {
-            get => new Command<Position>((Position position) => {
-                this.MapCenter = position;
-                this.UserPosition = position;
-            });
+            get => new Command<Position>(UserPositionChanged);
         }
+
+        private bool _userPositionChangedFirstTime = true;
+        protected event EventHandler<Position> UserPositionChangedFirstTime;
+        protected virtual void UserPositionChanged(Position position) {
+            this.UserPosition = position;
+            if (_userPositionChangedFirstTime) {
+                _userPositionChangedFirstTime = false;
+                UserPositionChangedFirstTime?.Invoke(this, position);
+            }
+        }
+
+
 
         public ICommand PickPhotoCommand {
             get => new Command(async () => {

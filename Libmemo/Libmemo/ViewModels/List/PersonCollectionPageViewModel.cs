@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Libmemo {
@@ -18,10 +19,18 @@ namespace Libmemo {
         }
 
         public PersonCollectionPageViewModel() : base() {
-            Task.Run(async () => await Load());
+
+        }
+
+        public void StartListen() => App.Database.LoadSuccess += Database_LoadSuccess;
+        public void StopListen() => App.Database.LoadSuccess -= Database_LoadSuccess;
+        private void Database_LoadSuccess() {
+            LoadCommand.Execute(null);
         }
 
 
+
+        public ICommand LoadCommand => new Command(async () => await Load());
 
         private async Task Load() {
             if (!AuthHelper.CurrentUserId.HasValue) {

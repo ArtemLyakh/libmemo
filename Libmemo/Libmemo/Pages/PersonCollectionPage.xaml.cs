@@ -21,5 +21,15 @@ namespace Libmemo {
 
         public event EventHandler<PersonCollectionPageViewModel.Person> ItemSelected;
 
+        protected override void OnAppearing() {
+            base.OnAppearing();
+            ((PersonCollectionPageViewModel)BindingContext).StartListen();
+            ((PersonCollectionPageViewModel)BindingContext).LoadCommand.Execute(null);
+        }
+
+        protected override void OnDisappearing() {
+            base.OnDisappearing();
+            ((PersonCollectionPageViewModel)BindingContext).StopListen();
+        }
     }
 }
