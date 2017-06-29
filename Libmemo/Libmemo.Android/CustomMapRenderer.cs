@@ -3,6 +3,7 @@ using System.Linq;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Net.Http;
 
 using Android.Content;
 using Android.Widget;
@@ -477,6 +478,53 @@ namespace Libmemo.Droid {
         #endregion
 
         #region InfoWindow render
+        //public Android.Views.View GetInfoContents(Marker marker) {
+        //    var inflater = Android.App.Application.Context.GetSystemService(Context.LayoutInflaterService) as Android.Views.LayoutInflater;
+        //    if (inflater != null) {
+        //        Android.Views.View view;
+
+        //        var binding = _customPinsBindings.FirstOrDefault(i => i.Value.Id == marker.Id);
+        //        var customPin = binding.Key;
+
+        //        view = inflater.Inflate(Resource.Layout.MapInfoWindow, null);
+
+        //        var infoTitle = view.FindViewById<TextView>(Resource.Id.InfoWindowTitle);
+        //        var infoSubtitle = view.FindViewById<TextView>(Resource.Id.InfoWindowSubtitle);
+        //        var infoWindowButton = view.FindViewById<ImageButton>(Resource.Id.InfoWindowButton);
+
+        //        var b64 = string.IsNullOrWhiteSpace(customPin.Base64) ? null : customPin.Base64;
+        //        if (b64 != null) {
+        //            var imageBytes = Convert.FromBase64String(b64);
+        //            Android.Graphics.Bitmap bitmap;
+        //            try {
+        //                bitmap = Android.Graphics.BitmapFactory.DecodeByteArray(imageBytes, 0, imageBytes.Length);
+        //            } catch {
+        //                bitmap = null;
+        //            }
+
+        //            if (bitmap != null) {
+        //                infoWindowButton.SetMaxHeight(infoWindowButton.Height);
+        //                infoWindowButton.SetMaxWidth(infoWindowButton.Width);
+        //                infoWindowButton.SetBackgroundColor(Android.Graphics.Color.Transparent);
+        //                infoWindowButton.SetImageBitmap(bitmap);
+        //            }
+        //        }
+
+
+        //        if (infoTitle != null) {
+        //            infoTitle.Text = marker.Title;
+        //        }
+        //        if (infoSubtitle != null) {
+        //            infoSubtitle.Text = marker.Snippet;
+        //        }
+
+        //        return view;
+        //    }
+        //    return null;
+        //}
+
+        private Dictionary<Uri, Android.Graphics.Bitmap> MarkerIconsDownloaded = new Dictionary<Uri, Android.Graphics.Bitmap>();
+
         public Android.Views.View GetInfoContents(Marker marker) {
             var inflater = Android.App.Application.Context.GetSystemService(Context.LayoutInflaterService) as Android.Views.LayoutInflater;
             if (inflater != null) {
@@ -491,21 +539,43 @@ namespace Libmemo.Droid {
                 var infoSubtitle = view.FindViewById<TextView>(Resource.Id.InfoWindowSubtitle);
                 var infoWindowButton = view.FindViewById<ImageButton>(Resource.Id.InfoWindowButton);
 
-                var b64 = string.IsNullOrWhiteSpace(customPin.Base64) ? null : customPin.Base64;
-                if (b64 != null) {
-                    var imageBytes = Convert.FromBase64String(b64);
-                    Android.Graphics.Bitmap bitmap;
-                    try {
-                        bitmap = Android.Graphics.BitmapFactory.DecodeByteArray(imageBytes, 0, imageBytes.Length);
-                    } catch {
-                        bitmap = null;
-                    }
-
-                    if (bitmap != null) {
+                if (customPin.IconUri != null) {
+                    var inCache = MarkerIconsDownloaded.ContainsKey(customPin.IconUri) ? MarkerIconsDownloaded[customPin.IconUri] : null;
+                    if (inCache != null) {
                         infoWindowButton.SetMaxHeight(infoWindowButton.Height);
                         infoWindowButton.SetMaxWidth(infoWindowButton.Width);
                         infoWindowButton.SetBackgroundColor(Android.Graphics.Color.Transparent);
-                        infoWindowButton.SetImageBitmap(bitmap);
+                        infoWindowButton.SetImageBitmap(inCache);
+                    } else { 
+                        Task.Run(async () => {
+                            System.IO.Stream download;
+                            try {
+                                using (var client = new HttpClient { Timeout = TimeSpan.FromSeconds(3) })
+                                using (var responce = await client.GetAsync(customPin.IconUri)) {
+                                    download = await responce.Content.ReadAsStreamAsync();
+                                }
+                            } catch {
+                                download = null;
+                            }
+
+                            if (download != null) {
+                                Android.Graphics.Bitmap bitmap;
+                                try {
+                                    bitmap = await Android.Graphics.BitmapFactory.DecodeStreamAsync(download);
+                                } catch {
+                                    bitmap = null;
+                                }
+
+                                if (bitmap != null) {
+                                    MarkerIconsDownloaded.Add(customPin.IconUri, bitmap);
+
+                                    if (this._selectedPin != null && this._selectedPin == customPin) {
+                                        Device.BeginInvokeOnMainThread(() => marker.ShowInfoWindow());
+                                    }
+                                }
+                            }
+
+                        });
                     }
                 }
 
@@ -521,7 +591,6 @@ namespace Libmemo.Droid {
             }
             return null;
         }
-
 
         public Android.Views.View GetInfoWindow(Marker marker) {
             return null;

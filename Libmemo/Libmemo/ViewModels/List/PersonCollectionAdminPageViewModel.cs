@@ -35,9 +35,7 @@ namespace Libmemo {
                     Id = i.Id,
                     Fio = i.FIO,
                     IsDead = i.PersonType == PersonType.Dead,
-                    Image = string.IsNullOrWhiteSpace(i.Icon)
-                                ? null :
-                                ImageSource.FromStream(() => new MemoryStream(Convert.FromBase64String(i.Icon)))
+                    Image = i.IconUrl == null ? null : ImageSource.FromUri(i.IconUrl)
                 });
 
         }

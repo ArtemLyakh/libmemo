@@ -54,7 +54,7 @@ namespace Libmemo {
             public double _Latitude { get; set; }
             public double _Longitude { get; set; }
             public string _Text { get; set; }
-            public string _Icon { get; set; }
+            public string _IconUrl { get; set; }
             public string _ImageUrl { get; set; }
             public double? _Height { get; set; }
             public double? _Width { get; set; }
@@ -74,7 +74,7 @@ namespace Libmemo {
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public string Text { get; set; }
-        public string Icon { get; set; }
+        public Uri IconUrl { get; set; }
         public Uri ImageUrl { get; set; }
         public double? Height { get; set; }
         public double? Width { get; set; }
@@ -85,7 +85,7 @@ namespace Libmemo {
            _DateDeath = person.DateDeath,
            _FirstName = person.FirstName,
            _Height = person.Height,
-           _Icon = person.Icon,
+           _IconUrl = person.IconUrl?.ToString(),
            _Id = person.Id,
            _ImageUrl = person.ImageUrl?.ToString(),
            _LastModified = person.LastModified,
@@ -106,7 +106,7 @@ namespace Libmemo {
             DateDeath = personDb._DateDeath,
             FirstName = personDb._FirstName,
             Height = personDb._Height,
-            Icon = personDb._Icon,
+            IconUrl = Uri.TryCreate(personDb._IconUrl, UriKind.Absolute, out Uri iconUrl) ? iconUrl : null,
             Id = personDb._Id,
             ImageUrl = Uri.TryCreate(personDb._ImageUrl, UriKind.Absolute, out Uri imageUrl) ? imageUrl : null,
             LastModified = personDb._LastModified,

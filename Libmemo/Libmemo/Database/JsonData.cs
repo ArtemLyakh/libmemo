@@ -15,7 +15,7 @@ namespace Libmemo {
         public string second_name { get; set; }
         public string last_name { get; set; }
         public string date_birth { get; set; }
-        public string icon { get; set; }
+        public string icon_url { get; set; }
         public string photo_url { get; set; }
 
         public string latitude { get; set; }

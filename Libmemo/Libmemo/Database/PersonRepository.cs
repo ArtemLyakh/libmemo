@@ -177,7 +177,8 @@ namespace Libmemo {
 
                 if (DateTime.TryParse(item.date_birth, out DateTime dBirth)) person.DateBirth = dBirth;
 
-                if (!string.IsNullOrWhiteSpace(item.icon)) person.Icon = item.icon;
+                if (!string.IsNullOrWhiteSpace(item.icon_url) && Uri.TryCreate(item.icon_url, UriKind.Absolute, out Uri iconUrl))
+                    person.IconUrl = iconUrl;
 
                 if (!string.IsNullOrWhiteSpace(item.photo_url) && Uri.TryCreate(item.photo_url, UriKind.Absolute, out Uri photoUrl))
                     person.ImageUrl = photoUrl;

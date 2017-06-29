@@ -107,7 +107,7 @@ namespace Libmemo {
             Title = person.FIO,
             Text = person.DateBirth.HasValue && person.DateDeath.HasValue ? $"{person.DateBirth.Value.Date.ToString("dd.MM.yyyy")}\u2014{person.DateDeath.Value.ToString("dd.MM.yyyy")}" : "",
             Visible = true,
-            Base64 = person.Icon
+            IconUri = person.IconUrl
         };
 
         #endregion

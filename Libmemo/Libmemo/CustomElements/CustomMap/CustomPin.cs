@@ -1,10 +1,11 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
 namespace Libmemo {
     public class CustomPin : BindableObject {
 
-        public string Base64 { get; set; }
+        public Uri IconUri { get; set; }
 
         private bool _visible;
         public bool Visible {
