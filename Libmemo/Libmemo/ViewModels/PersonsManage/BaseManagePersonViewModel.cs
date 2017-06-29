@@ -58,6 +58,7 @@ namespace Libmemo {
             get => _personTypeIndex;
             set {
                 _personTypeIndex = value;
+                OnPropertyChanged(nameof(PersonTypeIndex));
                 switch (personTypeDictionary.ElementAt(value).Key) {
                     case PersonType.Alive: IsDeadPerson = false; break;
                     case PersonType.Dead: default: IsDeadPerson = true; break;

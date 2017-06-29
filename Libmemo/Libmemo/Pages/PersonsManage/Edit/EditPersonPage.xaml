@@ -211,7 +211,7 @@
                                HorizontalOptions="Start"
                                VerticalOptions="CenterAndExpand"
                                />
-                        <Button Text="Скачать"
+                        <Button Text="Открыть"
                                 Command="{Binding SchemeDownloadCommand}"
                                 HorizontalOptions="CenterAndExpand" 
                                 />
