@@ -15,7 +15,7 @@ namespace Libmemo {
         public const string DATABASE_URL = SERVER_URL + "/api/database/database.php";
 
         public const string USER_LIST_URL = SERVER_URL + "/api/admin/user_list.php";
-
+        public const string USER_DATA_URL = SERVER_URL + "/api/admin/user_data.php";
 
         public const string LOGIN_URL = SERVER_URL + "/api/auth/login.php";
 
@@ -29,17 +29,7 @@ namespace Libmemo {
         public const string ADD_PERSON_URL_ADMIN = SERVER_URL + "/api/database/add_admin.php";
 
         public const string EDIT_PERSON_URL = SERVER_URL + "/api/database/edit.php";
-
-
-        
-
-        
-
-
-        
-
-        private const string EDIT_PERSON_URL_ADMIN = SERVER_URL + "/api/admin/edit.php";
-
+        public const string EDIT_PERSON_URL_ADMIN = SERVER_URL + "/api/database/edit_admin.php";
 
         #endregion
 
@@ -98,8 +88,6 @@ namespace Libmemo {
                 AppSettings.AddOrUpdateValue("auth_credentials", value?.Serialize());
             }
         }
-
-        public static string EditPersonUrlAdmin { get; } = EDIT_PERSON_URL_ADMIN;
 
     }
 

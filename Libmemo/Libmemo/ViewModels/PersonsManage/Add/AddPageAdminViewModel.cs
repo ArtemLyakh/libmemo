@@ -32,8 +32,8 @@ namespace Libmemo {
 
         public ICommand SelectOwnerCommand {
             get => new Command(async () => {
-                var page = new UserListPageAdmin();
-                page.ItemSelected += async (object sender, UserListAdminPageViewModel.User user) => {
+                var page = new UserListPage();
+                page.ItemSelected += async (object sender, UserListPageViewModel.User user) => {
                     Owner = new User { Id = user.Id, Email = user.Fio, Fio = user.Fio };
                     await App.GlobalPage.Pop();
                 };
@@ -92,17 +92,22 @@ namespace Libmemo {
 
                     }
 
-                    using (var message = await client.PostAsync(Settings.ADD_PERSON_URL_ADMIN, content)) {
-                        if (message.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
+                    using (var response = await client.PostAsync(Settings.ADD_PERSON_URL_ADMIN, content)) {
+                        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
                             await AuthHelper.ReloginAsync();
                             return;
                         }
 
-                        message.EnsureSuccessStatusCode();
+                        response.EnsureSuccessStatusCode();
+                        var str = await response.Content.ReadAsStringAsync();
+                        var json = Newtonsoft.Json.JsonConvert.DeserializeObject<PersonJson.Update>(str);
+                        var person = Person.ConvertFromJson(json);
+                        await App.Database.SaveItem(person);
 
                         App.ToastNotificator.Show("Данные успешно отправлены");
-                        ResetCommand.Execute(null);
-                        App.Database.Load();
+
+                        var page = new EditPersonPageAdmin(person.Id);
+                        await App.GlobalPage.ReplaceCurrentPage(page);
                     }
                 }
             } catch {

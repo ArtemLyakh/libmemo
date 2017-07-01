@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
 namespace Libmemo {
-    public class JsonData {
-        public List<PersonJsonUpdate> update { get; set; }
-        public List<PersonJsonDelete> delete { get; set; }
+    public class PersonJson {
+        public List<Update> update { get; set; }
+        public List<Delete> delete { get; set; }
 
-        public class PersonJsonUpdate {
+        public class Update {
             public string type { get; set; }
             public int? id { get; set; }
             public long? modified { get; set; }
@@ -26,7 +26,7 @@ namespace Libmemo {
             public string scheme_url { get; set; }
         }
 
-        public class PersonJsonDelete {
+        public class Delete {
             public int? id { get; set; }
             public long? modified { get; set; }
         }

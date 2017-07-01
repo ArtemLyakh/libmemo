@@ -12,13 +12,12 @@ namespace Libmemo {
     public partial class PersonCollectionAdminPage : ContentPage {
         public PersonCollectionAdminPage() {
             InitializeComponent();
-
-            var model = new PersonCollectionAdminPageViewModel();
-            model.ItemSelected += (object sender, PersonCollectionAdminPageViewModel.Person e) => this.ItemSelected?.Invoke(this, e);
-
-            BindingContext = model;
+            BindingContext = new PersonCollectionAdminPageViewModel();
         }
 
-        public event EventHandler<PersonCollectionAdminPageViewModel.Person> ItemSelected;
+        protected override void OnAppearing() {
+            base.OnAppearing();
+            ((PersonCollectionAdminPageViewModel)BindingContext).LoadCommand.Execute(null);
+        }
     }
 }

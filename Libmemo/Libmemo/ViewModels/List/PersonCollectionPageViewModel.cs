@@ -19,8 +19,11 @@ namespace Libmemo {
         }
 
         public PersonCollectionPageViewModel() : base() {
-
+            this.ItemSelected += PersonCollectionPageViewModel_ItemSelected;
         }
+
+        private async void PersonCollectionPageViewModel_ItemSelected(object sender, Person e) => 
+            await App.GlobalPage.Push(new EditPersonPage(e.Id));
 
         public ICommand LoadCommand => new Command(async () => await Load());
 

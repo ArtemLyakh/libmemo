@@ -76,7 +76,7 @@ namespace Libmemo {
 
                         var str = await response.Content.ReadAsStringAsync();
                         response.EnsureSuccessStatusCode();
-                        var json = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonData.PersonJsonUpdate>(str);
+                        var json = Newtonsoft.Json.JsonConvert.DeserializeObject<PersonJson.Update>(str);
                         var person = Person.ConvertFromJson(json);
                         await App.Database.SaveItem(person);
 

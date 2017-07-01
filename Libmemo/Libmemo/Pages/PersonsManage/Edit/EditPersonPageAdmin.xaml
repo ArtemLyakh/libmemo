@@ -210,6 +210,20 @@
 
                 <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" IsVisible="{Binding IsDeadPerson}">
                     <Label Text="Схема захоронения" HorizontalOptions="CenterAndExpand" FontSize="Large" />
+                    <StackLayout Orientation="Horizontal" 
+                                 HorizontalOptions="FillAndExpand"
+                                 Spacing="10"
+                                 IsVisible="{Binding IsSchemeCanDownload}"
+                                 >
+                        <Label Text="Схема захоронения:"
+                               HorizontalOptions="Start"
+                               VerticalOptions="CenterAndExpand"
+                               />
+                        <Button Text="Открыть"
+                                Command="{Binding SchemeDownloadCommand}"
+                                HorizontalOptions="CenterAndExpand" 
+                                />
+                    </StackLayout>
                     <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="FillAndExpand">
                         <Button Text="Выбрать" Command="{Binding SelectSchemeCommand}" VerticalOptions="CenterAndExpand" HorizontalOptions="Start" />
                         <Label Text="{Binding SchemeName}" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center" />

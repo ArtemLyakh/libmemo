@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Libmemo {
@@ -19,10 +19,13 @@ namespace Libmemo {
         }
 
         public PersonCollectionAdminPageViewModel() : base() {
-            Task.Run(async () => await Load());
+            this.ItemSelected += PersonCollectionAdminPageViewModel_ItemSelected;
         }
 
+        private async void PersonCollectionAdminPageViewModel_ItemSelected(object sender, Person e) => 
+            await App.GlobalPage.Push(new EditPersonPageAdmin(e.Id));
 
+        public ICommand LoadCommand => new Command(async() => await Load());
 
         private async Task Load() {
             if (!AuthHelper.IsAdmin) {

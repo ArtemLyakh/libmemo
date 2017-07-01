@@ -112,7 +112,7 @@ namespace Libmemo {
             LoadSuccess?.Invoke();
         }
 
-        private async Task<JsonData> SendRequest(long? modified = null) {
+        private async Task<PersonJson> SendRequest(long? modified = null) {
             HttpClient client = new HttpClient {
                 Timeout = TimeSpan.FromSeconds(DATA_LOAD_TIMEOUT)
             };
@@ -127,7 +127,7 @@ namespace Libmemo {
                 responce.EnsureSuccessStatusCode();
 
                 var content = await responce.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<JsonData>(content);
+                var result = JsonConvert.DeserializeObject<PersonJson>(content);
 
                 return result;
             } catch {
@@ -135,7 +135,7 @@ namespace Libmemo {
             }
         }
 
-        private async Task LoadDatabaseFromJson(JsonData result) {
+        private async Task LoadDatabaseFromJson(PersonJson result) {
             var pList = GetPersonsList(result.update);
             var dList = GetDeleteList(result.delete);
 
@@ -148,10 +148,10 @@ namespace Libmemo {
             if (lastModified.HasValue) Settings.LastModified = lastModified;
         }
 
-        private IEnumerable<Tuple<int, long>> GetDeleteList(IEnumerable<JsonData.PersonJsonDelete> list) =>
+        private IEnumerable<Tuple<int, long>> GetDeleteList(IEnumerable<PersonJson.Delete> list) =>
             list.Where(i => i.id.HasValue && i.modified.HasValue).Select(i => Tuple.Create(i.id.Value, i.modified.Value));
 
-        private IEnumerable<Person> GetPersonsList(List<JsonData.PersonJsonUpdate> list) {
+        private IEnumerable<Person> GetPersonsList(List<PersonJson.Update> list) {
             var update = new List<Person>();
 
             foreach (var item in list) {

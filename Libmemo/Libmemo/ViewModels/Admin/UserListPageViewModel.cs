@@ -1,13 +1,14 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Xamarin.Forms;
 
 namespace Libmemo {
-    public class UserListAdminPageViewModel : BaseListViewModel<UserListAdminPageViewModel.User> {
+    public class UserListPageViewModel : BaseListViewModel<UserListPageViewModel.User>{
         public class User : ISearchFiltrable {
             public string FilterString => Email;
             public string ShowString => $"{Id}: {Email}";
@@ -17,10 +18,9 @@ namespace Libmemo {
             public string Fio { get; set; }
         }
 
-        public UserListAdminPageViewModel() : base() {
-            Task.Run(async () => await Load());
-        }
+        public UserListPageViewModel() : base() { }
 
+        public ICommand LoadCommand => new Command(async () => await Load());
 
         class JsonData {
             public int id { get; set; }
@@ -40,7 +40,7 @@ namespace Libmemo {
 
                     responce.EnsureSuccessStatusCode();
                     var str = await responce.Content.ReadAsStringAsync();
-                    var data = JsonConvert.DeserializeObject<List<JsonData>>(str);
+                    var data = Newtonsoft.Json.JsonConvert.DeserializeObject<List<JsonData>>(str);
 
                     this.Data = data.Select(i => new User { Id = i.id, Fio = i.fio, Email = i.email });
                 }
@@ -48,9 +48,7 @@ namespace Libmemo {
                 App.ToastNotificator.Show("Ошибка загрузки данных");
             }
         }
+
+
     }
-
-
-
-
 }

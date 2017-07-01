@@ -12,14 +12,8 @@ namespace Libmemo {
     public partial class PersonCollectionPage : ContentPage {
         public PersonCollectionPage() {
             InitializeComponent();
-
-            var model = new PersonCollectionPageViewModel();
-            model.ItemSelected += (object sender, PersonCollectionPageViewModel.Person e) => this.ItemSelected?.Invoke(this, e);
-
-            BindingContext = model;
+            BindingContext = new PersonCollectionPageViewModel();
         }
-
-        public event EventHandler<PersonCollectionPageViewModel.Person> ItemSelected;
 
         protected override void OnAppearing() {
             base.OnAppearing();

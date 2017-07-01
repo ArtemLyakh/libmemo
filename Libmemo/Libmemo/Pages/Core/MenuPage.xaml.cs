@@ -97,12 +97,7 @@ namespace Libmemo {
                     yield return new MenuItem {
                         Title = "Коллекция",
                         Text = "Коллекция",
-                        Action = () => {
-                            var page = new PersonCollectionAdminPage();
-                            page.ItemSelected += async (object sender, PersonCollectionAdminPageViewModel.Person item) =>
-                                await App.GlobalPage.Push(new EditPersonPageAdmin(item.Id));
-                            return App.GlobalPage.PushRoot(page);
-                        }
+                        Action = () => App.GlobalPage.PushRoot(new PersonCollectionAdminPage())
                     };
                     yield return new MenuItem {
                         Title = "Зарегистрировать пользователя",
@@ -113,10 +108,10 @@ namespace Libmemo {
                         Title = "Список пользователей",
                         Text = "Список пользователей",
                         Action = () => {
-                            var page = new UserListPageAdmin();
-                            page.ItemSelected += async (object sender, UserListAdminPageViewModel.User item) =>
-                                await App.GlobalPage.Push(new PersonalDataPageAdmin(item.Id));
-                            return App.GlobalPage.PushRoot(page);
+                            var page = new UserListPage();
+                            page.ItemSelected += async (object sender, UserListPageViewModel.User user) =>
+                                await App.GlobalPage.Push(new PersonalDataPageAdmin(user.Id));
+                            return App.GlobalPage.Push(page);
                         }
                     };
                 } else {
@@ -133,12 +128,7 @@ namespace Libmemo {
                     yield return new MenuItem {
                         Title = "Коллекция",
                         Text = "Коллекция",
-                        Action = () => {
-                            var page = new PersonCollectionPage();
-                            page.ItemSelected += async (object sender, PersonCollectionPageViewModel.Person item) =>
-                                await App.GlobalPage.Push(new EditPersonPage(item.Id));
-                            return App.GlobalPage.PushRoot(page);
-                        }
+                        Action = () => App.GlobalPage.PushRoot(new PersonCollectionPage())
                     };
                     yield return new MenuItem {
                         Title = "Древо",

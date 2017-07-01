@@ -124,7 +124,7 @@ namespace Libmemo {
 
 
 
-        public static Person ConvertFromJson(JsonData.PersonJsonUpdate json) {
+        public static Person ConvertFromJson(PersonJson.Update json) {
             var person = new Person();
 
             switch (json.type) {

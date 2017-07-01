@@ -124,11 +124,8 @@ namespace Libmemo {
         }
         public bool IsSchemeCanDownload => SchemeUrl != null;
 
-        public ICommand SchemeDownloadCommand {
-            get => new Command(() =>
-                Device.OpenUri(SchemeUrl)
-            );
-        }
+        public ICommand SchemeDownloadCommand => new Command(() => Device.OpenUri(SchemeUrl));
+
 
         
 
@@ -171,52 +168,6 @@ namespace Libmemo {
 
 
 
-
-
-        //protected virtual IEnumerable<string> Validate() {
-        //    if (String.IsNullOrWhiteSpace(this.FirstName)) yield return "Поле \"Имя\" не заполнено";
-        //}
-
-        //protected virtual async Task AddParams(PersonDataLoader uploader) {
-        //    uploader.Params.Add("id", this.Id.ToString());
-
-        //    uploader.Params.Add("latitude", this.PersonPosition.Latitude.ToString(CultureInfo.InvariantCulture));
-        //    uploader.Params.Add("longitude", this.PersonPosition.Longitude.ToString(CultureInfo.InvariantCulture));
-
-        //    if (!string.IsNullOrWhiteSpace(this.FirstName)) {
-        //        uploader.Params.Add("first_name", this.FirstName.ToString());
-        //    }
-        //    if (!string.IsNullOrWhiteSpace(this.SecondName)) {
-        //        uploader.Params.Add("second_name", this.SecondName.ToString());
-        //    }
-        //    if (!string.IsNullOrWhiteSpace(this.LastName)) {
-        //        uploader.Params.Add("last_name", this.LastName.ToString());
-        //    }
-
-        //    if (this.DateBirth.HasValue) {
-        //        uploader.Params.Add("date_birth", this.DateBirth.Value.ToString("yyyy-MM-dd"));
-        //    }
-        //    if (this.DateDeath.HasValue) {
-        //        uploader.Params.Add("date_death", this.DateDeath.Value.ToString("yyyy-MM-dd"));
-        //    }
-        //    if (!string.IsNullOrWhiteSpace(this.Text)) {
-        //        uploader.Params.Add("text", this.Text.ToString());
-        //    }
-        //    if (this.PhotoSource != null && this.PhotoSource is FileImageSource) {
-        //        await uploader.SetFile(this.PhotoSource);
-        //    }
-
-        //    if (this.Height.HasValue) {
-        //        uploader.Params.Add("height", this.Height.Value.ToString(CultureInfo.InvariantCulture));
-        //    }
-        //    if (this.Width.HasValue) {
-        //        uploader.Params.Add("width", this.Width.Value.ToString(CultureInfo.InvariantCulture));
-        //    }
-
-        //    if (this.SchemeStream != null) {
-        //        uploader.Files.Add("scheme", Tuple.Create(this.SchemeName, this.SchemeStream));
-        //    }
-        //}
 
     }
 }
