@@ -62,6 +62,11 @@ namespace Libmemo {
             }
         });
 
+        public async Task SaveItem(Person item) => await Task.Run(() => {
+            var save = Person.ConvertToDatabase(item);
+            if (database.Update(save) == 0) database.Insert(save);
+        });
+
         public async Task SaveItems(IEnumerable<Person> items) => await Task.Run(() => {
             lock (database) {
                 foreach (var item in items) {
@@ -122,7 +127,7 @@ namespace Libmemo {
                 responce.EnsureSuccessStatusCode();
 
                 var content = await responce.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<JsonData>(content, new IsoDateTimeConverter { DateTimeFormat = "dd.MM.yyyy" });
+                var result = JsonConvert.DeserializeObject<JsonData>(content);
 
                 return result;
             } catch {
@@ -143,72 +148,15 @@ namespace Libmemo {
             if (lastModified.HasValue) Settings.LastModified = lastModified;
         }
 
-        private IEnumerable<Tuple<int, long>> GetDeleteList(IEnumerable<PersonJsonDelete> list) =>
+        private IEnumerable<Tuple<int, long>> GetDeleteList(IEnumerable<JsonData.PersonJsonDelete> list) =>
             list.Where(i => i.id.HasValue && i.modified.HasValue).Select(i => Tuple.Create(i.id.Value, i.modified.Value));
 
-        private IEnumerable<Person> GetPersonsList(List<PersonJsonUpdate> list) {
+        private IEnumerable<Person> GetPersonsList(List<JsonData.PersonJsonUpdate> list) {
             var update = new List<Person>();
 
             foreach (var item in list) {
-                var person = new Person();
-
-                switch (item.type) {
-                    case "a": person.PersonType = PersonType.Alive; break;
-                    case "d": person.PersonType = PersonType.Dead; break;
-                    default: continue;
-                }
-
-                if (item.id.HasValue) person.Id = item.id.Value;
-                else continue;
-
-                if (item.modified.HasValue) person.LastModified = item.modified.Value;
-                else continue;
-
-                if (item.owner.HasValue) person.Owner = item.owner.Value;
-                else continue;
-
-
-                if (!string.IsNullOrWhiteSpace(item.first_name)) person.FirstName = item.first_name;
-                else continue;
-
-                if (!string.IsNullOrWhiteSpace(item.second_name)) person.SecondName = item.second_name;
-
-                if (!string.IsNullOrWhiteSpace(item.last_name)) person.LastName = item.last_name;
-
-                if (DateTime.TryParse(item.date_birth, out DateTime dBirth)) person.DateBirth = dBirth;
-
-                if (!string.IsNullOrWhiteSpace(item.icon_url) && Uri.TryCreate(item.icon_url, UriKind.Absolute, out Uri iconUrl))
-                    person.IconUrl = iconUrl;
-
-                if (!string.IsNullOrWhiteSpace(item.photo_url) && Uri.TryCreate(item.photo_url, UriKind.Absolute, out Uri photoUrl))
-                    person.ImageUrl = photoUrl;
-
-
-                if (person.PersonType == PersonType.Dead) {
-                    if (double.TryParse(item.latitude, NumberStyles.Any, CultureInfo.InvariantCulture, out double latitude)) {
-                        person.Latitude = latitude;
-                    } else continue;
-
-                    if (double.TryParse(item.longitude, NumberStyles.Any, CultureInfo.InvariantCulture, out double longitude)) {
-                        person.Longitude = longitude;
-                    } else continue;
-
-                    if (DateTime.TryParse(item.date_death, out DateTime dDeath)) person.DateDeath = dDeath;
-
-                    if (!string.IsNullOrWhiteSpace(item.text)) person.Text = item.text;
-
-                    if (double.TryParse(item.height, NumberStyles.Any, CultureInfo.InvariantCulture, out double height)) {
-                        person.Height = height;
-                    }
-
-                    if (double.TryParse(item.width, NumberStyles.Any, CultureInfo.InvariantCulture, out double width)) {
-                        person.Width = width;
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(item.scheme_url) && Uri.TryCreate(item.scheme_url, UriKind.Absolute, out Uri schemeUrl))
-                        person.SchemeUrl = schemeUrl;
-                }
-
+                var person = Person.ConvertFromJson(item);
+                if (person == null) continue;
                 update.Add(person);
             }
 

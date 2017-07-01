@@ -65,22 +65,27 @@ namespace Libmemo {
 
                     }
 
-                    using (var message = await client.PostAsync(Settings.ADD_PERSON_URL, content)) {
-                        if (message.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
+                    using (var response = await client.PostAsync(Settings.ADD_PERSON_URL, content)) {
+                        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
                             await AuthHelper.ReloginAsync();
                             return;
                         }
 
-                        message.EnsureSuccessStatusCode();
+                        response.EnsureSuccessStatusCode();
+                        var str = await response.Content.ReadAsStringAsync();
+                        var json = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonData.PersonJsonUpdate>(str);
+                        var person = Person.ConvertFromJson(json);
+                        await App.Database.SaveItem(person);
 
                         App.ToastNotificator.Show("Данные успешно отправлены");
-                        ResetCommand.Execute(null);
-                        App.Database.Load();
+
+                        var page = new EditPersonPage(person.Id);
+                        await App.GlobalPage.ReplaceCurrentPage(page);
                     }
                 }
             } catch {
                 Device.BeginInvokeOnMainThread(() =>
-                    App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка отправки данных", "ОК"));
+                    App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка добавления", "ОК"));
             }
         }
 

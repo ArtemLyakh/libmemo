@@ -34,53 +34,60 @@ namespace Libmemo {
                 using (var handler = new HttpClientHandler { CookieContainer = AuthHelper.CookieContainer })
                 using (var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(20) })
                 using (var content = new MultipartFormDataContent(String.Format("----------{0:N}", Guid.NewGuid()))) {
-                    content.Add(new StringContent(this.Id.ToString()), "id");
-                    content.Add(new StringContent(this.IsDeadPerson ? "dead" : "alive"), "type");
-                    content.Add(new StringContent(this.FirstName), "first_name");
-                    content.Add(new StringContent(this.SecondName), "second_name");
-                    content.Add(new StringContent(this.LastName), "last_name");
-                    if (this.DateBirth.HasValue)
-                        content.Add(new StringContent(this.DateBirth.Value.ToString("yyyy-MM-dd")), "date_birth");
-                    if (this.PhotoSource != null && this.PhotoSource is FileImageSource) {
-                        var result = await DependencyService.Get<IImageFileToByteArrayConverter>().Get(this.PhotoSource);
+                    content.Add(new StringContent(Id.ToString()), "id");
+                    content.Add(new StringContent(IsDeadPerson ? "dead" : "alive"), "type");
+
+                    content.Add(new StringContent(FirstName), "first_name");
+                    content.Add(new StringContent(string.IsNullOrWhiteSpace(SecondName) ? string.Empty : SecondName), "second_name");
+                    content.Add(new StringContent(string.IsNullOrWhiteSpace(LastName) ? string.Empty : LastName), "last_name");
+
+                    if (DateBirth.HasValue)
+                        content.Add(new StringContent(DateBirth.Value.ToString("yyyy-MM-dd")), "date_birth");
+                    if (PhotoSource != null && PhotoSource is FileImageSource) {
+                        var result = await DependencyService.Get<IImageFileToByteArrayConverter>().Get(PhotoSource);
                         content.Add(new ByteArrayContent(result), "photo", "photo.jpg");
                     }
 
-                    if (this.IsDeadPerson) {
-                        content.Add(new StringContent(this.PersonPosition.Latitude.ToString(CultureInfo.InvariantCulture)), "latitude");
-                        content.Add(new StringContent(this.PersonPosition.Longitude.ToString(CultureInfo.InvariantCulture)), "longitude");
-                        if (this.DateDeath.HasValue)
-                            content.Add(new StringContent(this.DateDeath.Value.ToString("yyyy-MM-dd")), "date_death");
-                        if (!string.IsNullOrWhiteSpace(this.Text))
-                            content.Add(new StringContent(this.Text), "text");
-                        if (this.Height.HasValue)
-                            content.Add(new StringContent(this.Height.Value.ToString(CultureInfo.InvariantCulture)), "height");
-                        if (this.Width.HasValue)
-                            content.Add(new StringContent(this.Width.Value.ToString(CultureInfo.InvariantCulture)), "width");
-                        if (this.SchemeStream != null) {
-                            content.Add(new StreamContent(this.SchemeStream), "scheme", this.SchemeName);
+                    if (IsDeadPerson) {
+                        content.Add(new StringContent(PersonPosition.Latitude.ToString(CultureInfo.InvariantCulture)), "latitude");
+                        content.Add(new StringContent(PersonPosition.Longitude.ToString(CultureInfo.InvariantCulture)), "longitude");
+
+                        if (DateDeath.HasValue)
+                            content.Add(new StringContent(DateDeath.Value.ToString("yyyy-MM-dd")), "date_death");
+
+                        content.Add(new StringContent(string.IsNullOrWhiteSpace(Text) ? string.Empty : Text), "text");
+
+                        if (Height.HasValue)
+                            content.Add(new StringContent(Height.Value.ToString(CultureInfo.InvariantCulture)), "height");
+                        if (Width.HasValue)
+                            content.Add(new StringContent(Width.Value.ToString(CultureInfo.InvariantCulture)), "width");
+
+                        if (SchemeStream != null) {
+                            content.Add(new StreamContent(SchemeStream), "scheme", SchemeName);
                         }
 
                     }
 
-                    using (var message = await client.PostAsync(Settings.EDIT_PERSON_URL, content)) {
-                        if (message.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
+                    using (var response = await client.PostAsync(Settings.EDIT_PERSON_URL, content)) {
+                        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
                             await AuthHelper.ReloginAsync();
                             return;
                         }
 
-                        message.EnsureSuccessStatusCode();
+                        var str = await response.Content.ReadAsStringAsync();
+                        response.EnsureSuccessStatusCode();
+                        var json = Newtonsoft.Json.JsonConvert.DeserializeObject<JsonData.PersonJsonUpdate>(str);
+                        var person = Person.ConvertFromJson(json);
+                        await App.Database.SaveItem(person);
 
                         App.ToastNotificator.Show("Данные успешно отправлены");
-                        App.Database.Load();
-                        await App.GlobalPage.Pop();
-                        //bool success = await App.Database.Load();
-                        //if (success) ResetCommand.Execute(null);
+
+                        ResetCommand.Execute(null);
                     }
                 }
             } catch {
                 Device.BeginInvokeOnMainThread(() =>
-                    App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка отправки данных", "ОК"));
+                    App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка редактирования", "ОК"));
             }
 
 

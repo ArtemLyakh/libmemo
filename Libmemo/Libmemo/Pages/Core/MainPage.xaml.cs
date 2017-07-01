@@ -27,7 +27,11 @@ namespace Libmemo {
             await PopToRootPage();
             await NavStack.Navigation.PushAsync(page);
         }
-
+        public Task ReplaceCurrentPage(Page page) {
+            var last = NavStack.Navigation.NavigationStack.Last();
+            NavStack.Navigation.RemovePage(last);
+            return NavStack.Navigation.PushAsync(page);
+        }
 
 
 

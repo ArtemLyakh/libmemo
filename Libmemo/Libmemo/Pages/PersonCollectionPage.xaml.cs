@@ -23,13 +23,8 @@ namespace Libmemo {
 
         protected override void OnAppearing() {
             base.OnAppearing();
-            ((PersonCollectionPageViewModel)BindingContext).StartListen();
             ((PersonCollectionPageViewModel)BindingContext).LoadCommand.Execute(null);
         }
 
-        protected override void OnDisappearing() {
-            base.OnDisappearing();
-            ((PersonCollectionPageViewModel)BindingContext).StopListen();
-        }
     }
 }

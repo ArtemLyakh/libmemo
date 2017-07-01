@@ -1,5 +1,6 @@
 ﻿using System;
 using SQLite;
+using System.Globalization;
 
 namespace Libmemo {
 
@@ -120,6 +121,71 @@ namespace Libmemo {
             Text = personDb._Text,
             Width = personDb._Width
         };
+
+
+
+        public static Person ConvertFromJson(JsonData.PersonJsonUpdate json) {
+            var person = new Person();
+
+            switch (json.type) {
+                case "a": person.PersonType = PersonType.Alive; break;
+                case "d": person.PersonType = PersonType.Dead; break;
+                default: return null;
+            }
+
+            if (json.id.HasValue) person.Id = json.id.Value;
+            else return null;
+
+            if (json.modified.HasValue) person.LastModified = json.modified.Value;
+            else return null;
+
+            if (json.owner.HasValue) person.Owner = json.owner.Value;
+            else return null;
+
+
+            if (!string.IsNullOrWhiteSpace(json.first_name)) person.FirstName = json.first_name;
+            else return null;
+
+            if (!string.IsNullOrWhiteSpace(json.second_name)) person.SecondName = json.second_name;
+
+            if (!string.IsNullOrWhiteSpace(json.last_name)) person.LastName = json.last_name;
+
+            if (DateTime.TryParse(json.date_birth, out DateTime dBirth)) person.DateBirth = dBirth;
+
+            if (!string.IsNullOrWhiteSpace(json.icon_url) && Uri.TryCreate(json.icon_url, UriKind.Absolute, out Uri iconUrl))
+                person.IconUrl = iconUrl;
+
+            if (!string.IsNullOrWhiteSpace(json.photo_url) && Uri.TryCreate(json.photo_url, UriKind.Absolute, out Uri photoUrl))
+                person.ImageUrl = photoUrl;
+
+
+            if (person.PersonType == PersonType.Dead) {
+                if (double.TryParse(json.latitude, NumberStyles.Any, CultureInfo.InvariantCulture, out double latitude)) {
+                    person.Latitude = latitude;
+                } else return null;
+
+                if (double.TryParse(json.longitude, NumberStyles.Any, CultureInfo.InvariantCulture, out double longitude)) {
+                    person.Longitude = longitude;
+                } else return null;
+
+                if (DateTime.TryParse(json.date_death, out DateTime dDeath)) person.DateDeath = dDeath;
+
+                if (!string.IsNullOrWhiteSpace(json.text)) person.Text = json.text;
+
+                if (double.TryParse(json.height, NumberStyles.Any, CultureInfo.InvariantCulture, out double height)) {
+                    person.Height = height;
+                }
+
+                if (double.TryParse(json.width, NumberStyles.Any, CultureInfo.InvariantCulture, out double width)) {
+                    person.Width = width;
+                }
+
+                if (!string.IsNullOrWhiteSpace(json.scheme_url) && Uri.TryCreate(json.scheme_url, UriKind.Absolute, out Uri schemeUrl))
+                    person.SchemeUrl = schemeUrl;
+            }
+
+            return person;
+        }
 
 
     }

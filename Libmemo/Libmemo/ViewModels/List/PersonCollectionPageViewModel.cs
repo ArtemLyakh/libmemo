@@ -22,14 +22,6 @@ namespace Libmemo {
 
         }
 
-        public void StartListen() => App.Database.LoadSuccess += Database_LoadSuccess;
-        public void StopListen() => App.Database.LoadSuccess -= Database_LoadSuccess;
-        private void Database_LoadSuccess() {
-            LoadCommand.Execute(null);
-        }
-
-
-
         public ICommand LoadCommand => new Command(async () => await Load());
 
         private async Task Load() {
