@@ -210,18 +210,21 @@ namespace Libmemo.Droid {
                 throw new NotImplementedException();
             }
 
-            if (_googleMap != null)
-                _customPinsBindings.Add(pin, _googleMap.AddMarker(marker));
+            if (_googleMap != null) {
+                if (_customPinsBindings.ContainsKey(pin) && _customPinsBindings[pin] != null) 
+                    _customPinsBindings[pin].Remove();
+                _customPinsBindings[pin] = _googleMap.AddMarker(marker);
+            }
         }
 
         private void DeletePin(CustomPin pin) {
-            var bind = _customPinsBindings.FirstOrDefault(i => i.Key.Id == pin.Id);
+            var marker = _customPinsBindings[pin];
             _customPinsBindings.Remove(pin);
 
-            bind.Value.Remove();
+            marker.Remove();
         }
 
-        private void UpdatePin(CustomPin pin, ref Marker m, string propName) {
+        private void UpdatePin(CustomPin pin, Marker m, string propName) {
             if (propName == nameof(CustomPin.PinImage)) {
                 if (pin.PinImage == PinImage.Default) {
                     m.SetIcon(BitmapDescriptorFactory.FromResource(Resource.Drawable.default_pin));
@@ -233,6 +236,7 @@ namespace Libmemo.Droid {
             } else if (propName == nameof(CustomPin.Position)) {
                 m.Position = new LatLng(pin.Position.Latitude, pin.Position.Longitude);
             } else if (propName == nameof(CustomPin.Visible)) {
+                if (m != null) 
                 m.Visible = pin.Visible;
             } else {
                 throw new NotImplementedException();
@@ -413,11 +417,10 @@ namespace Libmemo.Droid {
         #region Event handlers
 
         private void CustomPin_PropertyChanged(object sender, PropertyChangedEventArgs e) {
-            var bind = _customPinsBindings.FirstOrDefault(i => i.Key == sender);
-            Marker m = bind.Value;
             var pin = (CustomPin)sender;
+            var marker = _customPinsBindings[pin];
 
-            UpdatePin(pin, ref m, e.PropertyName);
+            UpdatePin(pin, marker, e.PropertyName);
         }
 
         private void _googleMap_CameraChange(object sender, GoogleMap.CameraChangeEventArgs e) {
@@ -627,14 +630,14 @@ namespace Libmemo.Droid {
             } else if (e.PropertyName == CustomMap.SelectedPinProperty.PropertyName) { //SelectedPin
                 var pinForm = ((CustomMap)sender).SelectedPin;
                 if (pinForm != null) {
-                    var binding = _customPinsBindings.FirstOrDefault(i => i.Key.Id == pinForm.Id);
+                    var marker = _customPinsBindings[pinForm];
                     this._selectedPin = pinForm;
-                    binding.Value?.ShowInfoWindow();
+                    marker?.ShowInfoWindow();
                     ((CustomMap)sender).SelectedPin = pinForm;
                 } else {
                     if (_selectedPin != null) {
-                        var binding = _customPinsBindings.FirstOrDefault(i => i.Key == this._selectedPin);
-                        binding.Value?.HideInfoWindow();
+                        var marker = _customPinsBindings[this._selectedPin];
+                        marker?.HideInfoWindow();
                         this._selectedPin = null;
                     }
                 }

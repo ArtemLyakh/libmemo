@@ -417,13 +417,7 @@ namespace Libmemo {
 
         #region SideMenu
 
-        public ICommand OpenMenuCommand {
-            get => new Command(() => {
-                if (Application.Current.MainPage is MainPage) {
-                    App.SetShowMenu(true);
-                }
-            });
-        }
+        public ICommand OpenMenuCommand => new Command(() => App.SetShowMenu(true));
 
         #endregion
 
@@ -442,19 +436,9 @@ namespace Libmemo {
             }
         }
 
-        public ICommand SpaceMapCommand {
-            get => new Command(() => {
-                this.MapType = MapType.Hybrid;
-            });
-        }
+        public ICommand SpaceMapCommand => new Command(() => this.MapType = MapType.Hybrid);
 
-        public ICommand StreetMapCommand {
-            get => new Command(() => {
-                this.MapType = MapType.Street;
-            });
-        }
-
-
+        public ICommand StreetMapCommand => new Command(() => this.MapType = MapType.Street);
 
 
 
@@ -489,18 +473,16 @@ namespace Libmemo {
             get => SelectedPin != null && !IsShowOnlySelected;
         }
 
-        public ICommand HidePinsCommand {
-            get => new Command(() => {           
-                if (SelectedPin != null) HideAllPinsExcept(SelectedPin.Id);
-                else ShowAllPins();
-            });
-        }
+        public ICommand HidePinsCommand => new Command(() => {           
+            if (SelectedPin != null) HideAllPinsExcept(SelectedPin.Id);
+            else ShowAllPins();
+        });
 
-        public ICommand ShowPinsCommand {
-            get => new Command(() => {
-                ShowAllPins();
-            });
-        }
+
+        public ICommand ShowPinsCommand => new Command(() => {
+            ShowAllPins();
+        });
+
 
 
         public event PropertyChangedEventHandler PropertyChanged;

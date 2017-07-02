@@ -63,5 +63,14 @@ namespace Libmemo {
             }
         }
 
+        public override int GetHashCode() {
+            return int.Parse(Id);
+        }
+
+        public override bool Equals(object obj) {
+            if (!(obj is CustomPin)) return false;
+            return Id == ((CustomPin)obj).Id;
+        }
+
     }
 }
