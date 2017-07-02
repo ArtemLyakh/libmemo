@@ -26,11 +26,21 @@
         </StackLayout>
 
         <local:CustomListView x:Name="ShowList" 
-                  ItemsSource="{Binding SearchList}"
-                  ItemClickCommand="{Binding ItemSelectedCommand}">
+                                  HasUnevenRows="True"
+                                  ItemsSource="{Binding SearchList}"
+                                  ItemClickCommand="{Binding ItemSelectedCommand}"
+                                  >
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding Item2}" Height="70" />
+                    <ViewCell>
+                        <ViewCell.View>
+                            <StackLayout Orientation="Horizontal" Padding="10" Spacing="5">
+                                <Image Source="{Binding Image}" />
+                                <Label Text="{Binding Id}" VerticalOptions="CenterAndExpand" />
+                                <Label Text="{Binding Fio}" VerticalOptions="CenterAndExpand" />
+                            </StackLayout>
+                        </ViewCell.View>
+                    </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </local:CustomListView>

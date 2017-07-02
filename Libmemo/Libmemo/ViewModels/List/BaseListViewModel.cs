@@ -16,17 +16,10 @@ namespace Libmemo {
             set {
                 _data = value;
                 this.SearchList = value;
-                this.Search = null;
             }
         }
 
         public BaseListViewModel() { }
-        public BaseListViewModel(IEnumerable<T> data, string search = "") {
-            this.Data = data;
-            this.Search = search;
-
-            this.SearchCommand.Execute(null);
-        }
 
         public event EventHandler<T> ItemSelected;
         public event EventHandler<string> SearchChanged;

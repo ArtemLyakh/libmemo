@@ -49,13 +49,13 @@
                         <local:EntrySelectedBehavior SelectedCommand="{Binding SearchCommand}"/>
                     </Entry.Behaviors>
                 </Entry>
-                <Button x:Name="resetButton"
-                        Text="&#10060;"
-                        FontSize="Large"
-                        Command="{Binding ResetCommand}"
-                        VerticalOptions="FillAndExpand"
-                        WidthRequest="{Binding Source={x:Reference Name=resetButton}, Path=Height}"
-                        />
+                <Button x:Name="searchButton"
+                    Text="&#x1F50D;"
+                    FontSize="Default"
+                    Command="{Binding SearchCommand}"
+                    VerticalOptions="FillAndExpand"
+                    WidthRequest="{Binding Source={x:Reference Name=searchButton}, Path=Height}"
+                    />
             </StackLayout>
         </StackLayout>
 

@@ -91,15 +91,12 @@ namespace Libmemo {
             }
         }
 
-        public ICommand InfoWindowClickedCommand {
-            get => new Command<CustomPin>(async (CustomPin pin) => {
-                if (int.TryParse(pin.Id, out int id)) {
-                    var page = new DetailPage(id);
-                    await App.GlobalPage.Push(page);
-                }
-            });
-
-        }
+        public ICommand InfoWindowClickedCommand => new Command<CustomPin>(async (CustomPin pin) => {
+            if (int.TryParse(pin.Id, out int id)) {
+                var page = new DetailPage(id);
+                await App.GlobalPage.Push(page);
+            }
+        });
 
         private CustomPin CreatePin(Person person) => new CustomPin() {
             Id = person.Id.ToString(),
@@ -231,30 +228,28 @@ namespace Libmemo {
         }
 
         private bool firstCamera = true;
-        public ICommand UserPositionChangedCommand {
-            get => new Command<Position>((Position position) => {
-                this.UserPosition = position;
+        public ICommand UserPositionChangedCommand => new Command<Position>((Position position) => {
+            this.UserPosition = position;
 
-                if (this.FollowUser) {
-                    if (firstCamera) {
-                        this.IsCameraAnimated = true;
-                        firstCamera = false;
-                    }
-                    MoveCameraToUserPosition();
+            if (this.FollowUser) {
+                if (firstCamera) {
+                    this.IsCameraAnimated = true;
+                    firstCamera = false;
                 }
-            });
-        }
+                MoveCameraToUserPosition();
+            }
+        });
 
-        public ICommand FollowUserToogleCommand {
-            get => new Command(() => {
-                if (FollowUser) {
-                    FollowUser = false;
-                } else {
-                    FollowUser = true;
-                    MoveCameraToUserPosition();
-                }
-            });
-        }
+
+        public ICommand FollowUserToogleCommand => new Command(() => {
+            if (FollowUser) {
+                FollowUser = false;
+            } else {
+                FollowUser = true;
+                MoveCameraToUserPosition();
+            }
+        });
+
 
         #endregion
 
@@ -276,52 +271,47 @@ namespace Libmemo {
 
         private bool _routeProcessing = false;
 
-        public Command SetLinearRouteCommand {
-            get => new Command(() => {
-                if (this._routeProcessing) return;
-                if (this.UserPosition != default(Position) && this.SelectedPin != null) {
-                    this.RouteFrom = this.UserPosition;
-                    this.RouteTo = this.SelectedPin.Position;
-                    this._routeProcessing = true;
-                    this.MapFunctions.SetLinearRoute(this.UserPosition, this.SelectedPin.Position);
-                }
-            });
-        }
+        public ICommand SetLinearRouteCommand => new Command(() => {
+            if (this._routeProcessing) return;
+            if (this.UserPosition != default(Position) && this.SelectedPin != null) {
+                this.RouteFrom = this.UserPosition;
+                this.RouteTo = this.SelectedPin.Position;
+                this._routeProcessing = true;
+                this.MapFunctions.SetLinearRoute(this.UserPosition, this.SelectedPin.Position);
+            }
+        });
 
-        public Command SetCalculatedRouteCommand {
-            get => new Command(() => {
-                if (this._routeProcessing) return;
-                if (this.UserPosition != default(Position) && this.SelectedPin != null) {
-                    this.RouteFrom = this.UserPosition;
-                    this.RouteTo = this.SelectedPin.Position;
-                    this._routeProcessing = true;
-                    this.MapFunctions.SetCalculatedRoute(this.UserPosition, this.SelectedPin.Position);
-                }
-            });
-        }
 
-        public ICommand DeleteRouteCommand {
-            get => new Command(() => {
-                this.MapFunctions.DeleteRoute();
-                this.IsRouteActive = false;
-                this._routeProcessing = false; //на всякий случай
-            });
-        }
+        public ICommand SetCalculatedRouteCommand => new Command(() => {
+            if (this._routeProcessing) return;
+            if (this.UserPosition != default(Position) && this.SelectedPin != null) {
+                this.RouteFrom = this.UserPosition;
+                this.RouteTo = this.SelectedPin.Position;
+                this._routeProcessing = true;
+                this.MapFunctions.SetCalculatedRoute(this.UserPosition, this.SelectedPin.Position);
+            }
+        });
 
-        public ICommand RouteInitializingSucceedCommand {
-            get => new Command(() => {
-                this.IsRouteActive = true;
-                this._routeProcessing = false;
-            });
-        }
 
-        public ICommand RouteInitializingFailedCommand {
-            get => new Command<CustomPin>(pin => {
-                this._routeProcessing = false;
-                this.IsRouteActive = false;
-                App.ToastNotificator.Show("Ошибка построения маршрута");
-            });
-        }
+        public ICommand DeleteRouteCommand => new Command(() => {
+            this.MapFunctions.DeleteRoute();
+            this.IsRouteActive = false;
+            this._routeProcessing = false; //на всякий случай
+        });
+
+
+        public ICommand RouteInitializingSucceedCommand => new Command(() => {
+            this.IsRouteActive = true;
+            this._routeProcessing = false;
+        });
+
+
+        public ICommand RouteInitializingFailedCommand => new Command<CustomPin>(pin => {
+            this._routeProcessing = false;
+            this.IsRouteActive = false;
+            App.ToastNotificator.Show("Ошибка построения маршрута");
+        });
+
 
         #endregion
 
@@ -338,39 +328,25 @@ namespace Libmemo {
             }
         }
 
-        public ICommand SearchCommand {
-            get => new Command(() => {
-                throw new NotImplementedException();
-                //var searchPage = new SearchPage(await App.Database.GetItems<Person>(), this.SearchText);
-                //searchPage.ItemSelected += OnSearchItemSelected;
-                //searchPage.SearchTextChanged += OnSearchChanged;
+        public ICommand SearchCommand => new Command(async () => {
+            var page = new SearchPage(this.SearchText);
 
-                //this.SelectedPin = null;
-                //await App.GlobalPage.Push(searchPage);
-            });
+            page.SearchTextChanged += (sender, text) => this.SearchText = text;
+            page.ItemSelected += async (sender, person) => {
+                await App.GlobalPage.Pop();
+                var pin = _customPins.FirstOrDefault(e => e.Id == person.Id.ToString());
+                if (pin != null) {
+                    ShowAllPins();
+                    this.SelectedPin = pin;
+                    this.FollowUser = false;
+                    MoveCameraToPosition(pin.Position);
+                }
+            };
 
-        }
+            await App.GlobalPage.Push(page);
+        });
 
-        public ICommand ResetCommand {
-            get => new Command(() => {
-                this.SearchText = string.Empty;
-            }); 
-        }
 
-        private void OnSearchChanged(object sender, string e) {
-            this.SearchText = e;
-        }
-
-        private void OnSearchItemSelected(object sender, int id) {
-            var pin = _customPins.FirstOrDefault(e => e.Id == id.ToString());
-
-            if (pin != null) {
-                ShowAllPins();
-                this.SelectedPin = pin;
-                this.FollowUser = false;
-                MoveCameraToPosition(pin.Position);
-            }
-        }
 
         #endregion
 

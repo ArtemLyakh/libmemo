@@ -630,6 +630,7 @@ namespace Libmemo.Droid {
                     var binding = _customPinsBindings.FirstOrDefault(i => i.Key.Id == pinForm.Id);
                     this._selectedPin = pinForm;
                     binding.Value?.ShowInfoWindow();
+                    ((CustomMap)sender).SelectedPin = pinForm;
                 } else {
                     if (_selectedPin != null) {
                         var binding = _customPinsBindings.FirstOrDefault(i => i.Key == this._selectedPin);
