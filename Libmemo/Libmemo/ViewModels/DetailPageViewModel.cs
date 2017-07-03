@@ -10,28 +10,30 @@ using Xamarin.Forms;
 namespace Libmemo {
     public class DetailPageViewModel : INotifyPropertyChanged {
 
-        private int id;
-        
+        private int Id { get; set; }
+
         public DetailPageViewModel(int id) {
-            this.id = id;
+            this.Id = id;
         }
 
-        public async void Init() {
-            //var person = await App.Database.GetById<Person>(id);
-            Person person = null;
+
+        public ICommand LoadCommand => new Command(async () => {
+            var person = await App.Database.GetById(Id);
+
             if (person != null) {
                 this.FIO = person.FIO;
                 this.LatLon = $"{person.Latitude.ToString(CultureInfo.InvariantCulture)}, {person.Longitude.ToString(CultureInfo.InvariantCulture)}";
 
-                //if (Uri.TryCreate(person.ImageUrl, UriKind.Absolute, out Uri imageUrl))
-                //    this.ImageUri = imageUrl;
+                if (person.ImageUrl != null) {
+                    this.ImageUri = person.ImageUrl;
+                } else {
+                    this.ImageUri = null;
+                }
 
                 if (!string.IsNullOrWhiteSpace(person.Text)) {
                     this.Text = person.Text;
-                }
-
-                if (AuthHelper.IsAdmin || AuthHelper.CurrentUserId == person.Owner) {
-                    CanEdit = true;
+                } else {
+                    this.Text = string.Empty;
                 }
 
                 if (person.Height.HasValue) {
@@ -50,25 +52,15 @@ namespace Libmemo {
                     this.Width = string.Empty;
                 }
 
-                
-                //if (Uri.TryCreate(person.SchemeUrl, UriKind.Absolute, out Uri schemeUrl)) {
-                //    this.IsSchemeShow = true;
-                //} else {
-                //    this.IsSchemeShow = false;
-                //}
-            }
-        }
-
-        private bool _canEdit;
-        public bool CanEdit {
-            get { return this._canEdit; }
-            set {
-                if (this._canEdit != value) {
-                    this._canEdit = value;
-                    this.OnPropertyChanged(nameof(CanEdit));
+                if (person.SchemeUrl != null) {
+                    this.IsSchemeShow = true;
+                    this.SchemeUri = person.SchemeUrl;
+                } else {
+                    this.IsSchemeShow = false;
+                    this.SchemeUri = null;
                 }
             }
-        }
+        });
 
 
         private string _fio;
@@ -115,24 +107,9 @@ namespace Libmemo {
             }
         }
 
-
-
-        public ICommand EditCommand {
-            get => new Command(async () => {
-                ContentPage page;
-                if (AuthHelper.IsAdmin) {
-                    page = new EditPersonPageAdmin(id);
-                } else {
-                    page = new EditPersonPage(id);
-                }
-                await App.GlobalPage.Push(page);
-            });
-        }
-
-
         private bool _isHeightShow;
         public bool IsHeightShow {
-            get { return this._isHeightShow; }
+            get => this._isHeightShow;
             set {
                 if (this._isHeightShow != value) {
                     this._isHeightShow = value;
@@ -183,14 +160,13 @@ namespace Libmemo {
             }
         }
 
-        public ICommand SchemeDownloadCommand {
-            get => new Command(async () => {
-                //var person = await App.Database.GetById<Person>(id);
-                //if (Uri.TryCreate(person.SchemeUrl, UriKind.Absolute, out Uri schemeUrl)) {
-                //    Device.OpenUri(schemeUrl);
-                //}
-            });
-        }
+
+        private Uri SchemeUri { get; set; }
+
+        public ICommand SchemeDownloadCommand => new Command(() => {
+            if (this.SchemeUri != null) Device.OpenUri(SchemeUri);
+        });
+
 
 
 

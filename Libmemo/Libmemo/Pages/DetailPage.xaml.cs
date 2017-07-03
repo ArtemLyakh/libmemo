@@ -18,7 +18,7 @@ namespace Libmemo {
 
         protected override void OnAppearing() {
             base.OnAppearing();
-            (BindingContext as DetailPageViewModel)?.Init();
+            ((DetailPageViewModel)BindingContext).LoadCommand.Execute(null);
         }
 
     }

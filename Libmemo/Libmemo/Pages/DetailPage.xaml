@@ -16,7 +16,7 @@
                 <Label Text="{Binding FIO}" HorizontalOptions="CenterAndExpand" FontAttributes="Bold" FontSize="Medium" />
                 <Label Text="{Binding LatLon}" HorizontalOptions="EndAndExpand" FontAttributes="Italic" FontSize="Small" />
             </StackLayout>
-            <Button Text="Редактировать" HorizontalOptions="FillAndExpand" IsVisible="{Binding CanEdit}" Command="{Binding EditCommand}" />
+
             <Image>
                 <Image.Source>
                     <UriImageSource CachingEnabled="True" Uri="{Binding ImageUri}" />
