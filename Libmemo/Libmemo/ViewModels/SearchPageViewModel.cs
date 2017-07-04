@@ -26,7 +26,7 @@ namespace Libmemo {
         public ICommand LoadCommand => new Command(async () => await Load());
         
         private async Task Load() {
-            this.Data = (await App.Database.GetItems(PersonType.Dead))
+            this.Data = (await App.Database.GetList(PersonType.Dead))
                 .Select(i => new Person {
                     Id = i.Id,
                     Fio = i.FIO,

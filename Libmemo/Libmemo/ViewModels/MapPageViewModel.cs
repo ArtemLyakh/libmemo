@@ -400,7 +400,7 @@ namespace Libmemo {
         #region Database
 
         private async void InitPinsFromMemory() {
-            var list = await App.Database.GetItems(PersonType.Dead);
+            var list = await App.Database.GetList(PersonType.Dead);
 
             CustomPins.Clear();
             foreach (var item in list) {

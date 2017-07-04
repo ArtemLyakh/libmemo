@@ -40,25 +40,33 @@ namespace Libmemo {
             }
         });
 
-        public async Task<List<Person>> GetItems() => await Task.Run(() => {
+        public async Task<List<Person>> GetList() => await Task.Run(() => {
             lock (database) {
                 var list = new List<Person>();
-                foreach (var item in database.Table<Person.PersonDB>()) {
-                    var person = Person.ConvertFromDatabase(item);
-                    list.Add(person);
-                }
+                foreach (var item in database.Table<Person.PersonDB>()) 
+                    list.Add(Person.ConvertFromDatabase(item));
+
                 return list;
             }
         });
-        public async Task<List<Person>> GetItems(PersonType type) => await Task.Run(() => {
+        public async Task<List<Person>> GetList(PersonType type) => await Task.Run(() => {
             lock (database) {
                 var list = new List<Person>();
                 foreach (var item in database.Table<Person.PersonDB>()) {
                     if (item._PersonType != type) continue;
-                    var person = Person.ConvertFromDatabase(item);
-                    list.Add(person);
+                    list.Add(Person.ConvertFromDatabase(item));
                 }
                 return list;
+            }
+        });
+
+        public async Task<Dictionary<int, Person>> GetDictionary() => await Task.Run(() => {
+            lock (database) {
+                var dict = new Dictionary<int, Person>();
+                foreach (var item in database.Table<Person.PersonDB>())
+                    dict.Add(item._Id, Person.ConvertFromDatabase(item));
+
+                return dict;
             }
         });
 
@@ -94,7 +102,7 @@ namespace Libmemo {
         #region Load
 
         private async Task<long?> GetLastModified() => await Task.Run(async () => Settings.LastModified ??
-            (await GetItems()).OrderByDescending(i => i.LastModified).FirstOrDefault()?.LastModified
+            (await GetList()).OrderByDescending(i => i.LastModified).FirstOrDefault()?.LastModified
         );
 
         public async void Load(bool full = false) {

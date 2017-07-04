@@ -11,37 +11,40 @@ using Xamarin.Forms.Xaml;
 namespace Libmemo {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class TreePage : ContentPage {
-        public TreePage() {
+        private Tree Tree { get; set; }
+
+        public TreePage(int? id = null) {
             InitializeComponent();
-
-
-            //int id = Settings.CurrentUser;
-            //Init(id);
+            Init(id);
         }
 
+        private async void Init(int? id) {
+            if (!AuthHelper.IsAdmin) id = AuthHelper.CurrentUserId;
+            if (!id.HasValue) {
+                await App.GlobalPage.PopToRootPage();
+                return;
+            }
 
-        //private IEnumerable<IDatabaseSavable> db;
-
-        private async void Init(int id) {
-
+            Tree = new Tree(id.Value);
             try {
-
-
-
-
-                //var user = await App.Database.GetById<User>(id);
-               // if (user == null) throw new NullReferenceException();
-
-                //var tree = new Tree(user);
-                //await tree.Calculate();
-
-            } catch (Exception e) {
+                var success = await Tree.LoadData();
+            } catch (UnauthorizedAccessException) {
+                await App.GlobalPage.PopToRootPage();
+                return;
+            } catch (FormatException) {
+                Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Ошибка", "Данные повреждены", "Ок"));
+                await App.GlobalPage.PopToRootPage();
+                return;
+            } catch {
                 var q = 1;
             }
             
-
-           
         }
+
+
+
+
+
 
         //private async void Init() {
 
