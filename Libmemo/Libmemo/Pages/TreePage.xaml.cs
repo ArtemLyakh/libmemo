@@ -16,6 +16,7 @@ namespace Libmemo {
         public TreePage(int? id = null) {
             InitializeComponent();
             Init(id);
+
         }
 
         private async void Init(int? id) {
@@ -28,6 +29,9 @@ namespace Libmemo {
             Tree = new Tree(id.Value);
             try {
                 var success = await Tree.LoadData();
+                if (!success) throw new Exception();
+                Tree.DrawTree(absolute);
+
             } catch (UnauthorizedAccessException) {
                 await App.GlobalPage.PopToRootPage();
                 return;
@@ -178,33 +182,7 @@ namespace Libmemo {
         //    return stack;
         //}
 
-        private View GetAddNewButton(Action action) {
-            var button = new Image {
-                WidthRequest = 75,
-                HeightRequest = 75,
-                Source = ImageSource.FromResource("Libmemo.Tree.Images.add_button.jpg")
-            };
-            button.GestureRecognizers.Add(new TapGestureRecognizer() {
-                Command = new Command(() => action.Invoke())
-            });
-
-            //button.Clicked += (object sender, EventArgs e) => action.Invoke();
-
-            return button;
-        }
-
-        private Tuple<View, Point> GetLine(Point a, Point b) {
-            var length = Math.Pow(Math.Pow(a.Y - b.Y, 2) + Math.Pow(a.X - b.X, 2), 0.5);
-            var rot = Math.Atan((b.X - a.X) / (a.Y - b.Y)) * 180 / Math.PI;
-
-            return Tuple.Create(new BoxView {
-                HeightRequest = length,
-                WidthRequest = 5,
-                BackgroundColor = Color.Black,
-                Rotation = rot
-            } as View, new Point((a.X + b.X) / 2 - 5 / 2, (a.Y + b.Y) / 2 - length / 2));
-        }
-
+      
         private async void Slider1_ValueChanged(object sender, ValueChangedEventArgs e) {
             await absolute.ScaleTo(e.NewValue / 100);         
 
