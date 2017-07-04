@@ -98,28 +98,60 @@ namespace Libmemo {
 
 
 
-        
+        private const int LINE_WIDTH = 5;
+
+        private const int ADD_BUTTON_WIDTH = 50;
+        private const int ADD_BUTON_HEIGHT = 50;
+
+        private const int TREE_ITEM_WIDTH = 100;
+        private const int TREE_ITEM_HEIGHT = 175;
+        private const int TREE_ITEM_IMAGE_HEIGHT = 100;
+
+        private const int SPACE_BETWEEN_ITEMS = 15;
+        private const int SPACE_BETWEEN_GROUPS = 50;
+        private const int LEVEL_HEIGHT = 250;
+
+
 
         public void DrawTree(AbsoluteLayout layout) {
+            var LineList = new List<(View, Point)>();
+            var ViewList = new List<(View, Point)>();
+
+            var levelOffsetDict = new Dictionary<int, double>();
+            (Point, double) DrawItem(Item item, int level, bool left) {
+                if (!levelOffsetDict.ContainsKey(level)) levelOffsetDict[level] = 0;
+
+                if (item == null) {
+                    var buttonData = GetAddNewButton(new Point(levelOffsetDict[level], level * LEVEL_HEIGHT), () => {
+                        var q = 1;
+                    });
+                    ViewList.Add(buttonData);
+                    levelOffsetDict[level] += ADD_BUTTON_WIDTH / 2;
+                    var end = levelOffsetDict[level];
 
 
-            var levelDict = new Dictionary<int, int>();
-            void DrawItem(Item item, int level) {
-                if (!levelDict.ContainsKey(level)) levelDict[level] = 0;
-                else levelDict[level] += 1;
+                    levelOffsetDict[level] += SPACE_BETWEEN_GROUPS;
+                    return (buttonData.Item2, end);
+                } else {
 
-                var person = item.Person;
-                var point = new Point(TreeItemWidth/2 + levelDict[level] * TreeItemWidth, 1000 - level * TreeItemHeight);
-                Action action = () => {
+                }
 
-                    var q = 1;
-                };
+                //var offset = DrawItem(item.Mother, level + 1, true);
 
-                (var v, var p) = GetTreeItem(point, person, action);
-                layout.Children.Add(v, p);
+                //if (item.Mother != null)
 
-                if (item.Mother != null) DrawItem(item.Mother, level + 1);
-                if (item.Father != null) DrawItem(item.Father, level + 1);
+                //var person = item.Person;
+                //var point = new Point(TREE_ITEM_WIDTH/2 + levelDict[level] * TREE_ITEM_WIDTH, 1000 - level * TREE_ITEM_HEIGHT);
+                //Action action = () => {
+
+                //    var q = 1;
+                //};
+
+                //(var v, var p) = GetTreeItem(point, person, action);
+                //layout.Children.Add(v, p);
+
+                //if (item.Mother != null) DrawItem(item.Mother, level + 1);
+                //if (item.Father != null) DrawItem(item.Father, level + 1);
             }
 
 
@@ -134,57 +166,47 @@ namespace Libmemo {
         }
 
 
-        private readonly int LineWidth = 5;
-        private readonly Color LineColor = Color.Black;
-
-        private readonly int AddButtonWidth = 50;
-        private readonly int AddButtonHeight = 50;
-
-        private readonly int TreeItemWidth = 100;
-        private readonly int TreeItemHeight = 175;
-        private readonly int TreeItemImageHeight = 100;
-
         private (View, Point) GetLine(Point A, Point B) {
             var length = Math.Pow(Math.Pow(A.Y - B.Y, 2) + Math.Pow(A.X - B.X, 2), 0.5);
             var rot = Math.Atan((B.X - A.X) / (A.Y - B.Y)) * 180 / Math.PI;
 
             var view = new BoxView {
                 HeightRequest = length,
-                WidthRequest = LineWidth,
-                BackgroundColor = LineColor,
+                WidthRequest = LINE_WIDTH,
+                BackgroundColor = Color.Black,
                 Rotation = rot
             };
-            var point = new Point((A.X + B.X) / 2 - LineWidth / 2, (A.Y + B.Y) / 2 - length / 2);
+            var point = new Point((A.X + B.X) / 2 - LINE_WIDTH / 2, (A.Y + B.Y) / 2 - length / 2);
 
             return (view, point);
         }
 
         private (View, Point) GetAddNewButton(Point center, Action onTap) {
             var button = new Image {
-                WidthRequest = AddButtonWidth,
-                HeightRequest = AddButtonHeight,
+                WidthRequest = ADD_BUTTON_WIDTH,
+                HeightRequest = ADD_BUTON_HEIGHT,
                 Source = ImageSource.FromResource("Libmemo.Tree.Images.add_button.jpg"),
             };
             button.GestureRecognizers.Add(new TapGestureRecognizer {
                 Command = new Command(() => onTap?.Invoke())
             });
 
-            var point = new Point(center.X - AddButtonWidth / 2, center.Y - AddButtonHeight / 2);
+            var point = new Point(center.X - ADD_BUTTON_WIDTH / 2, center.Y - ADD_BUTON_HEIGHT / 2);
 
             return (button, point);
         }
 
         private (View, Point) GetTreeItem (Point center, Person person, Action onTap) {
             var stack = new StackLayout {
-                HeightRequest = TreeItemHeight,
-                WidthRequest = TreeItemWidth
+                HeightRequest = TREE_ITEM_HEIGHT,
+                WidthRequest = TREE_ITEM_WIDTH
             };
             stack.GestureRecognizers.Add(new TapGestureRecognizer {
                 Command = new Command(() => onTap?.Invoke())
             });
 
             var image = new Image {
-                HeightRequest = TreeItemImageHeight,
+                HeightRequest = TREE_ITEM_IMAGE_HEIGHT,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 Source = person.IconUrl != null 
                     ? ImageSource.FromUri(person.IconUrl) 
@@ -195,13 +217,13 @@ namespace Libmemo {
 
             var fio = new Label {
                 Text = person.FIO,
-                HeightRequest = TreeItemHeight - TreeItemImageHeight,
+                HeightRequest = TREE_ITEM_HEIGHT - TREE_ITEM_IMAGE_HEIGHT,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 LineBreakMode = LineBreakMode.WordWrap
             };
             stack.Children.Add(fio);
 
-            var point = new Point(center.X - TreeItemWidth / 2, center.Y - TreeItemHeight / 2);
+            var point = new Point(center.X - TREE_ITEM_WIDTH / 2, center.Y - TREE_ITEM_HEIGHT / 2);
 
             return (stack, point);
         }
