@@ -22,6 +22,36 @@ namespace Libmemo {
         }
         public Item Root { get; set; } = null;
 
+        private Item SearchInTree(int personId) {
+            Item search = null;
+
+            void Iteration(Item item) {
+                if (item.Person.Id == personId) search = item;
+                if (item.Mother != null) Iteration(item.Mother);
+                if (item.Father != null) Iteration(item.Father);
+            }
+
+            Iteration(Root);
+
+            return search;
+        }
+
+        private List<int> GetInTreePersonIds() {
+            var list = new List<int>();
+
+            void Iteration(Item item)
+            {
+                list.Add(item.Person.Id);
+                foreach(var sibling in item.Siblings) list.Add(sibling.Id);
+                
+                if (item.Mother != null) Iteration(item.Mother);
+                if (item.Father != null) Iteration(item.Father);
+            }
+            Iteration(Root);
+
+            return list;
+        }
+
 
         public Tree (int userId) {
             this._userId = userId;
@@ -98,6 +128,8 @@ namespace Libmemo {
             Root = DecodeItem(data.user.Value);
         }
 
+        
+
 
 
         private const int LINE_WIDTH = 5;
@@ -113,6 +145,8 @@ namespace Libmemo {
         private const int SPACE_BETWEEN_GROUPS = 150;
         private const int LEVEL_HEIGHT = 250;
 
+        private AbsoluteLayout Layout { get; set; }
+
         private int ColumnCount { get; set; }
         private Dictionary<int, double> ColumnWidths { get; set; } = new Dictionary<int, double>();
         private int LevelCount { get; set; }
@@ -122,13 +156,21 @@ namespace Libmemo {
         private List<(View, Point)> Views { get; set; } = new List<(View, Point)>();
 
         public void DrawTree(AbsoluteLayout layout) {
+            Layout = layout;
+            _DrawTree();
+        }
+        private void RedrawTree() {
+            _DrawTree();
+        }
+
+        private void _DrawTree() {
             CalculateColumns();
             SetDefaultColumnWidths();
             AdjustColumnWidths();
             CalculateLevels();
             CalculateLayoutSize();
-            CalculatePositions();
-            DrawLayout(layout);
+            BufferDraw();
+            DrawLayout();
         }
         private void CalculateColumns() {
             ColumnCount = 0;
@@ -185,7 +227,7 @@ namespace Libmemo {
             LayoutHeight = LEVEL_HEIGHT * LevelCount;
             LayoutWidth = ColumnWidths.Select(i => i.Value).Aggregate(0d, (sum, i) => sum += i);
         }
-        private void CalculatePositions() {
+        private void BufferDraw() {
             Views = new List<(View, Point)>();
             Lines = new List<(View, Point)>();
 
@@ -269,7 +311,7 @@ namespace Libmemo {
                 #region Add button
 
                 #region Line
-                element = GetLine(new Point(x, y), new Point(x + SPACE_BETWEEN_ITEMS, y));
+                element = GetLine(new Point(x, y), new Point(x + SPACE_BETWEEN_ITEMS + (TREE_ITEM_WIDTH - ADD_BUTTON_WIDTH) /2, y)); ;
                 Lines.Add(element);
                 x += SPACE_BETWEEN_ITEMS;
                 #endregion
@@ -289,32 +331,110 @@ namespace Libmemo {
 
             Iteration(Root, 1);
         }
-        private void DrawLayout(AbsoluteLayout layout) {
-            layout.Children.Clear();
+        private void DrawLayout() {
+            Layout.Children.Clear();
 
-            layout.HeightRequest = LayoutHeight;
-            layout.WidthRequest = LayoutWidth;
+            Layout.HeightRequest = LayoutHeight;
+            Layout.WidthRequest = LayoutWidth;
 
-            foreach (var element in Lines) 
-                layout.Children.Add(element.Item1, element.Item2);
+            foreach (var element in Lines)
+                Layout.Children.Add(element.Item1, element.Item2);
 
             foreach (var element in Views)
-                layout.Children.Add(element.Item1, element.Item2);
+                Layout.Children.Add(element.Item1, element.Item2);
         }
 
 
         private enum AddPersonType {
             Mother, Father, Sibling
         }
-        private void AddClickHandler(Person person, AddPersonType type) {
-            App.ToastNotificator.Show($"Добавление {type.ToString()} для {person.Id}:{person.FIO}");
+        private async void AddClickHandler(Person person, AddPersonType type) {
+            var presentPersonIds = this.GetInTreePersonIds();
+            var page = new SelectPersonExceptPage(presentPersonIds);
+            page.ItemSelected += async (sender, selected) => {
+                await App.GlobalPage.Pop();
+
+                var item = SearchInTree(person.Id);
+                if (item == null) return;
+                switch (type) {
+                    case AddPersonType.Sibling:
+                        item.Siblings.Add(selected);
+                        break;
+                    case AddPersonType.Mother:
+                        item.Mother = new Item(selected);
+                        break;
+                    case AddPersonType.Father:
+                        item.Father = new Item(selected);
+                        break;
+                }
+                RedrawTree();
+            };
+
+            await App.GlobalPage.Push(page);
         }
 
-        private void TreeItemClickHandler(Person person) {
-            App.ToastNotificator.Show($"Клик по {person.Id}:{person.FIO}");
+        private enum TreeItemAction {
+            Cancel,    
+            Details, Replace, Delete
         }
 
+        private async void TreeItemClickHandler(Person person) {
+            var actions = new Dictionary<string, TreeItemAction> {
+                { "Просмотреть", TreeItemAction.Details },
+                { "Заменить", TreeItemAction.Replace },
+                { "Удалить", TreeItemAction.Delete }
+            };
+            var cancel = new KeyValuePair<string, TreeItemAction>("Отмена", TreeItemAction.Cancel);
 
+            var action = (await App.Current.MainPage.DisplayActionSheet(
+                "Выбирите действие",
+                cancel.Key, 
+                null,
+                actions.Select(i => i.Key).ToArray())
+            ) ?? cancel.Key;
+
+            actions.Add(cancel.Key, cancel.Value);
+
+            var selectedAction = actions.ContainsKey(action) ? actions[action] : cancel.Value;
+            switch (selectedAction) {
+                case TreeItemAction.Details:
+                    TreeItemDetails(person);
+                    break;
+                case TreeItemAction.Replace:
+                    TreeItemReplace(person);
+                    break;
+                case TreeItemAction.Delete:
+                    TreeItemDelete(person);
+                    break;
+                case TreeItemAction.Cancel: default:
+                    return;
+            }
+        }
+        private async void TreeItemDetails(Person person) {
+            var page = new DetailPage(person.Id);
+            await App.GlobalPage.Push(page);
+        }
+        private async void TreeItemReplace(Person person) {
+            if (person.Id == Root.Person.Id) {
+                App.ToastNotificator.Show("Невозможно заменить корневой элемент");
+                return;
+            }
+
+            var presentPersonIds = this.GetInTreePersonIds();          
+            var page = new SelectPersonExceptPage(presentPersonIds);
+            page.ItemSelected += async (sender, selected) => {
+                await App.GlobalPage.Pop();
+
+                var item = SearchInTree(person.Id);
+                item.Person = selected;
+                RedrawTree();
+            };
+
+            await App.GlobalPage.Push(page);
+        }
+        private void TreeItemDelete(Person person) {
+
+        }
 
         private (View, Point) GetLine(Point A, Point B) {
             var length = Math.Pow(Math.Pow(A.Y - B.Y, 2) + Math.Pow(A.X - B.X, 2), 0.5);
