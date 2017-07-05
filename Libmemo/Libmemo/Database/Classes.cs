@@ -187,6 +187,9 @@ namespace Libmemo {
             return person;
         }
 
+        public override string ToString() {
+            return $"{Id}: {FIO}";
+        }
 
     }
 

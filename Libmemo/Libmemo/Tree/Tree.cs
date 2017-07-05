@@ -17,6 +17,8 @@ namespace Libmemo {
             public Item Mother { get; set; }
             public Item Father { get; set; }
             public List<Person> Siblings { get; set; } = new List<Person>();
+
+            public int[] Columns { get; set; }
         }
         public Item Root { get; set; } = null;
 
@@ -108,50 +110,243 @@ namespace Libmemo {
         private const int TREE_ITEM_IMAGE_HEIGHT = 100;
 
         private const int SPACE_BETWEEN_ITEMS = 15;
-        private const int SPACE_BETWEEN_GROUPS = 50;
+        private const int SPACE_BETWEEN_GROUPS = 150;
         private const int LEVEL_HEIGHT = 250;
+
+        private int ColumnCount { get; set; }
+        private Dictionary<int, double> ColumnWidths { get; set; } = new Dictionary<int, double>();
+        private int LevelCount { get; set; }
+        private double LayoutWidth { get; set; }
+        private double LayoutHeight { get; set; }
+        private List<(View, Point)> Lines { get; set; } = new List<(View, Point)>();
+        private List<(View, Point)> Views { get; set; } = new List<(View, Point)>();
+
+        public void DrawTreeTest(AbsoluteLayout layout) {
+            CalculateColumns();
+            SetDefaultColumnWidths();
+            AdjustColumnWidths();
+            CalculateLevels();
+            CalculateLayoutSize();
+            CalculatePositions();
+            DrawLayout(layout);
+        }
+        private void CalculateColumns() {
+            ColumnCount = 0;
+
+            int[] Iteration(Item item) => item == null
+                ? new int[] { ++ColumnCount }
+                : item.Columns = Iteration(item.Mother).Concat(Iteration(item.Father)).ToArray();
+
+            Iteration(Root);
+        }
+        private void SetDefaultColumnWidths() {
+            for (int i = 1; i <= ColumnCount; i++) {
+                ColumnWidths[i] = SPACE_BETWEEN_GROUPS / 2 + ADD_BUTTON_WIDTH + SPACE_BETWEEN_GROUPS / 2;
+            }
+        }
+        private void AdjustColumnWidths() {
+            void Iteration(Item item) {
+                if (item != null) {
+                    double requiredWidth = SPACE_BETWEEN_GROUPS + TREE_ITEM_WIDTH + SPACE_BETWEEN_ITEMS + ADD_BUTTON_WIDTH;
+                    foreach (var sibling in item.Siblings) 
+                        requiredWidth += SPACE_BETWEEN_ITEMS + TREE_ITEM_WIDTH;
+
+                    var currentColumnWidth = ColumnWidths.Keys.Intersect(item.Columns).Aggregate(0d, (sum, i) => sum += ColumnWidths[i]);
+                    var widthDificit = requiredWidth - currentColumnWidth;
+                    if (widthDificit > 0) {
+                        var additionalColumnWidth = widthDificit / item.Columns.Length;
+                        foreach (var i in item.Columns) {
+                            ColumnWidths[i] += additionalColumnWidth;
+                        }
+                    }
+
+                    Iteration(item.Mother);
+                    Iteration(item.Father);
+                }
+            }
+
+            Iteration(Root);
+        }
+        private void CalculateLevels() {
+            LevelCount = 0;
+            void Iteration(Item item, int level)
+            {
+                if (item == null) {
+                    LevelCount = Math.Max(LevelCount, level);
+                } else {
+                    Iteration(item.Mother, level + 1);
+                    Iteration(item.Father, level + 1);
+                }
+            }
+
+            Iteration(Root, 1);
+        }
+        private void CalculateLayoutSize() {
+            LayoutHeight = LEVEL_HEIGHT * LevelCount;
+            LayoutWidth = ColumnWidths.Select(i => i.Value).Aggregate(0d, (sum, i) => sum += i);
+        }
+        private void CalculatePositions() {
+            Views = new List<(View, Point)>();
+            Lines = new List<(View, Point)>();
+
+            Point IterationAdd(int column, int level, Item child, Action action) {
+                double offset = 0;
+                for (int i = 1; i < column; i++)
+                    offset += ColumnWidths[i];
+                var width = ColumnWidths[column];
+
+                var x = offset + width / 2;
+                var y = LayoutHeight - LEVEL_HEIGHT / 2 - (level - 1) * LEVEL_HEIGHT;
+
+                var bottomConnectPoint = new Point(x, y + ADD_BUTON_HEIGHT / 2);
+                (View, Point) element = GetAddNewButton(new Point(x, y), () => {
+                    var q = 1;
+                });
+                Views.Add(element);
+                return bottomConnectPoint;
+            }
+
+            Point Iteration(Item item, int level) {
+                double offset = 0, groupWidth = 0;
+                int columnStart = item.Columns.Min();
+                int columnEnd = item.Columns.Max();
+                for (int i = 1; i <= columnEnd; i++)
+                    if (i < columnStart) offset += ColumnWidths[i];
+                    else groupWidth += ColumnWidths[i];
+
+                double groupRequiredWidth = SPACE_BETWEEN_GROUPS + TREE_ITEM_WIDTH + SPACE_BETWEEN_ITEMS + ADD_BUTTON_WIDTH;
+                foreach (var sibling in item.Siblings)
+                    groupRequiredWidth += SPACE_BETWEEN_ITEMS + TREE_ITEM_WIDTH;
+
+                //pointer
+                var x = offset + SPACE_BETWEEN_GROUPS / 2;
+                x += groupWidth / 2;
+                x -= groupRequiredWidth / 2;
+                var y = LayoutHeight - LEVEL_HEIGHT / 2 - (level - 1) * LEVEL_HEIGHT;
+
+                Point MotherConnectPoint, FatherConnectPoint;
+                if (item.Mother == null) {
+                    MotherConnectPoint = IterationAdd(item.Columns.First(), level + 1, item, () => {
+                        var q = 1;
+                    });
+                } else {
+                    MotherConnectPoint = Iteration(item.Mother, level + 1);
+                }
+                if (item.Father == null) {
+                    FatherConnectPoint = IterationAdd(item.Columns.Last(), level + 1, item, () => {
+                        var q = 1;
+                    });
+                } else {
+                    FatherConnectPoint = Iteration(item.Father, level + 1);
+                }
+
+                #region Draw
+                (View, Point) element;
+
+                #region Current item
+                x += TREE_ITEM_WIDTH / 2;
+                var bottomConnectPoint = new Point(x, y + TREE_ITEM_HEIGHT / 2);
+                var topConnectPoint = new Point(x, y - TREE_ITEM_HEIGHT / 2);
+                element = GetTreeItem(new Point(x, y), item.Person, () => {
+                    var q = 1;
+                });
+                Views.Add(element);
+                x += TREE_ITEM_WIDTH / 2;
+                #endregion
+
+                #region Connect lines
+                element = GetLine(MotherConnectPoint, topConnectPoint);
+                Lines.Add(element);
+                element = GetLine(FatherConnectPoint, topConnectPoint);
+                Lines.Add(element);
+                #endregion
+
+                #region Siblings
+                foreach (var sibling in item.Siblings) {
+                    #region Line
+                    element = GetLine(new Point(x, y), new Point(x + SPACE_BETWEEN_ITEMS, y));
+                    Lines.Add(element);
+                    x += SPACE_BETWEEN_ITEMS;
+                    #endregion
+
+                    #region Sibling
+                    x += TREE_ITEM_WIDTH / 2;
+                    element = GetTreeItem(new Point(x, y), sibling, () => {
+                        var q = 1;
+                    });
+                    Views.Add(element);
+                    x += TREE_ITEM_WIDTH / 2;
+                    #endregion
+                }
+                #endregion
+
+                #region Add button
+
+                #region Line
+                element = GetLine(new Point(x, y), new Point(x + SPACE_BETWEEN_ITEMS, y));
+                Lines.Add(element);
+                x += SPACE_BETWEEN_ITEMS;
+                #endregion
+
+                #region Button
+                x += ADD_BUTTON_WIDTH;
+                element = GetAddNewButton(new Point(x, y), () => {
+                    var q = 1;
+                });
+                Views.Add(element);
+                #endregion
+
+                #endregion
+
+                #endregion
+
+                return bottomConnectPoint;
+            }
+
+            Iteration(Root, 1);
+        }
+        private void DrawLayout(AbsoluteLayout layout) {
+            layout.Children.Clear();
+
+            layout.HeightRequest = LayoutHeight;
+            layout.WidthRequest = LayoutWidth;
+
+            foreach (var element in Lines) 
+                layout.Children.Add(element.Item1, element.Item2);
+
+            foreach (var element in Views)
+                layout.Children.Add(element.Item1, element.Item2);
+        }
+
+
+
+
+
+
 
 
 
         public void DrawTree(AbsoluteLayout layout) {
-            var LineList = new List<(View, Point)>();
-            var ViewList = new List<(View, Point)>();
-
-            var levelOffsetDict = new Dictionary<int, double>();
-            (Point, double) DrawItem(Item item, int level, bool left) {
-                if (!levelOffsetDict.ContainsKey(level)) levelOffsetDict[level] = 0;
-
-                if (item == null) {
-                    var buttonData = GetAddNewButton(new Point(levelOffsetDict[level], level * LEVEL_HEIGHT), () => {
-                        var q = 1;
-                    });
-                    ViewList.Add(buttonData);
-                    levelOffsetDict[level] += ADD_BUTTON_WIDTH / 2;
-                    var end = levelOffsetDict[level];
 
 
-                    levelOffsetDict[level] += SPACE_BETWEEN_GROUPS;
-                    return (buttonData.Item2, end);
-                } else {
+            var levelDict = new Dictionary<int, int>();
+            void DrawItem(Item item, int level)
+            {
+                if (!levelDict.ContainsKey(level)) levelDict[level] = 0;
+                else levelDict[level] += 1;
 
-                }
+                var person = item.Person;
+                var point = new Point(TREE_ITEM_WIDTH / 2 + levelDict[level] * TREE_ITEM_WIDTH, 1000 - level * TREE_ITEM_HEIGHT);
+                Action action = () => {
 
-                //var offset = DrawItem(item.Mother, level + 1, true);
+                    var q = 1;
+                };
 
-                //if (item.Mother != null)
+                (var v, var p) = GetTreeItem(point, person, action);
+                layout.Children.Add(v, p);
 
-                //var person = item.Person;
-                //var point = new Point(TREE_ITEM_WIDTH/2 + levelDict[level] * TREE_ITEM_WIDTH, 1000 - level * TREE_ITEM_HEIGHT);
-                //Action action = () => {
-
-                //    var q = 1;
-                //};
-
-                //(var v, var p) = GetTreeItem(point, person, action);
-                //layout.Children.Add(v, p);
-
-                //if (item.Mother != null) DrawItem(item.Mother, level + 1);
-                //if (item.Father != null) DrawItem(item.Father, level + 1);
+                if (item.Mother != null) DrawItem(item.Mother, level + 1);
+                if (item.Father != null) DrawItem(item.Father, level + 1);
             }
 
 
@@ -164,7 +359,6 @@ namespace Libmemo {
             if (Root != null) DrawItem(Root, 0);
 
         }
-
 
         private (View, Point) GetLine(Point A, Point B) {
             var length = Math.Pow(Math.Pow(A.Y - B.Y, 2) + Math.Pow(A.X - B.X, 2), 0.5);
@@ -199,7 +393,8 @@ namespace Libmemo {
         private (View, Point) GetTreeItem (Point center, Person person, Action onTap) {
             var stack = new StackLayout {
                 HeightRequest = TREE_ITEM_HEIGHT,
-                WidthRequest = TREE_ITEM_WIDTH
+                WidthRequest = TREE_ITEM_WIDTH,
+                BackgroundColor = Color.Red
             };
             stack.GestureRecognizers.Add(new TapGestureRecognizer {
                 Command = new Command(() => onTap?.Invoke())

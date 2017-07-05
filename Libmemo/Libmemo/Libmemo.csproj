@@ -141,7 +141,6 @@
     <Compile Include="TextToSpeech\TextToSpeech.cs" />
     <Compile Include="ToastNotificator\ToastNotificator.cs" />
     <Compile Include="Tree\Tree.cs" />
-    <Compile Include="Tree\TreeItem.cs" />
     <Compile Include="ViewModels\Admin\UserListPageViewModel.cs" />
     <Compile Include="ViewModels\List\PersonCollectionAdminPageViewModel.cs" />
     <Compile Include="ViewModels\List\PersonCollectionPageViewModel.cs" />
