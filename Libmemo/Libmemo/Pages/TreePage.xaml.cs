@@ -30,8 +30,7 @@ namespace Libmemo {
             try {
                 var success = await Tree.LoadData();
                 if (!success) throw new Exception();
-                //Tree.DrawTree(absolute);
-                Tree.DrawTreeTest(absolute);
+                Tree.DrawTree(absolute);
             } catch (UnauthorizedAccessException) {
                 await App.GlobalPage.PopToRootPage();
                 return;

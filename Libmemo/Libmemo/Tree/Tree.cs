@@ -121,7 +121,7 @@ namespace Libmemo {
         private List<(View, Point)> Lines { get; set; } = new List<(View, Point)>();
         private List<(View, Point)> Views { get; set; } = new List<(View, Point)>();
 
-        public void DrawTreeTest(AbsoluteLayout layout) {
+        public void DrawTree(AbsoluteLayout layout) {
             CalculateColumns();
             SetDefaultColumnWidths();
             AdjustColumnWidths();
@@ -189,7 +189,7 @@ namespace Libmemo {
             Views = new List<(View, Point)>();
             Lines = new List<(View, Point)>();
 
-            Point IterationAdd(int column, int level, Item child, Action action) {
+            Point IterationAddButton(int column, int level, Item child, Action action) {
                 double offset = 0;
                 for (int i = 1; i < column; i++)
                     offset += ColumnWidths[i];
@@ -199,9 +199,7 @@ namespace Libmemo {
                 var y = LayoutHeight - LEVEL_HEIGHT / 2 - (level - 1) * LEVEL_HEIGHT;
 
                 var bottomConnectPoint = new Point(x, y + ADD_BUTON_HEIGHT / 2);
-                (View, Point) element = GetAddNewButton(new Point(x, y), () => {
-                    var q = 1;
-                });
+                (View, Point) element = GetAddNewButton(new Point(x, y), action);
                 Views.Add(element);
                 return bottomConnectPoint;
             }
@@ -224,21 +222,13 @@ namespace Libmemo {
                 x -= groupRequiredWidth / 2;
                 var y = LayoutHeight - LEVEL_HEIGHT / 2 - (level - 1) * LEVEL_HEIGHT;
 
-                Point MotherConnectPoint, FatherConnectPoint;
-                if (item.Mother == null) {
-                    MotherConnectPoint = IterationAdd(item.Columns.First(), level + 1, item, () => {
-                        var q = 1;
-                    });
-                } else {
-                    MotherConnectPoint = Iteration(item.Mother, level + 1);
-                }
-                if (item.Father == null) {
-                    FatherConnectPoint = IterationAdd(item.Columns.Last(), level + 1, item, () => {
-                        var q = 1;
-                    });
-                } else {
-                    FatherConnectPoint = Iteration(item.Father, level + 1);
-                }
+                Point MotherConnectPoint = item.Mother == null
+                    ? IterationAddButton(item.Columns.First(), level + 1, item, () => AddClickHandler(item.Person, AddPersonType.Mother))
+                    : Iteration(item.Mother, level + 1);
+
+                Point FatherConnectPoint = item.Father == null
+                    ? IterationAddButton(item.Columns.Last(), level + 1, item, () => AddClickHandler(item.Person, AddPersonType.Father))
+                    : Iteration(item.Father, level + 1);
 
                 #region Draw
                 (View, Point) element;
@@ -247,9 +237,7 @@ namespace Libmemo {
                 x += TREE_ITEM_WIDTH / 2;
                 var bottomConnectPoint = new Point(x, y + TREE_ITEM_HEIGHT / 2);
                 var topConnectPoint = new Point(x, y - TREE_ITEM_HEIGHT / 2);
-                element = GetTreeItem(new Point(x, y), item.Person, () => {
-                    var q = 1;
-                });
+                element = GetTreeItem(new Point(x, y), item.Person, () => TreeItemClickHandler(item.Person));
                 Views.Add(element);
                 x += TREE_ITEM_WIDTH / 2;
                 #endregion
@@ -271,9 +259,7 @@ namespace Libmemo {
 
                     #region Sibling
                     x += TREE_ITEM_WIDTH / 2;
-                    element = GetTreeItem(new Point(x, y), sibling, () => {
-                        var q = 1;
-                    });
+                    element = GetTreeItem(new Point(x, y), sibling, () => TreeItemClickHandler(item.Person));
                     Views.Add(element);
                     x += TREE_ITEM_WIDTH / 2;
                     #endregion
@@ -290,9 +276,7 @@ namespace Libmemo {
 
                 #region Button
                 x += ADD_BUTTON_WIDTH;
-                element = GetAddNewButton(new Point(x, y), () => {
-                    var q = 1;
-                });
+                element = GetAddNewButton(new Point(x, y), () => AddClickHandler(item.Person, AddPersonType.Sibling));
                 Views.Add(element);
                 #endregion
 
@@ -319,46 +303,18 @@ namespace Libmemo {
         }
 
 
-
-
-
-
-
-
-
-        public void DrawTree(AbsoluteLayout layout) {
-
-
-            var levelDict = new Dictionary<int, int>();
-            void DrawItem(Item item, int level)
-            {
-                if (!levelDict.ContainsKey(level)) levelDict[level] = 0;
-                else levelDict[level] += 1;
-
-                var person = item.Person;
-                var point = new Point(TREE_ITEM_WIDTH / 2 + levelDict[level] * TREE_ITEM_WIDTH, 1000 - level * TREE_ITEM_HEIGHT);
-                Action action = () => {
-
-                    var q = 1;
-                };
-
-                (var v, var p) = GetTreeItem(point, person, action);
-                layout.Children.Add(v, p);
-
-                if (item.Mother != null) DrawItem(item.Mother, level + 1);
-                if (item.Father != null) DrawItem(item.Father, level + 1);
-            }
-
-
-
-
-            layout.Children.Clear();
-            layout.WidthRequest = 1500;
-            layout.HeightRequest = 1500;
-
-            if (Root != null) DrawItem(Root, 0);
-
+        private enum AddPersonType {
+            Mother, Father, Sibling
         }
+        private void AddClickHandler(Person person, AddPersonType type) {
+            App.ToastNotificator.Show($"Добавление {type.ToString()} для {person.Id}:{person.FIO}");
+        }
+
+        private void TreeItemClickHandler(Person person) {
+            App.ToastNotificator.Show($"Клик по {person.Id}:{person.FIO}");
+        }
+
+
 
         private (View, Point) GetLine(Point A, Point B) {
             var length = Math.Pow(Math.Pow(A.Y - B.Y, 2) + Math.Pow(A.X - B.X, 2), 0.5);
