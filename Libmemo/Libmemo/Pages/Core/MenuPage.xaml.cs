@@ -111,7 +111,17 @@ namespace Libmemo {
                             var page = new UserListPage();
                             page.ItemSelected += async (object sender, UserListPageViewModel.User user) =>
                                 await App.GlobalPage.Push(new PersonalDataPageAdmin(user.Id));
-                            return App.GlobalPage.Push(page);
+                            return App.GlobalPage.PushRoot(page);
+                        }
+                    };
+                    yield return new MenuItem {
+                        Title = "Деревья пользователей",
+                        Text = "Деревья пользователей",
+                        Action = () => {
+                            var page = new UserListPage();
+                            page.ItemSelected += async (object sender, UserListPageViewModel.User user) =>
+                                await App.GlobalPage.Push(new TreePageAdmin(user.Id));
+                            return App.GlobalPage.PushRoot(page);
                         }
                     };
                 } else {

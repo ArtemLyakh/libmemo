@@ -18,6 +18,19 @@ namespace Libmemo {
             get => new Command(async () => await App.GlobalPage.PushRoot(new LoginPage()));
         }
 
+
+        public class Json {
+            public class User {
+                public int id { get; set; }
+                public bool is_admin { get; set; }
+                public string fio { get; set; }
+                public string email { get; set; }
+            }
+
+            public User user { get; set; }
+            public PersonJson.Update person { get; set; }
+        }
+
         public ICommand RegisterCommand {
             get => new Command(async () => {
                 var errors = this.Validate();
@@ -46,18 +59,21 @@ namespace Libmemo {
                         }
                         responce.EnsureSuccessStatusCode();
 
-                        var authJson = JsonConvert.DeserializeObject<AuthJson>(str);
+                        var json = JsonConvert.DeserializeObject<Json>(str);
                         var authInfo = new AuthInfo(
-                            UserId: authJson.id,
-                            IsAdmin: authJson.is_admin,
-                            Email: authJson.email,
-                            Fio: authJson.fio,
+                            UserId: json.user.id,
+                            IsAdmin: json.user.is_admin,
+                            Email: json.user.email,
+                            Fio: json.user.fio,
                             CookieContainer: handler.CookieContainer
                         );
                         var authCredentials = new AuthCredentials(
                             Email: Email,
                             Password: Password
                         );
+
+                        var person = Person.ConvertFromJson(json.person);
+                        await App.Database.SaveItem(person);
 
                         AuthHelper.Login(authInfo, authCredentials);
 

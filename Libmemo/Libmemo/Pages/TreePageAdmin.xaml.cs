@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -11,19 +10,26 @@ using Xamarin.Forms.Xaml;
 
 namespace Libmemo {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class TreePage : ContentPage {
+    public partial class TreePageAdmin : ContentPage {
+
+        private int UserId { get; set; }
         private Tree Tree { get; set; }
 
-        public TreePage() {
+        public TreePageAdmin(int id) {
             InitializeComponent();
+            UserId = id;
             Init();
         }
 
 
         private async Task<Tree.Json> LoadData() {
+            var builder = new UriBuilder(Settings.TREE_DATA_URL_ADMIN);
+            builder.Query = $"id={UserId}";
+            var uri = builder.Uri;
+
             using (var handler = new HttpClientHandler { CookieContainer = AuthHelper.CookieContainer })
             using (var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(5) })
-            using (var responce = await client.GetAsync(Settings.TREE_DATA_URL)) {
+            using (var responce = await client.GetAsync(uri)) {
                 var str = await responce.Content.ReadAsStringAsync();
                 if (responce.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
                     throw new UnauthorizedAccessException();
@@ -35,17 +41,13 @@ namespace Libmemo {
             }
         }
 
-
-
-
-
         private async void Init() {
-            if (!AuthHelper.IsLogged || !AuthHelper.CurrentUserId.HasValue) {
+            if (!AuthHelper.IsAdmin) {
                 await AuthHelper.ReloginAsync();
                 return;
             }
 
-            int id = AuthHelper.CurrentUserId.Value;
+            int id = UserId;
             Tree = new Tree(id, absolute, scroll);
 
             try {
@@ -88,7 +90,7 @@ namespace Libmemo {
                 using (var handler = new HttpClientHandler { CookieContainer = AuthHelper.CookieContainer })
                 using (var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(20) }) {
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
-                    using (var response = await client.PostAsync(Settings.TREE_DATA_URL, content)) {
+                    using (var response = await client.PostAsync(Settings.TREE_DATA_URL_ADMIN, content)) {
                         if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
                             await AuthHelper.ReloginAsync();
                             return;
@@ -107,11 +109,7 @@ namespace Libmemo {
 
         private async Task ButtonPlus_Clicked(object sender, EventArgs e) => await Tree.ZoomIn();
         private async Task ButtonMinus_Clicked(object sender, EventArgs e) => await Tree.ZoomOut();
-        
+
+
     }
-
-
-
-
-
 }

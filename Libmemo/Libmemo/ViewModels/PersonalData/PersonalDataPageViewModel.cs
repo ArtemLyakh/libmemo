@@ -75,13 +75,19 @@ namespace Libmemo {
                         content.Add(new ByteArrayContent(result), "photo", "photo.jpg");
                     }
 
-                    using (var message = await client.PostAsync(Settings.PERSONAL_DATA_URL, content)) {
-                        if (message.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
+                    using (var response = await client.PostAsync(Settings.PERSONAL_DATA_URL, content)) {
+                        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
                             await AuthHelper.ReloginAsync();
                             return;
                         }
 
-                        message.EnsureSuccessStatusCode();
+                        response.EnsureSuccessStatusCode();
+
+                        var str = await response.Content.ReadAsStringAsync();
+                        var json = JsonConvert.DeserializeObject<PersonJson.Update>(str);
+                        var person = Person.ConvertFromJson(json);
+                        await App.Database.SaveItem(person);
+
                         App.ToastNotificator.Show("Данные успешно отправлены");
                         this.ResetCommand.Execute(null);
                     }

@@ -14,6 +14,18 @@ using Xamarin.Forms;
 namespace Libmemo {
     public class RegisterAdminPageViewModel : BaseRegisterViewModel {
 
+        public class Json {
+            public class User {
+                public int id { get; set; }
+                public bool is_admin { get; set; }
+                public string fio { get; set; }
+                public string email { get; set; }
+            }
+
+            public User user { get; set; }
+            public PersonJson.Update person { get; set; }
+        }
+
         public ICommand RegisterCommand {
             get => new Command(async () => {
                 var errors = this.Validate();
@@ -41,11 +53,14 @@ namespace Libmemo {
                         }
                         responce.EnsureSuccessStatusCode();
 
-                        var authJson = JsonConvert.DeserializeObject<AuthJson>(str);
+                        var json = JsonConvert.DeserializeObject<Json>(str);
+
+                        var person = Person.ConvertFromJson(json.person);
+                        await App.Database.SaveItem(person);
 
                         App.ToastNotificator.Show("Пользователь зарегистрирован");
 
-                        await App.GlobalPage.PushRoot(new PersonalDataPageAdmin(authJson.id));
+                        await App.GlobalPage.PushRoot(new PersonalDataPageAdmin(json.user.id));
                     }
                 } catch (UnauthorizedAccessException) {
                     await AuthHelper.ReloginAsync();

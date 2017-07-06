@@ -53,8 +53,10 @@ namespace Libmemo {
         }
 
 
-        public Tree (int userId) {
+        public Tree (int userId, AbsoluteLayout absolute, ScrollView scroll) {
             this._userId = userId;
+            this.Layout = absolute;
+            this.Scroll = scroll;
         }
 
 
@@ -69,35 +71,8 @@ namespace Libmemo {
                 public List<int?> siblings { get; set; }
             }
         }
-        public async Task<bool> LoadData() {
-            try {
-                using (var handler = new HttpClientHandler { CookieContainer = AuthHelper.CookieContainer })
-                using (var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(5) })
-                using (var responce = await client.GetAsync(Settings.TREE_DATA_URL)) {
-                    var str = await responce.Content.ReadAsStringAsync();
-                    if (responce.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
-                        throw new UnauthorizedAccessException();
-                    }
-
-                    var json = Newtonsoft.Json.JsonConvert.DeserializeObject<Json>(str);
-                    await DecodeJson(json);
-
-                    responce.EnsureSuccessStatusCode();
-                    return true;
-                }
-            } catch (UnauthorizedAccessException) {
-                throw;
-            } catch (FormatException) {
-                throw;
-            } catch {
-                return false;
-            }
-        }
-        private async Task DecodeJson(Json data) {
+        public async Task LoadFromJson(Json data) {
             var personDict = await App.Database.GetDictionary();
-
-            if (!data.user.HasValue || !personDict.ContainsKey(data.user.Value)) 
-                throw new FormatException();
 
             var jsonDict = new Dictionary<int, Json.Row>();
             foreach (var item in data.data) {
@@ -124,11 +99,8 @@ namespace Libmemo {
                 };
             }
           
-
             Root = DecodeItem(data.user.Value);
         }
-
-        
 
 
 
@@ -146,6 +118,23 @@ namespace Libmemo {
         private const int LEVEL_HEIGHT = 250;
 
         private AbsoluteLayout Layout { get; set; }
+        private ScrollView Scroll { get; set; }
+
+        private double _zoom = 1;
+        private const double ZOOM_STEP = 0.75;
+        public async Task SetZoom(double zoom, bool animate = false) {
+            if (zoom <= 0.01) return;
+            if (zoom > 1) zoom = 1;
+            _zoom = zoom;
+
+            if (Layout != null) {
+                if (animate) await Layout.ScaleTo(zoom);
+                else Layout.Scale = zoom;
+            }
+        }
+        public async Task ZoomIn() => await SetZoom(_zoom / ZOOM_STEP, true);
+        public async Task ZoomOut() => await SetZoom(_zoom * ZOOM_STEP, true);
+
 
         private int ColumnCount { get; set; }
         private Dictionary<int, double> ColumnWidths { get; set; } = new Dictionary<int, double>();
@@ -155,9 +144,9 @@ namespace Libmemo {
         private List<(View, Point)> Lines { get; set; } = new List<(View, Point)>();
         private List<(View, Point)> Views { get; set; } = new List<(View, Point)>();
 
-        public void DrawTree(AbsoluteLayout layout) {
-            Layout = layout;
+        public void DrawTree() {
             _DrawTree();
+            PositionToCenter();
         }
         private void RedrawTree() {
             _DrawTree();
@@ -343,7 +332,13 @@ namespace Libmemo {
             foreach (var element in Views)
                 Layout.Children.Add(element.Item1, element.Item2);
         }
+        private async void PositionToCenter() {
+            var w = Scroll.Width / LayoutWidth;
+            var h = Scroll.Height / LayoutHeight;
 
+            await Scroll.ScrollToAsync(LayoutWidth / 2 - Scroll.Width / 2, LayoutHeight / 2 - Scroll.Height / 2, false);
+            await SetZoom(Math.Min(w, h));
+        }
 
         private enum AddPersonType {
             Mother, Father, Sibling
@@ -465,7 +460,6 @@ namespace Libmemo {
 
             return (view, point);
         }
-
         private (View, Point) GetAddNewButton(Point center, Action onTap) {
             var button = new Image {
                 WidthRequest = ADD_BUTTON_WIDTH,
@@ -480,7 +474,6 @@ namespace Libmemo {
 
             return (button, point);
         }
-
         private (View, Point) GetTreeItem (Point center, Person person, Action onTap) {
             var stack = new StackLayout {
                 HeightRequest = TREE_ITEM_HEIGHT,
@@ -516,9 +509,31 @@ namespace Libmemo {
 
 
 
+        public Json GetTreeAsJson() {
+            var json = new Json {
+                data = new List<Json.Row>(),
+                user = this.UserId
+            };
 
+            void Iteration(Item item) {
+                var row = new Json.Row();
 
+                row.person = item.Person.Id;
+                row.mother = item.Mother?.Person.Id;
+                row.father = item.Father?.Person.Id;
+                row.siblings = new List<int?>();
+                foreach (var sibling in item.Siblings)
+                    row.siblings.Add(sibling.Id);
 
+                json.data.Add(row);
+
+                if (item.Mother != null) Iteration(item.Mother);
+                if (item.Father != null) Iteration(item.Father);
+            }
+            Iteration(Root);
+
+            return json;
+        }
     }
 
 }
