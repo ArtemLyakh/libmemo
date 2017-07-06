@@ -301,7 +301,7 @@ namespace Libmemo {
 
                     #region Sibling
                     x += TREE_ITEM_WIDTH / 2;
-                    element = GetTreeItem(new Point(x, y), sibling, () => TreeItemClickHandler(item.Person));
+                    element = GetTreeItem(new Point(x, y), sibling, () => TreeItemClickHandler(sibling));
                     Views.Add(element);
                     x += TREE_ITEM_WIDTH / 2;
                     #endregion
@@ -387,7 +387,7 @@ namespace Libmemo {
             var cancel = new KeyValuePair<string, TreeItemAction>("Отмена", TreeItemAction.Cancel);
 
             var action = (await App.Current.MainPage.DisplayActionSheet(
-                "Выбирите действие",
+                person.FIO,
                 cancel.Key, 
                 null,
                 actions.Select(i => i.Key).ToArray())
@@ -420,7 +420,7 @@ namespace Libmemo {
                 return;
             }
 
-            var presentPersonIds = this.GetInTreePersonIds();          
+            var presentPersonIds = this.GetInTreePersonIds();
             var page = new SelectPersonExceptPage(presentPersonIds);
             page.ItemSelected += async (sender, selected) => {
                 await App.GlobalPage.Pop();
@@ -433,7 +433,22 @@ namespace Libmemo {
             await App.GlobalPage.Push(page);
         }
         private void TreeItemDelete(Person person) {
+            void Iteration(Item item)
+            {
+                if (item.Mother != null && item.Mother.Person.Id == person.Id) {
+                    item.Mother = null;
+                }
+                if (item.Father != null && item.Father.Person.Id == person.Id) {
+                    item.Father = null;
+                }
+                item.Siblings.RemoveAll(i => i.Id == person.Id);
 
+                if (item.Mother != null) Iteration(item.Mother);
+                if (item.Father != null) Iteration(item.Father);
+            }
+            Iteration(Root);
+
+            RedrawTree();
         }
 
         private (View, Point) GetLine(Point A, Point B) {
