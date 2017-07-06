@@ -64,8 +64,6 @@
     <Compile Include="CustomElements\CustomMap\IMapFunctions.cs" />
     <Compile Include="CustomElements\CustomMap\INativeMapFunctions.cs" />
     <Compile Include="CustomElements\CustomMap\PinImageEnum.cs" />
-    <Compile Include="CustomElements\CustomScrollView\CustomScrollView.cs" />
-    <Compile Include="CustomElements\GestureImage\GestureImage.cs" />
     <Compile Include="Database\JsonData.cs" />
     <Compile Include="Database\Classes.cs" />
     <Compile Include="Database\PersonRepository.cs" />
@@ -80,7 +78,6 @@
     <Compile Include="Helpers\Auth\AuthInfo.cs" />
     <Compile Include="Helpers\Auth\AuthJson.cs" />
     <Compile Include="Helpers\ImageResourseExtension.cs" />
-    <Compile Include="Helpers\PersonDataLoader.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Helpers\UtilsFunctions.cs" />
     <Compile Include="Pages\Admin\UserListPage.xaml.cs">
