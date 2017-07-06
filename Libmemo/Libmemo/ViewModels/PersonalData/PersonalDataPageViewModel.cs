@@ -71,8 +71,8 @@ namespace Libmemo {
                         content.Add(new StringContent(this.DateBirth.Value.ToString("yyyy-MM-dd")), "date_birth");
                     }
                     if (this.PhotoSource != null && this.PhotoSource is FileImageSource) {
-                        var result = await DependencyService.Get<IImageFileToByteArrayConverter>().Get(this.PhotoSource);
-                        content.Add(new ByteArrayContent(result), "photo", "photo.jpg");
+                        var result = DependencyService.Get<IFileStreamPicker>().GetStream((PhotoSource as FileImageSource).File);
+                        content.Add(new StreamContent(result), "photo", "photo.jpg");
                     }
 
                     using (var response = await client.PostAsync(Settings.PERSONAL_DATA_URL, content)) {

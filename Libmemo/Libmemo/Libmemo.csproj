@@ -69,7 +69,6 @@
     <Compile Include="Database\PersonRepository.cs" />
     <Compile Include="Dependencies\ICloseApplication.cs" />
     <Compile Include="Dependencies\IFileStreamPicker.cs" />
-    <Compile Include="Dependencies\IImageFileToByteArrayConverter.cs" />
     <Compile Include="Dependencies\ISQLite.cs" />
     <Compile Include="Dependencies\ITextToSpeech.cs" />
     <Compile Include="Dependencies\IToastNotification.cs" />
