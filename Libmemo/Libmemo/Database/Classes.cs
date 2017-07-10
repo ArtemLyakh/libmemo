@@ -4,40 +4,10 @@ using System.Globalization;
 
 namespace Libmemo {
 
-    public interface IDatabaseSavable {
-        int Id { get; set; }
-        string FIO { get; set; }
-    }
-    public class User {
-        public int Id { get; set; }
-        public PersonType PersonType { get; set; }
-        public long LastModified { get; set; }
-        public int Owner { get; set; }
-
-        public string FIO { get => string.Join(" ", new string[] { LastName, FirstName, SecondName }).Trim(); }
-        public string FirstName { get; set; }
-        public string SecondName { get; set; }
-        public string LastName { get; set; }
-        public DateTime? DateBirth { get; set; }
-        public DateTime? DateDeath { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-        public string Text { get; set; }
-        public string Icon { get; set; }
-        public string ImageUrl { get; set; }
-        public double? Height { get; set; }
-        public double? Width { get; set; }
-        private string SchemeUrl { get; set; }
-
-    }
-
-
 
     public enum PersonType {
-        Dead, Alive
+        Dead, Alive, User
     }
-
-
 
     [Table("Persons")]
     public class Person {
@@ -130,6 +100,7 @@ namespace Libmemo {
             switch (json.type) {
                 case "a": person.PersonType = PersonType.Alive; break;
                 case "d": person.PersonType = PersonType.Dead; break;
+                case "u": person.PersonType = PersonType.User; break;
                 default: return null;
             }
 

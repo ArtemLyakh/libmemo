@@ -27,7 +27,7 @@ namespace Libmemo {
         public ICommand LoadCommand => new Command(async () => await Load());
 
         private async Task Load() {
-            var dict = (await App.Database.GetList()).ToDictionary(i => i.Id);
+            var dict = await App.Database.GetDictionary();
             foreach (var id in Except) 
                 if (dict.ContainsKey(id)) dict.Remove(id);
 

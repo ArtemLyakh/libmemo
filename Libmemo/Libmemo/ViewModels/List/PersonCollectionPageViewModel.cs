@@ -33,7 +33,7 @@ namespace Libmemo {
                 return;
             }
 
-            this.Data = (await App.Database.GetList())
+            this.Data = (await App.Database.GetList(new PersonType[] { PersonType.Alive, PersonType.Dead }))
                 .Where(i => i.Owner == AuthHelper.CurrentUserId.Value)
                 .Select(i => new Person {
                     Id = i.Id,

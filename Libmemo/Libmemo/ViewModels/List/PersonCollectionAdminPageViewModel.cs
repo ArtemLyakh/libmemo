@@ -33,7 +33,7 @@ namespace Libmemo {
                 return;
             }
 
-            this.Data = (await App.Database.GetList())
+            this.Data = (await App.Database.GetList(new PersonType[] { PersonType.Alive, PersonType.Dead }))
                 .Select(i => new Person {
                     Id = i.Id,
                     Fio = i.FIO,

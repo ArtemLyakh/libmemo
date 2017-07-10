@@ -59,16 +59,27 @@ namespace Libmemo {
                 return list;
             }
         });
+        public async Task<List<Person>> GetList(PersonType[] types) => await Task.Run(() => {
+            var set = new HashSet<PersonType>();
+            foreach (var type in types) set.Add(type);
 
-        public async Task<Dictionary<int, Person>> GetDictionary() => await Task.Run(() => {
             lock (database) {
-                var dict = new Dictionary<int, Person>();
-                foreach (var item in database.Table<Person.PersonDB>())
-                    dict.Add(item._Id, Person.ConvertFromDatabase(item));
-
-                return dict;
+                var list = new List<Person>();
+                foreach (var item in database.Table<Person.PersonDB>()) {
+                    if (!set.Contains(item._PersonType)) continue;
+                    list.Add(Person.ConvertFromDatabase(item));
+                }
+                return list;
             }
         });
+
+        public async Task<Dictionary<int, Person>> GetDictionary() =>
+            (await GetList()).ToDictionary(i => i.Id);
+        public async Task<Dictionary<int, Person>> GetDictionary(PersonType type) =>
+            (await GetList(type)).ToDictionary(i => i.Id);
+        public async Task<Dictionary<int, Person>> GetDictionary(PersonType[] types) =>
+            (await GetList(types)).ToDictionary(i => i.Id);
+
 
         public async Task SaveItem(Person item) => await Task.Run(() => {
             var save = Person.ConvertToDatabase(item);
