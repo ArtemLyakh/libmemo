@@ -13,7 +13,7 @@ namespace Libmemo {
         public MainPage() {
             InitializeComponent();
 
-            this.menuPage.ListView.ItemSelected += OnMenuItemSelected;
+            (Master as MenuPage).ListView.ItemSelected += OnMenuItemSelected;
         }
 
         private NavigationPage NavStack {
@@ -39,7 +39,7 @@ namespace Libmemo {
         private async void OnMenuItemSelected(object sender, SelectedItemChangedEventArgs e) {
             var item = e.SelectedItem as MenuItem;
             if (item != null) {
-                this.menuPage.ListView.SelectedItem = null;
+                (Master as MenuPage).ListView.SelectedItem = null;
 
                 await item.Action?.Invoke();
                 IsPresented = false;
