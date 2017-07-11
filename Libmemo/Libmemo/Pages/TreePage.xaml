@@ -3,65 +3,58 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Libmemo.TreePage"
              xmlns:local="clr-namespace:Libmemo"
-             NavigationPage.HasNavigationBar="False"
+             NavigationPage.HasNavigationBar="True"
+             Title="Древо"
              >
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Name="Сохранить"
+                     Command="{Binding SaveCommand}"
+                     Icon="icon.png"
+                     />
+        <ToolbarItem Name="Сбросить"
+                     Command="{Binding ResetCommand}"
+                     Icon="icon.png"
+                     />
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-            <StackLayout Orientation="Horizontal" Padding="10" HorizontalOptions="FillAndExpand">
-                <Button Text="Сохранить"
-                    Clicked="Save_Button_Clicked"
-                    HorizontalOptions="FillAndExpand"
-                    />
-                <Button Text="Сбросить"
-                    Clicked="Reset_Button_Clicked"
-                    HorizontalOptions="FillAndExpand"
-                    />
-            </StackLayout>
-            <StackLayout x:Name="container"
-                         HorizontalOptions="FillAndExpand"
-                         VerticalOptions="FillAndExpand"
+        <RelativeLayout>
+            <ScrollView x:Name="scroll"
+                        Orientation="Both" 
+                        RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                        RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
+                        RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0}"
+                        RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0}"
+                        >
+                <AbsoluteLayout x:Name="absolute" />
+            </ScrollView>
+
+            <StackLayout x:Name="right"
+                         Orientation="Vertical"
+                         Spacing="0"
+                         RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0, Constant=50}"
+                         RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
+                         RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=1,Constant=-50}"
+                         RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"
                          >
-                <RelativeLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                    <ScrollView x:Name="scroll"
-                            Orientation="Both" 
-
-                            RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
-                            RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
-                            RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0}"
-                            RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0}"  
-                            >
-                        <AbsoluteLayout x:Name="absolute" />
-                    </ScrollView>
-                    
-                    <StackLayout Orientation="Vertical"
+                <StackLayout x:Name="bottomRight"
+                             VerticalOptions="EndAndExpand"
+                             HorizontalOptions="Fill"
                              Spacing="0"
-                             
-                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0, Constant=50}"
-                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
-                             RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=1,Constant=-50}"
-                             RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"                            
                              >
-                        <StackLayout VerticalOptions="EndAndExpand"
-                                 HorizontalOptions="FillAndExpand"
-                                 Spacing="0"
-                                 >
-                            <Button Text="&#x2795;" 
-                                FontSize="Large" 
-                                WidthRequest="50" 
-                                HeightRequest="50"
-                                Clicked="ButtonPlus_Clicked"
-                                />
-                            <Button Text="&#x2796;" 
-                                FontSize="Large" 
-                                WidthRequest="50" 
-                                HeightRequest="50"
-                                Clicked="ButtonMinus_Clicked"
-                                />
-                        </StackLayout>
-                    </StackLayout>
-                </RelativeLayout>
+                    <Button Text="&#x2795;"
+                            FontSize="Large"
+                            WidthRequest="50"
+                            HeightRequest="50"
+                            Command="{Binding ZoomInCommand}"
+                            />
+                    <Button Text="&#x2796;"
+                            FontSize="Large"
+                            WidthRequest="50"
+                            HeightRequest="50"
+                            Command="{Binding ZoomOutCommand}"
+                            />
+                </StackLayout>
             </StackLayout>
-
-        </StackLayout>
+        </RelativeLayout>
     </ContentPage.Content>
 </ContentPage>

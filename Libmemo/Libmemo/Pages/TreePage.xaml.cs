@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -16,6 +17,7 @@ namespace Libmemo {
 
         public TreePage() {
             InitializeComponent();
+            BindingContext = this;
             Init();
         }
 
@@ -63,24 +65,7 @@ namespace Libmemo {
             Tree.DrawTree();
         }
 
-
-        private async Task Reset_Button_Clicked(object sender, EventArgs e) {
-            try {
-                var data = await LoadData();
-                await Tree.LoadFromJson(data);
-            } catch (UnauthorizedAccessException) {
-                await AuthHelper.ReloginAsync();
-                return;
-            } catch {
-                Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка построения дерева", "Ок"));
-                await App.GlobalPage.PopToRootPage();
-                return;
-            }
-
-            Tree.DrawTree();
-        }
-
-        private async Task Save_Button_Clicked(object sender, EventArgs e) {
+        public ICommand SaveCommand => new Command(async () => {
             var data = Tree.GetTreeAsJson();
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(data);
 
@@ -102,12 +87,27 @@ namespace Libmemo {
             } catch {
                 Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка сохранения дерева", "Ок"));
             }
-        }
+        });
 
+        public ICommand ResetCommand => new Command(async () => {
+            try {
+                var data = await LoadData();
+                await Tree.LoadFromJson(data);
+            } catch (UnauthorizedAccessException) {
+                await AuthHelper.ReloginAsync();
+                return;
+            } catch {
+                Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка построения дерева", "Ок"));
+                await App.GlobalPage.PopToRootPage();
+                return;
+            }
 
-        private async Task ButtonPlus_Clicked(object sender, EventArgs e) => await Tree.ZoomIn();
-        private async Task ButtonMinus_Clicked(object sender, EventArgs e) => await Tree.ZoomOut();
-        
+            Tree.DrawTree();
+        });
+
+        public ICommand ZoomInCommand => new Command(async () => await Tree.ZoomIn());
+        public ICommand ZoomOutCommand => new Command(async () => await Tree.ZoomOut());
+
     }
 
 
