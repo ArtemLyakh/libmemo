@@ -6,10 +6,8 @@ namespace Libmemo {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MapPage : ContentPage {
         public MapPage() {
-
             BindingContext = new MapPageViewModel();
             InitializeComponent();
-
         }
 
         protected override void OnDisappearing() {
@@ -21,6 +19,7 @@ namespace Libmemo {
 
         protected override void OnAppearing() {
             base.OnAppearing();
+
             ((MapPageViewModel)BindingContext).SetGPSTracking(true);
             ((MapPageViewModel)BindingContext).StartListen();
 
