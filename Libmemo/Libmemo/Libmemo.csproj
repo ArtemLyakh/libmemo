@@ -127,8 +127,8 @@
     <Compile Include="Pages\Auth\Register\RegisterPage.xaml.cs">
       <DependentUpon>RegisterPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\SearchPage.xaml.cs">
-      <DependentUpon>SearchPage.xaml</DependentUpon>
+    <Compile Include="Pages\MapSearchPage.xaml.cs">
+      <DependentUpon>MapSearchPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\SelectPersonExceptPage.xaml.cs">
       <DependentUpon>SelectPersonExceptPage.xaml</DependentUpon>
@@ -241,7 +241,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\SearchPage.xaml">
+    <EmbeddedResource Include="Pages\MapSearchPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

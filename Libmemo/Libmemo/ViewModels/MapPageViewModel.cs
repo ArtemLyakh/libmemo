@@ -329,7 +329,7 @@ namespace Libmemo {
         }
 
         public ICommand SearchCommand => new Command(async () => {
-            var page = new SearchPage(this.SearchText);
+            var page = new MapSearchPage(this.SearchText);
 
             page.SearchTextChanged += (sender, text) => this.SearchText = text;
             page.ItemSelected += async (sender, person) => {

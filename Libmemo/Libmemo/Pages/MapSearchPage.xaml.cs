@@ -13,9 +13,9 @@ using Xamarin.Forms.Xaml;
 namespace Libmemo {
 
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class SearchPage : ContentPage {
+    public partial class MapSearchPage : ContentPage {
 
-        public SearchPage(string search = null) {
+        public MapSearchPage(string search = null) {
             InitializeComponent();
 
             var model = new SearchPageViewModel(search);
