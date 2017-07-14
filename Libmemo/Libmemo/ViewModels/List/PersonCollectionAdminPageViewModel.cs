@@ -19,11 +19,11 @@ namespace Libmemo {
         }
 
         public PersonCollectionAdminPageViewModel() : base() {
-            this.ItemSelected += PersonCollectionAdminPageViewModel_ItemSelected;
+            this.SearchChanged += (sender, e) => SearchCommand.Execute(null);
+            this.ItemSelected += async (sender, e) => await App.GlobalPage.Push(new EditPersonPageAdmin(e.Id));
         }
 
-        private async void PersonCollectionAdminPageViewModel_ItemSelected(object sender, Person e) => 
-            await App.GlobalPage.Push(new EditPersonPageAdmin(e.Id));
+        public ICommand BackCommand => new Command(async () => await App.GlobalPage.Pop());
 
         public ICommand LoadCommand => new Command(async() => await Load());
 
