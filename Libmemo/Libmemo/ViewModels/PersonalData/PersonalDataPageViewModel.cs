@@ -18,6 +18,7 @@ namespace Libmemo {
             this.ResetCommand.Execute(null);
         }
 
+        public ICommand BackCommand => new Command(async () => await App.GlobalPage.Pop());
 
         class JsonData {
             public string first_name { get; set; }
