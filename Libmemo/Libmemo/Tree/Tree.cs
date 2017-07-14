@@ -268,16 +268,17 @@ namespace Libmemo {
                 x += TREE_ITEM_WIDTH / 2;
                 var bottomConnectPoint = new Point(x, y + TREE_ITEM_HEIGHT / 2);
                 var topConnectPoint = new Point(x, y - TREE_ITEM_HEIGHT / 2);
+                var levelLine = y - LEVEL_HEIGHT / 2;
                 element = GetTreeItem(new Point(x, y), item.Person, () => TreeItemClickHandler(item.Person));
                 Views.Add(element);
                 x += TREE_ITEM_WIDTH / 2;
                 #endregion
 
                 #region Connect lines
-                element = GetLine(MotherConnectPoint, topConnectPoint);
-                Lines.Add(element);
-                element = GetLine(FatherConnectPoint, topConnectPoint);
-                Lines.Add(element);
+                Lines.Add(GetLine(topConnectPoint, new Point(topConnectPoint.X, levelLine)));
+                Lines.Add(GetLine(new Point(MotherConnectPoint.X, levelLine + LINE_WIDTH / 2), MotherConnectPoint));
+                Lines.Add(GetLine(new Point(FatherConnectPoint.X, levelLine + LINE_WIDTH / 2), FatherConnectPoint));
+                Lines.Add(GetLine(new Point(MotherConnectPoint.X - LINE_WIDTH / 2, levelLine), new Point(FatherConnectPoint.X + LINE_WIDTH / 2, levelLine)));
                 #endregion
 
                 #region Siblings
