@@ -28,7 +28,7 @@
                          Orientation="Horizontal"
                          BackgroundColor="Black"
                          Padding="5"
-                         Spacing="0"
+                         Spacing="5"
                          >
                 <Image Source="icon.png"
                        VerticalOptions="CenterAndExpand"
@@ -61,8 +61,8 @@
                     </Image.GestureRecognizers>
                 </Image>
             </StackLayout>
-            <RelativeLayout Grid.Column="0" 
-                            Grid.Row="1"       
+            <RelativeLayout Grid.Column="0"
+                            Grid.Row="1"
                             >
                 <StackLayout x:Name="mapStack"
                              RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent ,Property=Width,Factor=1,Constant=0}"

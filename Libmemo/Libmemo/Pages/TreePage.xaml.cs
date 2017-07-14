@@ -65,6 +65,8 @@ namespace Libmemo {
             Tree.DrawTree();
         }
 
+        public ICommand BackCommand => new Command(async () => await App.GlobalPage.Pop());
+
         public ICommand SaveCommand => new Command(async () => {
             var data = Tree.GetTreeAsJson();
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(data);
