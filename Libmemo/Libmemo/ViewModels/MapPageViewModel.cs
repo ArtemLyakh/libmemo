@@ -31,7 +31,7 @@ namespace Libmemo {
             App.TextToSpeech.OnEnd += TextToSpeech_OnEnd;
 
             //DB listener
-            App.Database.LoadSuccess += Database_LoadSuccess;
+            App.Database.Updated += Database_Updated;
         }
 
         public void StopListen() {
@@ -40,7 +40,7 @@ namespace Libmemo {
             App.TextToSpeech.OnEnd -= TextToSpeech_OnEnd;
 
             //DB listener
-            App.Database.LoadSuccess -= Database_LoadSuccess;
+            App.Database.Updated -= Database_Updated;
         }
 
 
@@ -402,15 +402,15 @@ namespace Libmemo {
         private async void InitPinsFromMemory() {
             var list = await App.Database.GetList(PersonType.Dead);
 
-            CustomPins.Clear();
+            CustomPins = new ObservableCollection<CustomPin>();
             foreach (var item in list) {
                 var pin = CreatePin(item);
                 CustomPins.Add(pin);
             }      
         }
 
-        private void Database_LoadSuccess() {
-            InitPinsFromMemory();
+        private void Database_Updated(object sender, EventArgs e) {
+            SetupPins.Execute(null);
         }
 
         #endregion

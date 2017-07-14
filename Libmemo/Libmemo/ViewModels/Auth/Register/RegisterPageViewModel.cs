@@ -73,7 +73,7 @@ namespace Libmemo {
                         );
 
                         var person = Person.ConvertFromJson(json.person);
-                        await App.Database.SaveItem(person);
+                        await App.Database.AddPerson(person);
 
                         AuthHelper.Login(authInfo, authCredentials);
 

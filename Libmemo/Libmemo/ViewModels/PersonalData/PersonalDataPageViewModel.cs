@@ -86,7 +86,7 @@ namespace Libmemo {
                         var str = await response.Content.ReadAsStringAsync();
                         var json = JsonConvert.DeserializeObject<PersonJson.Update>(str);
                         var person = Person.ConvertFromJson(json);
-                        await App.Database.SaveItem(person);
+                        await App.Database.AddPerson(person);
 
                         App.ToastNotificator.Show("Данные успешно отправлены");
                         this.ResetCommand.Execute(null);

@@ -3,9 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Libmemo.MapPage"
              xmlns:local="clr-namespace:Libmemo"
-             NavigationPage.HasNavigationBar="True"
-             NavigationPage.TitleIcon="icon.png"
-             Title="Карта"
+             NavigationPage.HasNavigationBar="False"
              >
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -16,19 +14,36 @@
             <local:IsPinSpeakableConverter x:Key="IsPinSpeakable"/>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <ContentPage.ToolbarItems>
+    <!--<ContentPage.ToolbarItems>
         <ToolbarItem Name="Поиск"
                      Command="{Binding SearchCommand}"
                      Icon="icon.png"
                      />
-    </ContentPage.ToolbarItems>
+    </ContentPage.ToolbarItems>-->
     <ContentPage.Content>
-        <RelativeLayout>
-            <StackLayout x:Name="mapStack"
+        <Grid RowSpacing="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackLayout Grid.Column="0" 
+                         Grid.Row="0"
+                         HeightRequest="50"
+                         BackgroundColor="Gray"
+                         >
+                
+            </StackLayout>
+            <RelativeLayout Grid.Column="0" 
+                            Grid.Row="1"       
+                            >
+                <StackLayout x:Name="mapStack"
                          RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent ,Property=Width,Factor=1,Constant=0}"
                          RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent ,Property=Height,Factor=1,Constant=0}"
                          >
-                <local:CustomMap x:Name="mainMap"
+                    <local:CustomMap x:Name="mainMap"
                                  CustomMapType="{Binding MapType}"
                                  MapFunctions="{Binding MapFunctions}"
                                  MapCenter="{Binding MapCenter}"
@@ -48,21 +63,21 @@
                                  MyLocationEnabled="{Binding MyLocationEnabled}"
                                  IsShowInfoWindow="True"
                                  />
-            </StackLayout>
-            <StackLayout x:Name="left"
+                </StackLayout>
+                <StackLayout x:Name="left"
                          Orientation="Vertical"
                          RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0, Constant=50}"
                          RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
                          RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0,Constant=0}"
                          RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"
                          >
-                <StackLayout x:Name="topLeft"
+                    <StackLayout x:Name="topLeft"
                              Orientation="Vertical"
                              VerticalOptions="StartAndExpand"
                              HorizontalOptions="Fill"
                              Spacing="0"
                              >
-                    <Button x:Name="showPinsButton"
+                        <Button x:Name="showPinsButton"
                             Text="Show"
                             FontSize="Micro"
                             WidthRequest="50"
@@ -70,7 +85,7 @@
                             IsVisible="{Binding IsShowOnlySelected}"
                             Command="{Binding ShowPinsCommand}"
                             />
-                    <Button x:Name="hidePinsButton"
+                        <Button x:Name="hidePinsButton"
                             Text="Hide"
                             FontSize="Micro"
                             WidthRequest="50"
@@ -78,42 +93,42 @@
                             IsVisible="{Binding IsShowHideAnotherButton}"
                             Command="{Binding HidePinsCommand}"
                             />
-                </StackLayout>
-                <StackLayout x:Name="bottomLeft"
+                    </StackLayout>
+                    <StackLayout x:Name="bottomLeft"
                              Orientation="Vertical"
                              VerticalOptions="EndAndExpand"
                              HorizontalOptions="Fill"
                              Spacing="0"
                              >
-                    <Button x:Name="streetTypeButton"
+                        <Button x:Name="streetTypeButton"
                             Text="Street"
                             FontSize="Micro"
                             WidthRequest="50"
                             HeightRequest="50"
                             Command="{Binding StreetMapCommand}"
                             />
-                    <Button x:Name="spaceTypeButton"
+                        <Button x:Name="spaceTypeButton"
                             Text="Space"
                             FontSize="Micro"
                             WidthRequest="50"
                             HeightRequest="50"
                             Command="{Binding SpaceMapCommand}"
                             />
+                    </StackLayout>
                 </StackLayout>
-            </StackLayout>
-            <StackLayout x:Name="right"
+                <StackLayout x:Name="right"
                          Orientation="Vertical"
                          RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0, Constant=50}"
                          RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
                          RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=1,Constant=-50}"
                          RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"
                          >
-                <StackLayout x:Name="topRight"
+                    <StackLayout x:Name="topRight"
                              VerticalOptions="StartAndExpand"
                              HorizontalOptions="Fill"
                              Spacing="0"
                              >
-                    <Button x:Name="startTTSButton"
+                        <Button x:Name="startTTSButton"
                             Text="&#9654;"
                             BackgroundColor="Green"
                             FontSize="Large"
@@ -122,7 +137,7 @@
                             IsVisible="{Binding Path=SelectedPin, Mode=OneWay, Converter={StaticResource IsPinSpeakable}"
                             Command="{Binding StartTTSOnSelectedPinCommand}"
                             />
-                    <Button x:Name="stopTTSButton"
+                        <Button x:Name="stopTTSButton"
                             Text="&#9632;"
                             FontSize="Large"
                             BackgroundColor="Red"
@@ -131,14 +146,14 @@
                             IsVisible="{Binding Path=CurrentPlayed, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}"
                             Command="{Binding StopTTSCommand}"
                             />
-                </StackLayout>
-                <StackLayout x:Name="bottomRight"
+                    </StackLayout>
+                    <StackLayout x:Name="bottomRight"
                              Orientation="Vertical"
                              VerticalOptions="EndAndExpand"
                              HorizontalOptions="Fill"
                              Spacing="0"
                              >
-                    <Button x:Name="geoFixButton"
+                        <Button x:Name="geoFixButton"
                             Text="&#x2295;"
                             TextColor="{Binding Path=FollowUser, Mode=OneWay, Converter={StaticResource followUserConverter}, ConverterParameter={StaticResource folowUserColorText}}"
                             BackgroundColor="{Binding Path=FollowUser, Mode=OneWay, Converter={StaticResource followUserConverter}, ConverterParameter={StaticResource folowUserColorBG}}"
@@ -147,22 +162,22 @@
                             HeightRequest="50"
                             Command="{Binding FollowUserToogleCommand}"
                             />
+                    </StackLayout>
                 </StackLayout>
-            </StackLayout>
-            <StackLayout x:Name="bottom"
+                <StackLayout x:Name="bottom"
                          Orientation="Horizontal"
                          RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
                          RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0, Constant=50}"
                          RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0,Constant=0}"
                          RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=1,Constant=-50}"  
                          >
-                <StackLayout x:Name="bottomCenter"
+                    <StackLayout x:Name="bottomCenter"
                              Orientation="Horizontal"
                              VerticalOptions="Fill"
                              HorizontalOptions="CenterAndExpand"
                              Spacing="0"
                              >
-                    <Button x:Name="setLinearRouteButton"
+                        <Button x:Name="setLinearRouteButton"
                             Text="&#8600;"
                             FontSize="Medium"
                             WidthRequest="50"
@@ -170,7 +185,7 @@
                             IsVisible="{Binding Path=SelectedPin, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}"
                             Command="{Binding SetLinearRouteCommand}"
                             />
-                    <Button x:Name="setCalculatedRouteButton"
+                        <Button x:Name="setCalculatedRouteButton"
                             Text="&#9736;"
                             FontSize="Medium"
                             WidthRequest="50"
@@ -178,7 +193,7 @@
                             IsVisible="{Binding Path=SelectedPin, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}"
                             Command="{Binding SetCalculatedRouteCommand}"
                             />
-                    <Button x:Name="deleteRouteButton"
+                        <Button x:Name="deleteRouteButton"
                             Text="&#8603;"
                             FontSize="Large"
                             WidthRequest="50"
@@ -186,8 +201,9 @@
                             IsVisible="{Binding IsRouteActive}"
                             Command="{Binding DeleteRouteCommand}"
                             />
+                    </StackLayout>
                 </StackLayout>
-            </StackLayout>
-        </RelativeLayout>
+            </RelativeLayout>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

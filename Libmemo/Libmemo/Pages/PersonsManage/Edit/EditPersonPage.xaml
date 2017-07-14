@@ -26,6 +26,10 @@
                     Command="{Binding ResetCommand}"
                     HorizontalOptions="FillAndExpand"
                     />
+            <Button Text="Удалить"
+                    Command="{Binding DeleteCommand}"
+                    HorizontalOptions="FillAndExpand"
+                    />
         </StackLayout>
         <StackLayout HorizontalOptions="FillAndExpand" Spacing="15" IsVisible="{Binding IsDeadPerson}">
             <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" Spacing="0">

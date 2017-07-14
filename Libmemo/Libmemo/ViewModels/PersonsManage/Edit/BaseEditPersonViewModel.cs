@@ -167,7 +167,8 @@ namespace Libmemo {
         }
 
 
-
+        public ICommand DeleteCommand => new Command(async () => await Delete());
+        protected abstract Task Delete();
 
     }
 }

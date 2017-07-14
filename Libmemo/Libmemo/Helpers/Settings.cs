@@ -31,6 +31,9 @@ namespace Libmemo {
         public const string EDIT_PERSON_URL = SERVER_URL + "/api/database/edit.php";
         public const string EDIT_PERSON_URL_ADMIN = SERVER_URL + "/api/database/edit_admin.php";
 
+        public const string DELETE_PERSON_URL = SERVER_URL + "/api/database/delete.php";
+        public const string DELETE_PERSON_URL_ADMIN = SERVER_URL + "/api/database/delete_admin.php";
+
         public const string TREE_DATA_URL = SERVER_URL + "/api/tree/data.php";
         public const string TREE_DATA_URL_ADMIN = SERVER_URL + "/api/tree/data_admin.php";
 

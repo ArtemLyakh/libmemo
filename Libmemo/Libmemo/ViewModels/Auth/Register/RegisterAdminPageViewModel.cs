@@ -56,7 +56,7 @@ namespace Libmemo {
                         var json = JsonConvert.DeserializeObject<Json>(str);
 
                         var person = Person.ConvertFromJson(json.person);
-                        await App.Database.SaveItem(person);
+                        await App.Database.AddPerson(person);
 
                         App.ToastNotificator.Show("Пользователь зарегистрирован");
 

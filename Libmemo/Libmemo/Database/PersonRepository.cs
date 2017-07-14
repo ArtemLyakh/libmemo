@@ -23,13 +23,9 @@ namespace Libmemo {
             string databasePath = DependencyService.Get<ISQLite>().GetDatabasePath("database.db");
             database = new SQLiteConnection(databasePath);         
             database.CreateTable<Person.PersonDB>();
-
-            this.LoadSuccess += () => App.ToastNotificator.Show("База данных загружена");
-            this.LoadFail += () => App.ToastNotificator.Show("Ошибка загрузки данных с сервера");
         }
 
-        public event Action LoadSuccess;
-        public event Action LoadFail;
+        public event EventHandler Updated;
 
         #region CRUD
 
@@ -81,12 +77,12 @@ namespace Libmemo {
             (await GetList(types)).ToDictionary(i => i.Id);
 
 
-        public async Task SaveItem(Person item) => await Task.Run(() => {
+        private async Task SaveItem(Person item) => await Task.Run(() => {
             var save = Person.ConvertToDatabase(item);
             if (database.Update(save) == 0) database.Insert(save);
         });
 
-        public async Task SaveItems(IEnumerable<Person> items) => await Task.Run(() => {
+        private async Task SaveItems(IEnumerable<Person> items) => await Task.Run(() => {
             lock (database) {
                 foreach (var item in items) {
                     var save = Person.ConvertToDatabase(item);
@@ -95,14 +91,14 @@ namespace Libmemo {
             }              
         });
 
-        public async Task DeleteItems(IEnumerable<int> ids) => await Task.Run(() => {
+        private async Task DeleteItems(IEnumerable<int> ids) => await Task.Run(() => {
             lock (database) {
                 foreach (var id in ids)
                     database.Delete<Person.PersonDB>(id);
             }
         });
 
-        public async Task DeleteAllItems() => await Task.Run(() => {
+        private async Task DeleteAllItems() => await Task.Run(() => {
             lock (database) {
                 database.DeleteAll<Person.PersonDB>();
             }    
@@ -121,14 +117,13 @@ namespace Libmemo {
 
             var result = await SendRequest(lastModified);
             if (result == null) {
-                LoadFail?.Invoke();
                 return;
             }
 
             if (full) await DeleteAllItems();
             await LoadDatabaseFromJson(result);
 
-            LoadSuccess?.Invoke();
+            Updated?.Invoke(this, null);
         }
 
         private async Task<PersonJson> SendRequest(long? modified = null) {
@@ -167,8 +162,8 @@ namespace Libmemo {
             if (lastModified.HasValue) Settings.LastModified = lastModified;
         }
 
-        private IEnumerable<Tuple<int, long>> GetDeleteList(IEnumerable<PersonJson.Delete> list) =>
-            list.Where(i => i.id.HasValue && i.modified.HasValue).Select(i => Tuple.Create(i.id.Value, i.modified.Value));
+        private IEnumerable<(int, long)> GetDeleteList(IEnumerable<PersonJson.Delete> list) =>
+            list.Where(i => i.id.HasValue && i.modified.HasValue).Select(i => (i.id.Value, i.modified.Value));
 
         private IEnumerable<Person> GetPersonsList(List<PersonJson.Update> list) {
             var update = new List<Person>();
@@ -183,5 +178,15 @@ namespace Libmemo {
         }
         
         #endregion
+
+        public async Task AddPerson(Person person) {
+            await SaveItem(person);
+            Updated?.Invoke(this, null);
+        }
+
+        public async Task DeletePerson(int id) {
+            await DeleteItems(new int[] { id });
+            Updated?.Invoke(this, null);
+        }
     }
 }
