@@ -18,14 +18,14 @@ namespace Libmemo {
         public MapSearchPage(string search = null) {
             InitializeComponent();
 
-            var model = new SearchPageViewModel(search);
+            var model = new MapSearchPageViewModel(search);
             model.ItemSelected += (sender, person) => this.ItemSelected?.Invoke(this, person);
             model.SearchChanged += (sender, text) => this.SearchTextChanged?.Invoke(this, text);
 
             this.BindingContext = model;
         }
 
-        public event EventHandler<SearchPageViewModel.Person> ItemSelected;
+        public event EventHandler<MapSearchPageViewModel.Person> ItemSelected;
         public event EventHandler<string> SearchTextChanged;
 
     }

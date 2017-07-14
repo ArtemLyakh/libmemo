@@ -317,21 +317,21 @@ namespace Libmemo {
 
         #region Search
 
-        private string _searchText;
-        public string SearchText {
-            get { return _searchText; }
-            set {
-                if (_searchText != value) {
-                    _searchText = value;
-                    this.OnPropertyChanged(nameof(SearchText));
-                }
-            }
-        }
+        //private string _searchText;
+        //public string SearchText {
+        //    get { return _searchText; }
+        //    set {
+        //        if (_searchText != value) {
+        //            _searchText = value;
+        //            this.OnPropertyChanged(nameof(SearchText));
+        //        }
+        //    }
+        //}
 
         public ICommand SearchCommand => new Command(async () => {
-            var page = new MapSearchPage(this.SearchText);
+            var page = new MapSearchPage();//this.SearchText
 
-            page.SearchTextChanged += (sender, text) => this.SearchText = text;
+            //page.SearchTextChanged += (sender, text) => this.SearchText = text;
             page.ItemSelected += async (sender, person) => {
                 await App.GlobalPage.Pop();
                 var pin = _customPins.FirstOrDefault(e => e.Id == person.Id.ToString());

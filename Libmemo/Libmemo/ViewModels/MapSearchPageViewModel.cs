@@ -9,7 +9,7 @@ using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Libmemo {
-    public class SearchPageViewModel : BaseListViewModel<SearchPageViewModel.Person> {
+    public class MapSearchPageViewModel : BaseListViewModel<MapSearchPageViewModel.Person> {
         public class Person : ISearchFiltrable {
             public string FilterString => Fio;
 
@@ -18,10 +18,13 @@ namespace Libmemo {
             public string Fio { get; set; }
         }
 
-        public SearchPageViewModel(string search = null) : base() {
+        public MapSearchPageViewModel(string search = null) : base() {
             this.Search = search;
+            this.SearchChanged += (sender, e) => SearchCommand.Execute(null);
             LoadCommand.Execute(null);
         }
+
+        public ICommand BackCommand => new Command(async () => await App.GlobalPage.Pop());
 
         public ICommand LoadCommand => new Command(async () => await Load());
         
