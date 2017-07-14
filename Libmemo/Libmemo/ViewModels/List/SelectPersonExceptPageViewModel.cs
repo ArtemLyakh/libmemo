@@ -19,10 +19,12 @@ namespace Libmemo {
         }
 
         private IEnumerable<int> Except { get; set; }
-
         public SelectPersonExceptPageViewModel(IEnumerable<int> except) : base() {
             Except = except;
+            this.SearchChanged += (sender, e) => SearchCommand.Execute(null);
         }
+
+        public ICommand BackCommand => new Command(async () => await App.GlobalPage.Pop());
 
         public ICommand LoadCommand => new Command(async () => await Load());
 

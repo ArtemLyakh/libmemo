@@ -28,6 +28,11 @@ namespace Libmemo {
         public event EventHandler<MapSearchPageViewModel.Person> ItemSelected;
         public event EventHandler<string> SearchTextChanged;
 
+        protected override void OnAppearing() {
+            base.OnAppearing();
+            ((MapSearchPageViewModel)BindingContext).LoadCommand.Execute(null);
+        }
+
     }
 
 }

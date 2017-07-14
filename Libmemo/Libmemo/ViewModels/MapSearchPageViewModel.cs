@@ -21,7 +21,6 @@ namespace Libmemo {
         public MapSearchPageViewModel(string search = null) : base() {
             this.Search = search;
             this.SearchChanged += (sender, e) => SearchCommand.Execute(null);
-            LoadCommand.Execute(null);
         }
 
         public ICommand BackCommand => new Command(async () => await App.GlobalPage.Pop());
