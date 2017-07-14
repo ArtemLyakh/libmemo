@@ -17,6 +17,8 @@ namespace Libmemo {
             this.ResetCommand.Execute(null);
         }
 
+        public ICommand BackCommand => new Command(async () => await App.GlobalPage.Pop());
+
         private string _email;
         public string Email {
             get => _email;
