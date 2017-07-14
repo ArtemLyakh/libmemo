@@ -22,7 +22,7 @@
                          Padding="5"
                          Spacing="5"
                          >
-                <Image Source="icon.png"
+                <Image Source="back.png"
                        VerticalOptions="CenterAndExpand"
                        HorizontalOptions="Start"
                        WidthRequest="40"
@@ -41,7 +41,7 @@
                        HorizontalTextAlignment="Start"
                        Margin="10,0"
                        />
-                <Image Source="icon3.png"
+                <Image Source="reload.png"
                        VerticalOptions="CenterAndExpand"
                        HorizontalOptions="End"
                        WidthRequest="40"
@@ -52,7 +52,7 @@
                         <TapGestureRecognizer Command="{Binding ResetCommand}" />
                     </Image.GestureRecognizers>
                 </Image>
-                <Image Source="icon4.png"
+                <Image Source="save.png"
                        VerticalOptions="CenterAndExpand"
                        HorizontalOptions="End"
                        WidthRequest="40"
@@ -91,7 +91,7 @@
                                  Spacing="5"
                                  Padding="5"
                                  >
-                        <Image Source="icon4.png"
+                        <Image Source="zoom_in.png"
                                WidthRequest="40"
                                HeightRequest="40" 
                                Aspect="AspectFill"
@@ -100,7 +100,7 @@
                                 <TapGestureRecognizer Command="{Binding ZoomInCommand}" />
                             </Image.GestureRecognizers>
                         </Image>
-                        <Image Source="icon3.png"
+                        <Image Source="zoom_out.png"
                                WidthRequest="40"
                                HeightRequest="40" 
                                Aspect="AspectFill"

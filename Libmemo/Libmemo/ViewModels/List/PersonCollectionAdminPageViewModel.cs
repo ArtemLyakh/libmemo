@@ -12,7 +12,7 @@ namespace Libmemo {
         public class Person : ISearchFiltrable {
             public string FilterString => Fio;
 
-            public ImageSource Image { get; set; }
+            public object Image { get; set; }
             public bool IsDead { get; set; }
             public int Id { get; set; }
             public string Fio { get; set; }
@@ -38,7 +38,7 @@ namespace Libmemo {
                     Id = i.Id,
                     Fio = i.FIO,
                     IsDead = i.PersonType == PersonType.Dead,
-                    Image = i.IconUrl == null ? null : ImageSource.FromUri(i.IconUrl)
+                    Image = i.IconUrl == null ? "no_img.png" : ImageSource.FromUri(i.IconUrl)
                 });
 
         }

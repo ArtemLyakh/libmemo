@@ -26,11 +26,11 @@
                          Grid.Row="0"
                          HeightRequest="50"
                          Orientation="Horizontal"
-                         BackgroundColor="Black"
+                         BackgroundColor="#707070"
                          Padding="5"
                          Spacing="5"
                          >
-                <Image Source="icon.png"
+                <Image Source="menu.png"
                        VerticalOptions="CenterAndExpand"
                        HorizontalOptions="Start"
                        WidthRequest="40"
@@ -49,7 +49,7 @@
                        HorizontalTextAlignment="Start"
                        Margin="10,0"
                        />
-                <Image Source="icon.png"
+                <Image Source="search.png"
                        VerticalOptions="CenterAndExpand"
                        HorizontalOptions="End"
                        WidthRequest="40"
@@ -103,7 +103,7 @@
                                  Spacing="5"
                                  Padding="5"
                                  >
-                        <Image Source="icon4.png"
+                        <Image Source="pin_show.png"
                                WidthRequest="40"
                                HeightRequest="40" 
                                Aspect="AspectFill"
@@ -113,7 +113,7 @@
                                 <TapGestureRecognizer Command="{Binding ShowPinsCommand}" />
                             </Image.GestureRecognizers>
                         </Image>
-                        <Image Source="icon3.png"
+                        <Image Source="pin_hide.png"
                                WidthRequest="40"
                                HeightRequest="40" 
                                Aspect="AspectFill"
@@ -131,7 +131,7 @@
                                  Spacing="5"
                                  Padding="5"
                                  >
-                        <Image Source="icon.png"
+                        <Image Source="street_view.png"
                                WidthRequest="40"
                                HeightRequest="40" 
                                Aspect="AspectFill"
@@ -140,7 +140,7 @@
                                 <TapGestureRecognizer Command="{Binding StreetMapCommand}" />
                             </Image.GestureRecognizers>
                         </Image>
-                        <Image Source="icon2.png"
+                        <Image Source="space_view.png"
                                WidthRequest="40"
                                HeightRequest="40" 
                                Aspect="AspectFill"
@@ -164,7 +164,7 @@
                                  Spacing="5"
                                  Padding="5"
                                  >
-                        <Image Source="icon4.png"
+                        <Image Source="sound_play.png"
                                WidthRequest="40"
                                HeightRequest="40" 
                                Aspect="AspectFill"
@@ -174,7 +174,7 @@
                                 <TapGestureRecognizer Command="{Binding StartTTSOnSelectedPinCommand}" />
                             </Image.GestureRecognizers>
                         </Image>
-                        <Image Source="icon3.png"
+                        <Image Source="sound_stop.png"
                                WidthRequest="40"
                                HeightRequest="40" 
                                Aspect="AspectFill"
@@ -192,7 +192,7 @@
                                  Spacing="5"
                                  Padding="5"
                                  >
-                        <Image Source="icon.png"
+                        <Image Source="gps_off.png"
                                WidthRequest="40"
                                HeightRequest="40" 
                                Aspect="AspectFill"
@@ -205,7 +205,7 @@
                                              Binding="{Binding FollowUser}"
                                              Value="True"
                                              >
-                                    <Setter Property="Source" Value="icon2.png" />
+                                    <Setter Property="Source" Value="gps_on.png" />
                                 </DataTrigger>
                             </Image.Triggers>
                         </Image>
@@ -225,7 +225,7 @@
                                  Spacing="5"
                                  Padding="5"
                                  >
-                        <Image Source="icon.png"
+                        <Image Source="line_route.png"
                                WidthRequest="40"
                                HeightRequest="40" 
                                Aspect="AspectFill"
@@ -235,7 +235,7 @@
                                 <TapGestureRecognizer Command="{Binding SetLinearRouteCommand}" />
                             </Image.GestureRecognizers>
                         </Image>
-                        <Image Source="icon2.png"
+                        <Image Source="calc_route.png"
                                WidthRequest="40"
                                HeightRequest="40" 
                                Aspect="AspectFill"
@@ -245,7 +245,7 @@
                                 <TapGestureRecognizer Command="{Binding SetCalculatedRouteCommand}" />
                             </Image.GestureRecognizers>
                         </Image>
-                        <Image Source="icon3.png"
+                        <Image Source="delete_route.png"
                                WidthRequest="40"
                                HeightRequest="40" 
                                Aspect="AspectFill"

@@ -11,7 +11,7 @@ namespace Libmemo {
         public class ListItem : ISearchFiltrable {
             public string FilterString => Fio;
 
-            public ImageSource Image { get; set; }
+            public object Image { get; set; }
             public int Id { get; set; }
             public string Fio { get; set; }
 
@@ -36,7 +36,7 @@ namespace Libmemo {
             this.Data = dict.Select(i => new ListItem {
                 Id = i.Value.Id,
                 Fio = i.Value.FIO,
-                Image = i.Value.IconUrl == null ? null : ImageSource.FromUri(i.Value.IconUrl),
+                Image = i.Value.IconUrl == null ? "no_img.png" : ImageSource.FromUri(i.Value.IconUrl),
                 Person = i.Value
             });
         }

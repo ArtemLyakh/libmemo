@@ -22,7 +22,7 @@
                          Padding="5"
                          Spacing="5"
                          >
-                <Image Source="icon.png"
+                <Image Source="back.png"
                        VerticalOptions="CenterAndExpand"
                        HorizontalOptions="Start"
                        WidthRequest="40"

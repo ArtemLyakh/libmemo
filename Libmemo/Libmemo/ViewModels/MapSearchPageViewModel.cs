@@ -32,7 +32,7 @@ namespace Libmemo {
                 .Select(i => new Person {
                     Id = i.Id,
                     Fio = i.FIO,
-                    Image = i.IconUrl == null ? "icon.png" : ImageSource.FromUri(i.IconUrl)
+                    Image = i.IconUrl == null ? "no_img.png" : ImageSource.FromUri(i.IconUrl)
                 });
 
             this.SearchCommand.Execute(null);
