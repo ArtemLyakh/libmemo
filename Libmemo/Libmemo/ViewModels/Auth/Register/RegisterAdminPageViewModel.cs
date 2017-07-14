@@ -26,6 +26,8 @@ namespace Libmemo {
             public PersonJson.Update person { get; set; }
         }
 
+        public ICommand BackCommand => new Command(async () => await App.GlobalPage.Pop());
+
         public ICommand RegisterCommand {
             get => new Command(async () => {
                 var errors = this.Validate();

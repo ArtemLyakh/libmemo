@@ -16,6 +16,8 @@ namespace Libmemo {
 
         }
 
+        public ICommand BackCommand => new Command(async () => await App.GlobalPage.Pop());
+
         private string _email = AuthHelper.UserEmail;
         public string Email {
             get { return this._email; }

@@ -18,6 +18,7 @@ namespace Libmemo {
             get => new Command(async () => await App.GlobalPage.PushRoot(new LoginPage()));
         }
 
+        public ICommand BackCommand => new Command(async () => await App.GlobalPage.Pop());
 
         public class Json {
             public class User {
