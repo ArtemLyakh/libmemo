@@ -6,36 +6,63 @@
              NavigationPage.HasNavigationBar="False"
              >
     <ContentPage.Content>
-        <StackLayout>
-
-            <StackLayout Orientation="Horizontal" Padding="10,0,10,0" Spacing="1" VerticalOptions="Start">
+        <Grid RowSpacing="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackLayout Grid.Column="0" 
+                         Grid.Row="0"
+                         HeightRequest="50"
+                         Orientation="Horizontal"
+                         BackgroundColor="#707070"
+                         Padding="5"
+                         Spacing="5"
+                         >
+                <Image Source="back.png"
+                       VerticalOptions="CenterAndExpand"
+                       HorizontalOptions="Start"
+                       WidthRequest="40"
+                       HeightRequest="40" 
+                       Aspect="AspectFill"
+                       >
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding BackCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
                 <Entry Text="{Binding Search}"
-                   VerticalOptions="Center"
-                   HorizontalOptions="FillAndExpand"
-                   >
+                       VerticalOptions="CenterAndExpand"
+                       HorizontalOptions="FillAndExpand"
+                       Placeholder="Поиск"
+                       TextColor="White"
+                       PlaceholderColor="White"
+                       FontSize="Medium"
+                       HorizontalTextAlignment="Start"
+                       Margin="10,0"
+                       >
                     <Entry.Behaviors>
-                        <local:EntrySelectedBehavior SelectedCommand="{Binding SearchCommand}" />
-                        <local:EntryChangedBehavior ChangedCommand="{Binding SearchCommand}" />
+                        <local:EntrySelectedBehavior SelectedCommand="{Binding SearchSelectedCommand}" />
+                        <local:EntryChangedBehavior ChangedCommand="{Binding SearchChangedCommand}" />
                     </Entry.Behaviors>
                 </Entry>
-                <Button x:Name="searchButton"
-                    Text="&#x1F50D;"
-                    FontSize="Default"
-                    Command="{Binding SearhCommand}"
-                    VerticalOptions="FillAndExpand"
-                    WidthRequest="{Binding Source={x:Reference Name=searchButton}, Path=Height}"
-                    />
             </StackLayout>
-
-            <local:CustomListView x:Name="ShowList" 
-                  ItemsSource="{Binding SearchList}"
-                  ItemClickCommand="{Binding ItemSelectedCommand}">
+            <local:CustomListView Grid.Column="0" 
+                                  Grid.Row="1"
+                                  ItemsSource="{Binding SearchList}"
+                                  ItemClickCommand="{Binding ItemSelectedCommand}"
+                                  HasUnevenRows="True"
+                                  >
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextCell Text="{Binding ShowString}" Height="70" />
+                        <TextCell Text="{Binding ShowString}"
+                                  Height="40"
+                                  />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </local:CustomListView>
-        </StackLayout>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>
