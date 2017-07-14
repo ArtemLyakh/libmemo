@@ -3,8 +3,64 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Libmemo"
              x:Class="Libmemo.MapSearchPage"
-             NavigationPage.HasNavigationBar="False">
-    <StackLayout>
+             NavigationPage.HasNavigationBar="True"
+             Title="Поиск"
+             >
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Name="Поиск"
+                     Command="{Binding PopupCommand}"
+                     Icon="icon.png"
+                     />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <RelativeLayout>
+            <local:CustomListView x:Name="ShowList" 
+                                  HasUnevenRows="True"
+                                  ItemsSource="{Binding SearchList}"
+                                  ItemClickCommand="{Binding ItemSelectedCommand}"
+                                  
+                                  RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent ,Property=Width,Factor=1,Constant=0}"
+                                  RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent ,Property=Height,Factor=1,Constant=0}"
+                                  >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <StackLayout Orientation="Horizontal" Padding="10" Spacing="5">
+                                    <Image Source="{Binding Image}" />
+                                    <Label Text="{Binding Id}" VerticalOptions="CenterAndExpand" />
+                                    <Label Text="{Binding Fio}" VerticalOptions="CenterAndExpand" />
+                                </StackLayout>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </local:CustomListView>
+
+            <StackLayout x:Name="popup"
+                         BackgroundColor="Gray"
+                         RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.8, Constant=0}"
+                         RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0, Constant=100}"
+                         RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0.1,Constant=0}"
+                         RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0.5,Constant=-50}"
+                         IsVisible="{Binding IsPopupVisible}"
+                         >
+                <Entry Text="{Binding Search}"
+                       VerticalOptions="CenterAndExpand"
+                       HorizontalOptions="FillAndExpand"
+                       Placeholder="Поиск"
+                       >
+                    <Entry.Behaviors>
+                        <local:EntrySelectedBehavior SelectedCommand="{Binding SearchSelectedCommand}" />
+                        <local:EntryChangedBehavior ChangedCommand="{Binding SearchChangedCommand}" />
+                    </Entry.Behaviors>
+                </Entry>
+            </StackLayout>
+        </RelativeLayout>
+    </ContentPage.Content>
+    
+    
+    <!--<StackLayout>
 
         <StackLayout Orientation="Horizontal" Padding="10,0,10,0" Spacing="1" VerticalOptions="Start">
             <Entry Text="{Binding Search}"
@@ -25,25 +81,7 @@
                     />
         </StackLayout>
 
-        <local:CustomListView x:Name="ShowList" 
-                                  HasUnevenRows="True"
-                                  ItemsSource="{Binding SearchList}"
-                                  ItemClickCommand="{Binding ItemSelectedCommand}"
-                                  >
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <ViewCell.View>
-                            <StackLayout Orientation="Horizontal" Padding="10" Spacing="5">
-                                <Image Source="{Binding Image}" />
-                                <Label Text="{Binding Id}" VerticalOptions="CenterAndExpand" />
-                                <Label Text="{Binding Fio}" VerticalOptions="CenterAndExpand" />
-                            </StackLayout>
-                        </ViewCell.View>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </local:CustomListView>
-    </StackLayout>
+        
+    </StackLayout>-->
 
 </ContentPage>

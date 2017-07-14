@@ -36,5 +36,31 @@ namespace Libmemo {
             this.SearchCommand.Execute(null);
         }
 
+
+        public ICommand PopupCommand => new Command(() => IsPopupVisible = !IsPopupVisible);
+
+        private bool _isPopupVisible = false;
+        public bool IsPopupVisible {
+            get => _isPopupVisible;
+            set {
+                if (_isPopupVisible != value) {
+                    _isPopupVisible = value;
+                    OnPropertyChanged(nameof(IsPopupVisible));
+                }
+            }
+        }
+
+
+
+        public ICommand SearchSelectedCommand => new Command(() => {
+            SearchCommand.Execute(null);
+            IsPopupVisible = false;
+        });
+
+        public ICommand SearchChangedCommand => new Command(() => {
+            SearchCommand.Execute(null);
+        });
+
+
     }
 }

@@ -61,10 +61,8 @@ namespace Libmemo {
 
         public ICommand ItemSelectedCommand => 
             new Command<object>(selected => ItemSelected?.Invoke(this, (T)selected));
-        
 
-
-
+       
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName = "") =>
