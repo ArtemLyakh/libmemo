@@ -52,7 +52,6 @@
     </Compile>
     <Compile Include="Behaviors\EntryChangedBehavior.cs" />
     <Compile Include="Behaviors\EntrySelectedBehavior.cs" />
-    <Compile Include="Converters\FollowUserMapButtonColorConverter.cs" />
     <Compile Include="Converters\IsNullToColorConverter.cs" />
     <Compile Include="Converters\IsPinSpeakableConverter.cs" />
     <Compile Include="Converters\IsPropertyNullConverter.cs" />
