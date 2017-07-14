@@ -5,16 +5,6 @@
              xmlns:local="clr-namespace:Libmemo"
              NavigationPage.HasNavigationBar="False"
              >
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Name="Сохранить"
-                     Command="{Binding SaveCommand}"
-                     Icon="icon.png"
-                     />
-        <ToolbarItem Name="Сбросить"
-                     Command="{Binding ResetCommand}"
-                     Icon="icon.png"
-                     />
-    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid RowSpacing="0">
             <Grid.ColumnDefinitions>

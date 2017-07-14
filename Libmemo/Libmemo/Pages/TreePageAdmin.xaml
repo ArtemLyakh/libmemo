@@ -6,62 +6,112 @@
              NavigationPage.HasNavigationBar="False"
              >
     <ContentPage.Content>
-        <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-            <StackLayout Orientation="Horizontal" Padding="10" HorizontalOptions="FillAndExpand">
-                <Button Text="Сохранить"
-                    Clicked="Save_Button_Clicked"
-                    HorizontalOptions="FillAndExpand"
-                    />
-                <Button Text="Сбросить"
-                    Clicked="Reset_Button_Clicked"
-                    HorizontalOptions="FillAndExpand"
-                    />
-            </StackLayout>
-            <StackLayout x:Name="container"
-                         HorizontalOptions="FillAndExpand"
-                         VerticalOptions="FillAndExpand"
+        <Grid RowSpacing="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackLayout Grid.Column="0" 
+                         Grid.Row="0"
+                         HeightRequest="50"
+                         Orientation="Horizontal"
+                         BackgroundColor="Black"
+                         Padding="5"
+                         Spacing="5"
                          >
-                <RelativeLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                    <ScrollView x:Name="scroll"
-                            Orientation="Both" 
-
+                <Image Source="icon.png"
+                       VerticalOptions="CenterAndExpand"
+                       HorizontalOptions="Start"
+                       WidthRequest="40"
+                       HeightRequest="40" 
+                       Aspect="AspectFill"
+                       >
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding BackCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label Text="Древо"
+                       VerticalOptions="CenterAndExpand"
+                       HorizontalOptions="StartAndExpand"
+                       TextColor="White"
+                       FontSize="Medium"
+                       HorizontalTextAlignment="Start"
+                       Margin="10,0"
+                       />
+                <Image Source="icon3.png"
+                       VerticalOptions="CenterAndExpand"
+                       HorizontalOptions="End"
+                       WidthRequest="40"
+                       HeightRequest="40" 
+                       Aspect="AspectFill"
+                       >
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ResetCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Image Source="icon4.png"
+                       VerticalOptions="CenterAndExpand"
+                       HorizontalOptions="End"
+                       WidthRequest="40"
+                       HeightRequest="40" 
+                       Aspect="AspectFill"
+                       >
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SaveCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+            </StackLayout>
+            <RelativeLayout Grid.Column="0"
+                            Grid.Row="1"
+                            >
+                <ScrollView x:Name="scroll"
+                            Orientation="Both"
                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
                             RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0}"
-                            RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0}"  
+                            RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0}"
                             >
-                        <AbsoluteLayout x:Name="absolute" />
-                    </ScrollView>
+                    <AbsoluteLayout x:Name="absolute" />
+                </ScrollView>
 
-                    <StackLayout Orientation="Vertical"
+                <StackLayout x:Name="right"
+                             Orientation="Vertical"
                              Spacing="0"
-                             
                              RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0, Constant=50}"
                              RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
                              RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=1,Constant=-50}"
-                             RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"                            
+                             RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"
                              >
-                        <StackLayout VerticalOptions="EndAndExpand"
-                                 HorizontalOptions="FillAndExpand"
-                                 Spacing="0"
+                    <StackLayout x:Name="bottomRight"
+                                 VerticalOptions="EndAndExpand"
+                                 HorizontalOptions="Fill"
+                                 Spacing="5"
+                                 Padding="5"
                                  >
-                            <Button Text="&#x2795;" 
-                                FontSize="Large" 
-                                WidthRequest="50" 
-                                HeightRequest="50"
-                                Clicked="ButtonPlus_Clicked"
-                                />
-                            <Button Text="&#x2796;" 
-                                FontSize="Large" 
-                                WidthRequest="50" 
-                                HeightRequest="50"
-                                Clicked="ButtonMinus_Clicked"
-                                />
-                        </StackLayout>
+                        <Image Source="icon4.png"
+                               WidthRequest="40"
+                               HeightRequest="40" 
+                               Aspect="AspectFill"
+                               >
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ZoomInCommand}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Image Source="icon3.png"
+                               WidthRequest="40"
+                               HeightRequest="40" 
+                               Aspect="AspectFill"
+                               >
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ZoomOutCommand}" />
+                            </Image.GestureRecognizers>
+                        </Image>
                     </StackLayout>
-                </RelativeLayout>
-            </StackLayout>
-
-        </StackLayout>
+                </StackLayout>
+            </RelativeLayout>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>
