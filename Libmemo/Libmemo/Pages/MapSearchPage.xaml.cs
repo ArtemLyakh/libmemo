@@ -28,15 +28,6 @@ namespace Libmemo {
         public event EventHandler<SearchPageViewModel.Person> ItemSelected;
         public event EventHandler<string> SearchTextChanged;
 
-        protected override bool OnBackButtonPressed() {
-            if (((SearchPageViewModel)BindingContext).IsPopupVisible) {
-                (((SearchPageViewModel)BindingContext).IsPopupVisible) = false;
-                return true;
-            }
-
-            return base.OnBackButtonPressed();
-        }
-
     }
 
 }

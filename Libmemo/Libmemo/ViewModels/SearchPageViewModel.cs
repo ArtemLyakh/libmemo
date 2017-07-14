@@ -13,7 +13,7 @@ namespace Libmemo {
         public class Person : ISearchFiltrable {
             public string FilterString => Fio;
 
-            public ImageSource Image { get; set; }
+            public object Image { get; set; }
             public int Id { get; set; }
             public string Fio { get; set; }
         }
@@ -30,36 +30,11 @@ namespace Libmemo {
                 .Select(i => new Person {
                     Id = i.Id,
                     Fio = i.FIO,
-                    Image = i.IconUrl == null ? null : ImageSource.FromUri(i.IconUrl)
+                    Image = i.IconUrl == null ? "icon.png" : ImageSource.FromUri(i.IconUrl)
                 });
 
             this.SearchCommand.Execute(null);
         }
-
-
-        public ICommand PopupCommand => new Command(() => IsPopupVisible = !IsPopupVisible);
-
-        private bool _isPopupVisible = false;
-        public bool IsPopupVisible {
-            get => _isPopupVisible;
-            set {
-                if (_isPopupVisible != value) {
-                    _isPopupVisible = value;
-                    OnPropertyChanged(nameof(IsPopupVisible));
-                }
-            }
-        }
-
-
-
-        public ICommand SearchSelectedCommand => new Command(() => {
-            SearchCommand.Execute(null);
-            IsPopupVisible = false;
-        });
-
-        public ICommand SearchChangedCommand => new Command(() => {
-            SearchCommand.Execute(null);
-        });
 
 
     }
