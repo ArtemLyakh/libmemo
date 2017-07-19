@@ -326,6 +326,8 @@ namespace Libmemo {
             });
         }
 
+        public ICommand BackCommand => new Command(async () => await App.GlobalPage.Pop());
+
         public ICommand ResetCommand {
             get => new Command(Reset);
         }
