@@ -48,6 +48,17 @@
                         <local:EntryChangedBehavior ChangedCommand="{Binding SearchChangedCommand}" />
                     </Entry.Behaviors>
                 </Entry>
+                <Image Source="add.png"
+                       VerticalOptions="CenterAndExpand"
+                       HorizontalOptions="End"
+                       WidthRequest="40"
+                       HeightRequest="40" 
+                       Aspect="AspectFill"
+                       >
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding AddCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
             </StackLayout>
             <local:CustomListView Grid.Column="0"
                                   Grid.Row="1"

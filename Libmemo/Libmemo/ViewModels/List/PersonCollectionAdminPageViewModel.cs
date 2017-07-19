@@ -23,6 +23,8 @@ namespace Libmemo {
             this.ItemSelected += async (sender, e) => await App.GlobalPage.Push(new EditPersonPageAdmin(e.Id));
         }
 
+        public ICommand AddCommand => new Command(async () => await App.GlobalPage.Push(new AddPageAdmin()));
+
         public ICommand BackCommand => new Command(async () => await App.GlobalPage.Pop());
 
         public ICommand LoadCommand => new Command(async() => await Load());

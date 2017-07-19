@@ -25,6 +25,8 @@ namespace Libmemo {
 
         public ICommand BackCommand => new Command(async () => await App.GlobalPage.Pop());
 
+        public ICommand AddCommand => new Command(async () => await App.GlobalPage.Push(new AddPage()));
+
         public ICommand LoadCommand => new Command(async () => await Load());
 
         private async Task Load() {

@@ -90,11 +90,6 @@ namespace Libmemo {
             if (AuthHelper.IsLogged) {
                 if (AuthHelper.IsAdmin) {
                     yield return new MenuItem {
-                        Title = "Добавить/админ",
-                        Text = "админ",
-                        Action = () => App.GlobalPage.PushRoot(new AddPageAdmin())
-                    };
-                    yield return new MenuItem {
                         Title = "Коллекция",
                         Text = "Коллекция",
                         Action = () => App.GlobalPage.PushRoot(new PersonCollectionAdminPage())
@@ -125,11 +120,6 @@ namespace Libmemo {
                         }
                     };
                 } else {
-                    yield return new MenuItem {
-                        Title = "Добавить",
-                        Text = "добавить",
-                        Action = () => App.GlobalPage.PushRoot(new AddPage())
-                    };
                     yield return new MenuItem {
                         Title = "Редактировать данные",
                         Text = "Редактирование персональных данных",
