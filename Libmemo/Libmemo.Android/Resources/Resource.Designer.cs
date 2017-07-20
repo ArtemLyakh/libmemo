@@ -2497,8 +2497,8 @@ namespace Libmemo.Droid
 			// aapt resource value: 0x7f0200d7
 			public const int no_img = 2130837719;
 			
-			// aapt resource value: 0x7f0200e7
-			public const int notification_template_icon_bg = 2130837735;
+			// aapt resource value: 0x7f0200e8
+			public const int notification_template_icon_bg = 2130837736;
 			
 			// aapt resource value: 0x7f0200d8
 			public const int pin_hide = 2130837720;
@@ -2540,10 +2540,13 @@ namespace Libmemo.Droid
 			public const int street_view = 2130837732;
 			
 			// aapt resource value: 0x7f0200e5
-			public const int zoom_in = 2130837733;
+			public const int tree_add_button = 2130837733;
 			
 			// aapt resource value: 0x7f0200e6
-			public const int zoom_out = 2130837734;
+			public const int zoom_in = 2130837734;
+			
+			// aapt resource value: 0x7f0200e7
+			public const int zoom_out = 2130837735;
 			
 			static Drawable()
 			{

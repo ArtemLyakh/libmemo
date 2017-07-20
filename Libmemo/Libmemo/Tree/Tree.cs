@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ImageCircle.Forms.Plugin.Abstractions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -104,14 +105,14 @@ namespace Libmemo {
 
 
 
-        private const int LINE_WIDTH = 5;
+        private const int LINE_WIDTH = 4;
+        private const int BORDER_THICKNESS = 5;
 
         private const int ADD_BUTTON_WIDTH = 50;
         private const int ADD_BUTON_HEIGHT = 50;
 
-        private const int TREE_ITEM_WIDTH = 100;
-        private const int TREE_ITEM_HEIGHT = 175;
-        private const int TREE_ITEM_IMAGE_HEIGHT = 100;
+        private const int TREE_ITEM_WIDTH = 75;
+        private const int TREE_ITEM_HEIGHT = 75;
 
         private const int SPACE_BETWEEN_ITEMS = 15;
         private const int SPACE_BETWEEN_GROUPS = 150;
@@ -230,6 +231,7 @@ namespace Libmemo {
                 var y = LayoutHeight - LEVEL_HEIGHT / 2 - (level - 1) * LEVEL_HEIGHT;
 
                 var bottomConnectPoint = new Point(x, y + ADD_BUTON_HEIGHT / 2);
+
                 (View, Point) element = GetAddNewButton(new Point(x, y), action);
                 Views.Add(element);
                 return bottomConnectPoint;
@@ -284,8 +286,7 @@ namespace Libmemo {
                 #region Siblings
                 foreach (var sibling in item.Siblings) {
                     #region Line
-                    element = GetLine(new Point(x, y), new Point(x + SPACE_BETWEEN_ITEMS, y));
-                    Lines.Add(element);
+                    Lines.Add(GetLine(new Point(x, y), new Point(x + SPACE_BETWEEN_ITEMS + TREE_ITEM_WIDTH / 2, y)));
                     x += SPACE_BETWEEN_ITEMS;
                     #endregion
 
@@ -301,13 +302,12 @@ namespace Libmemo {
                 #region Add button
 
                 #region Line
-                element = GetLine(new Point(x, y), new Point(x + SPACE_BETWEEN_ITEMS + (TREE_ITEM_WIDTH - ADD_BUTTON_WIDTH) /2, y)); ;
-                Lines.Add(element);
+                Lines.Add(GetLine(new Point(x, y), new Point(x + SPACE_BETWEEN_ITEMS + ADD_BUTTON_WIDTH / 2, y)));
                 x += SPACE_BETWEEN_ITEMS;
                 #endregion
 
                 #region Button
-                x += ADD_BUTTON_WIDTH;
+                x += ADD_BUTTON_WIDTH / 2;
                 element = GetAddNewButton(new Point(x, y), () => AddClickHandler(item.Person, AddPersonType.Sibling));
                 Views.Add(element);
                 #endregion
@@ -454,7 +454,7 @@ namespace Libmemo {
             var view = new BoxView {
                 HeightRequest = length,
                 WidthRequest = LINE_WIDTH,
-                BackgroundColor = Color.Black,
+                BackgroundColor = Color.FromHex("D4D4D4"),
                 Rotation = rot
             };
             var point = new Point((A.X + B.X) / 2 - LINE_WIDTH / 2, (A.Y + B.Y) / 2 - length / 2);
@@ -465,7 +465,7 @@ namespace Libmemo {
             var button = new Image {
                 WidthRequest = ADD_BUTTON_WIDTH,
                 HeightRequest = ADD_BUTON_HEIGHT,
-                Source = ImageSource.FromResource("Libmemo.Tree.Images.add_button.jpg"),
+                Source = ImageSource.FromFile("tree_add_button.jpg"),
             };
             button.GestureRecognizers.Add(new TapGestureRecognizer {
                 Command = new Command(() => onTap?.Invoke())
@@ -476,36 +476,23 @@ namespace Libmemo {
             return (button, point);
         }
         private (View, Point) GetTreeItem (Point center, Person person, Action onTap) {
-            var stack = new StackLayout {
+            var element = new CircleImage {
+                BorderColor = person.PersonType == PersonType.Dead ? Color.Black : Color.White,
+                BorderThickness = BORDER_THICKNESS,
                 HeightRequest = TREE_ITEM_HEIGHT,
                 WidthRequest = TREE_ITEM_WIDTH,
-                BackgroundColor = Color.Red
+                Aspect = Aspect.AspectFill,
+                HorizontalOptions = LayoutOptions.Center,
+                Source = person.SmallImageUrl != null
+                    ? ImageSource.FromUri(person.SmallImageUrl)
+                    : ImageSource.FromFile("no_img")
             };
-            stack.GestureRecognizers.Add(new TapGestureRecognizer {
+            element.GestureRecognizers.Add(new TapGestureRecognizer {
                 Command = new Command(() => onTap?.Invoke())
             });
 
-            var image = new Image {
-                HeightRequest = TREE_ITEM_IMAGE_HEIGHT,
-                HorizontalOptions = LayoutOptions.FillAndExpand,
-                Source = person.IconUrl != null 
-                    ? ImageSource.FromUri(person.IconUrl) 
-                    : ImageSource.FromResource("Libmemo.Tree.Images.no_photo.jpg")
-            };
-
-            stack.Children.Add(image);
-
-            var fio = new Label {
-                Text = person.FIO,
-                HeightRequest = TREE_ITEM_HEIGHT - TREE_ITEM_IMAGE_HEIGHT,
-                HorizontalOptions = LayoutOptions.FillAndExpand,
-                LineBreakMode = LineBreakMode.WordWrap
-            };
-            stack.Children.Add(fio);
-
             var point = new Point(center.X - TREE_ITEM_WIDTH / 2, center.Y - TREE_ITEM_HEIGHT / 2);
-
-            return (stack, point);
+            return (element, point);
         }
 
 

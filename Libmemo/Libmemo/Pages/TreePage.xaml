@@ -66,6 +66,7 @@
             </StackLayout>
             <RelativeLayout Grid.Column="0"
                             Grid.Row="1"
+                            BackgroundColor="#EEEFF1"
                             >
                 <ScrollView x:Name="scroll"
                             Orientation="Both"

@@ -41,7 +41,7 @@ namespace Libmemo {
                     Id = i.Id,
                     Fio = i.FIO,
                     IsDead = i.PersonType == PersonType.Dead,
-                    Image = i.IconUrl == null ? "no_img.png" : ImageSource.FromUri(i.IconUrl)                              
+                    Image = i.SmallImageUrl == null ? "no_img.png" : ImageSource.FromUri(i.SmallImageUrl)                              
                 });
 
         }

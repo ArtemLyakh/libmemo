@@ -36,7 +36,7 @@ namespace Libmemo {
             this.Data = dict.Select(i => new ListItem {
                 Id = i.Value.Id,
                 Fio = i.Value.FIO,
-                Image = i.Value.IconUrl == null ? "no_img.png" : ImageSource.FromUri(i.Value.IconUrl),
+                Image = i.Value.SmallImageUrl == null ? "no_img.png" : ImageSource.FromUri(i.Value.SmallImageUrl),
                 Person = i.Value
             });
         }

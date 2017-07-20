@@ -73,7 +73,7 @@ namespace Libmemo {
         public ICommand SaveCommand => new Command(async () => {
             var data = Tree.GetTreeAsJson();
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(data);
-
+            App.ToastNotificator.Show("Сохранение");
             try {
                 using (var handler = new HttpClientHandler { CookieContainer = AuthHelper.CookieContainer })
                 using (var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(20) }) {

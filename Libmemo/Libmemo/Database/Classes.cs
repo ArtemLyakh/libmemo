@@ -27,6 +27,7 @@ namespace Libmemo {
             public string _Text { get; set; }
             public string _IconUrl { get; set; }
             public string _ImageUrl { get; set; }
+            public string _SmallImageUrl { get; set; }
             public double? _Height { get; set; }
             public double? _Width { get; set; }
             public string _SchemeUrl { get; set; }
@@ -47,6 +48,7 @@ namespace Libmemo {
         public string Text { get; set; }
         public Uri IconUrl { get; set; }
         public Uri ImageUrl { get; set; }
+        public Uri SmallImageUrl { get; set; }
         public double? Height { get; set; }
         public double? Width { get; set; }
         public Uri SchemeUrl { get; set; }
@@ -59,6 +61,7 @@ namespace Libmemo {
            _IconUrl = person.IconUrl?.ToString(),
            _Id = person.Id,
            _ImageUrl = person.ImageUrl?.ToString(),
+           _SmallImageUrl = person.SmallImageUrl?.ToString(),
            _LastModified = person.LastModified,
            _LastName = person.LastName,
            _Latitude = person.Latitude,
@@ -80,6 +83,7 @@ namespace Libmemo {
             IconUrl = Uri.TryCreate(personDb._IconUrl, UriKind.Absolute, out Uri iconUrl) ? iconUrl : null,
             Id = personDb._Id,
             ImageUrl = Uri.TryCreate(personDb._ImageUrl, UriKind.Absolute, out Uri imageUrl) ? imageUrl : null,
+            SmallImageUrl = Uri.TryCreate(personDb._SmallImageUrl, UriKind.Absolute, out Uri smallImageUrl) ? smallImageUrl : null,
             LastModified = personDb._LastModified,
             LastName = personDb._LastName,
             Latitude = personDb._Latitude,
@@ -129,6 +133,8 @@ namespace Libmemo {
             if (!string.IsNullOrWhiteSpace(json.photo_url) && Uri.TryCreate(json.photo_url, UriKind.Absolute, out Uri photoUrl))
                 person.ImageUrl = photoUrl;
 
+            if (!string.IsNullOrWhiteSpace(json.small_photo_url) && Uri.TryCreate(json.small_photo_url, UriKind.Absolute, out Uri smallPhotoUrl))
+                person.SmallImageUrl = smallPhotoUrl;
 
             if (person.PersonType == PersonType.Dead) {
                 if (double.TryParse(json.latitude, NumberStyles.Any, CultureInfo.InvariantCulture, out double latitude)) {
