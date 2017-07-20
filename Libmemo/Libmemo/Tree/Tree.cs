@@ -429,6 +429,11 @@ namespace Libmemo {
             await App.GlobalPage.Push(page);
         }
         private void TreeItemDelete(Person person) {
+            if (person.Id == Root.Person.Id) {
+                App.ToastNotificator.Show("Невозможно удалить корневой элемент");
+                return;
+            }
+
             void Iteration(Item item)
             {
                 if (item.Mother != null && item.Mother.Person.Id == person.Id) {
