@@ -16,6 +16,7 @@ namespace Libmemo {
             this.Id = id;
         }
 
+        public ICommand BackCommand => new Command(async () => await App.GlobalPage.Pop());
 
         public ICommand LoadCommand => new Command(async () => {
             var person = await App.Database.GetById(Id);
