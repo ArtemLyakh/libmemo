@@ -14,229 +14,328 @@
             <Color x:Key="invalidLatLngColor">Red</Color>
         </ResourceDictionary>
     </ContentPage.Resources>
-
-
-    <StackLayout>
-        <StackLayout Orientation="Horizontal" Padding="10" HorizontalOptions="FillAndExpand">
-            <Button Text="Отправить"
-                    Command="{Binding SendCommand}"
-                    HorizontalOptions="FillAndExpand"
-                    />
-            <Button Text="Сбросить"
-                    Command="{Binding ResetCommand}"
-                    HorizontalOptions="FillAndExpand"
-                    />
-            <Button Text="Удалить"
-                    Command="{Binding DeleteCommand}"
-                    HorizontalOptions="FillAndExpand"
-                    />
-        </StackLayout>
-        <StackLayout HorizontalOptions="FillAndExpand" Spacing="15" IsVisible="{Binding IsDeadPerson}">
-            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" Spacing="0">
-                <Label Text="{Binding PersonLatLon}" HorizontalOptions="StartAndExpand" VerticalOptions="Center" />
-                <Button x:Name="goToGeoButton"
-                        Text="&#x2295;"
-                        HorizontalOptions="End"
-                        Command="{Binding GoToGeoCommand}" 
-                        IsVisible="{Binding IsLatLonShow}"    
-                        VerticalOptions="FillAndExpand"
-                        WidthRequest="{Binding Source={x:Reference Name=goToGeoButton}, Path=Height}" 
-                        />                
-                <Button x:Name="geoButton"
-                        Text="C"
-                        HorizontalOptions="End"
-                        Command="{Binding CurrentGeoCommand}" 
-                        IsVisible="{Binding IsLatLonShow}"    
-                        VerticalOptions="FillAndExpand"
-                        WidthRequest="{Binding Source={x:Reference Name=geoButton}, Path=Height}" 
-                        />
-                <Button Text="{Binding ButtonShowHide}" HorizontalOptions="End" Command="{Binding ButtonShowHideClickCommand}" />
+    <ContentPage.Content>
+        <Grid RowSpacing="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackLayout Grid.Column="0" 
+                         Grid.Row="0"
+                         HeightRequest="50"
+                         Orientation="Horizontal"
+                         BackgroundColor="#333333"
+                         Padding="5"
+                         Spacing="5"
+                         >
+                <Image Source="back.png"
+                       VerticalOptions="CenterAndExpand"
+                       HorizontalOptions="Start"
+                       WidthRequest="40"
+                       HeightRequest="40" 
+                       Aspect="AspectFill"
+                       >
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding BackCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label Text="Редактирование"
+                       VerticalOptions="CenterAndExpand"
+                       HorizontalOptions="FillAndExpand"
+                       TextColor="White"
+                       FontSize="Medium"
+                       HorizontalTextAlignment="Start"
+                       Margin="10,0"
+                       />
+                <Image Source="reload.png"
+                       VerticalOptions="CenterAndExpand"
+                       HorizontalOptions="End"
+                       WidthRequest="40"
+                       HeightRequest="40" 
+                       Aspect="AspectFill"
+                       >
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ResetCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Image Source="delete.png"
+                       VerticalOptions="CenterAndExpand"
+                       HorizontalOptions="End"
+                       WidthRequest="40"
+                       HeightRequest="40" 
+                       Aspect="AspectFill"
+                       >
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding DeleteCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Image Source="save.png"
+                       VerticalOptions="CenterAndExpand"
+                       HorizontalOptions="End"
+                       WidthRequest="40"
+                       HeightRequest="40" 
+                       Aspect="AspectFill"
+                       >
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SendCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
             </StackLayout>
-            <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" IsVisible="{Binding IsLatLonShow}">
-                <Label Text="Координаты" HorizontalOptions="CenterAndExpand" FontSize="Large" />
-                <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="FillAndExpand" HeightRequest="400">
-                    <local:CustomMap x:Name="CoorMap"
-                                         MapType="Street"
-                                         HorizontalOptions="FillAndExpand"
-                                         VerticalOptions="FillAndExpand"
-                                         
-                                         MapFunctions="{Binding MapFunctions}"
-                                         
-                                         MapCenter="{Binding MapCenter}"
-                                         Zoom="{Binding Zoom}"
-                                         IsCameraAnimated="False"
-                                         
-                                         IsRotateGesturesEnabled="True"
-                                         IsScrollGesturesEnabled="True"
-                                         IsTiltGesturesEnabled="True"
-                                         IsZoomGesturesEnabled="True"
-                                         
-                                         UserPositionChangedCommand="{Binding UserPositionChangedCommand}"
-                                         MyLocationEnabled="{Binding MyLocationEnabled}"
-                                         
-                                         IsShowInfoWindow="False"
-                                         CustomPins="{Binding CustomPins}"
-                                         
-                                         MapClickCommand="{Binding MapClickCommand}"
-                                         />
-                </StackLayout>
-            </StackLayout>
-        </StackLayout>
-        <ScrollView>
-            <StackLayout Spacing="50" Padding="10">
-
-                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Spacing="10">
-                    <Label VerticalOptions="CenterAndExpand" Text="Тип" HorizontalOptions="Start" />
-                    <Picker ItemsSource="{Binding PersonTypeList}"
-                            SelectedIndex="{Binding PersonTypeIndex}"
-                            HorizontalOptions="FillAndExpand"
-                            />
-                </StackLayout>
-
-
-                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10">
-                    <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
-                        <Label Text="Имя: "
-                           VerticalOptions="CenterAndExpand"
-                           HorizontalOptions="Start"
-                           WidthRequest="{StaticResource titleWidth}"
-                           />
-                        <Entry Keyboard="Text"
-                           Text="{Binding FirstName}"
-                           VerticalOptions="CenterAndExpand"
-                           HorizontalOptions="FillAndExpand"
-                           HorizontalTextAlignment="Center"
-                           Placeholder="Обязательное поле"
-                           PlaceholderColor="Red"
-                           />
-                    </StackLayout>
-                    <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
-                        <Label Text="Фамилия: "
-                           VerticalOptions="CenterAndExpand"
-                           HorizontalOptions="Start"
-                           WidthRequest="{StaticResource titleWidth}"
-                           />
-                        <Entry Keyboard="Text"
-                           Text="{Binding LastName}"
-                           VerticalOptions="CenterAndExpand"
-                           HorizontalOptions="FillAndExpand"
-                           HorizontalTextAlignment="Center"
-                           />
-                    </StackLayout>
-                    <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
-                        <Label Text="Отчество: "
-                           VerticalOptions="CenterAndExpand"
-                           HorizontalOptions="Start"
-                           WidthRequest="{StaticResource titleWidth}"
-                           />
-                        <Entry Keyboard="Text"
-                           Text="{Binding SecondName}"
-                           VerticalOptions="CenterAndExpand"
-                           HorizontalOptions="FillAndExpand"
-                           HorizontalTextAlignment="Center"
-                           />
-                    </StackLayout>
-                    <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
-                        <Label Text="Дата рождения: "
-                           VerticalOptions="CenterAndExpand"
-                           HorizontalOptions="Start"
-                           WidthRequest="{StaticResource titleWidth}"
-                           />
-                        <DatePicker Date="{Binding Path=DateBirth, Converter={StaticResource NullableDateConverter}}"
-                                VerticalOptions="CenterAndExpand"
-                                HorizontalOptions="EndAndExpand"
-                                />
-                    </StackLayout>
-                    <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand" IsVisible="{Binding IsDeadPerson}">
-                        <Label Text="Дата смерти: "
-                           VerticalOptions="CenterAndExpand"
-                           HorizontalOptions="Start"
-                           WidthRequest="{StaticResource titleWidth}"
-                           />
-                        <DatePicker Date="{Binding Path=DateDeath, Converter={StaticResource NullableDateConverter}}"
-                                VerticalOptions="CenterAndExpand"
-                                HorizontalOptions="EndAndExpand"
-                                />
-                    </StackLayout>
-                </StackLayout>
-
-                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" Padding="10">
-                    <StackLayout Orientation="Horizontal">
-                        <Button Text="Выбрать фото"
-                            Command="{Binding PickPhotoCommand}"
-                            HorizontalOptions="FillAndExpand"
-                            />
-                        <Button Text="Сделать фото"
-                            Command="{Binding MakePhotoCommand}"
-                            HorizontalOptions="FillAndExpand"
-                            />
-                    </StackLayout>
-                    <Image Source="{Binding PhotoSource}"/>
-                </StackLayout>
-
-                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" IsVisible="{Binding IsDeadPerson}">
-                    <Label Text="Биография" FontSize="Large" HorizontalOptions="CenterAndExpand"/>
-                    <Editor Text="{Binding Text}"
-                        HeightRequest="400"
-                        HorizontalOptions="FillAndExpand"
-                        BackgroundColor="#D8D8D8"
-                        />
-                </StackLayout>
-
-                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" IsVisible="{Binding IsDeadPerson}">
-                    <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
-                        <Label Text="Длина: "
-                           VerticalOptions="CenterAndExpand"
-                           HorizontalOptions="Start"
-                           WidthRequest="{StaticResource titleWidth}"
-                           />
-                        <Entry Keyboard="Numeric"
-                           Text="{Binding Path=Height, Converter={StaticResource NullableDoubleConverter}}"
-                           VerticalOptions="CenterAndExpand"
-                           HorizontalOptions="FillAndExpand"
-                           HorizontalTextAlignment="Center"
-                           />
-                    </StackLayout>
-                    <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
-                        <Label Text="Ширина: "
-                           VerticalOptions="CenterAndExpand"
-                           HorizontalOptions="Start"
-                           WidthRequest="{StaticResource titleWidth}"
-                           />
-                        <Entry Keyboard="Numeric"
-                           Text="{Binding Path=Width, Converter={StaticResource NullableDoubleConverter}}"
-                           VerticalOptions="CenterAndExpand"
-                           HorizontalOptions="FillAndExpand"
-                           HorizontalTextAlignment="Center"
-                           />
-                    </StackLayout>
-                </StackLayout>
-
-                <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" IsVisible="{Binding IsDeadPerson}">
-                    <Label Text="Схема захоронения" HorizontalOptions="CenterAndExpand" FontSize="Large" />
-                    <StackLayout Orientation="Horizontal" 
+            <StackLayout Grid.Column="0"
+                         Grid.Row="1">
+                <StackLayout HorizontalOptions="FillAndExpand"
+                             Spacing="15"
+                             IsVisible="{Binding IsDeadPerson}"
+                             >
+                    <StackLayout Orientation="Horizontal"
                                  HorizontalOptions="FillAndExpand"
-                                 Spacing="10"
-                                 IsVisible="{Binding IsSchemeCanDownload}"
+                                 Padding="10"
+                                 Spacing="0"
                                  >
-                        <Label Text="Схема захоронения:"
-                               HorizontalOptions="Start"
-                               VerticalOptions="CenterAndExpand"
+                        <Label Text="{Binding PersonLatLon}"
+                               HorizontalOptions="StartAndExpand"
+                               VerticalOptions="Center"
                                />
-                        <Button Text="Открыть"
-                                Command="{Binding SchemeDownloadCommand}"
-                                HorizontalOptions="CenterAndExpand" 
-                                />
+                        <Image Source="gps_off.png"
+                               VerticalOptions="CenterAndExpand"
+                               HorizontalOptions="End"
+                               WidthRequest="40"
+                               HeightRequest="40"
+                               Aspect="AspectFill"
+                               IsVisible="{Binding IsLatLonShow}"
+                               >
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding GoToGeoCommand}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Image Source="arrow_up.png"
+                               WidthRequest="40"
+                               HeightRequest="40" 
+                               Aspect="AspectFill"
+                               VerticalOptions="CenterAndExpand"
+                               HorizontalOptions="End"
+                               Margin="10,0,0,0"
+                               >
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ButtonShowHideClickCommand}" />
+                            </Image.GestureRecognizers>
+                            <Image.Triggers>
+                                <DataTrigger TargetType="Image"
+                                             Binding="{Binding IsLatLonShow}"
+                                             Value="True"
+                                             >
+                                    <Setter Property="Source" Value="arrow_down.png" />
+                                </DataTrigger>
+                            </Image.Triggers>
+                        </Image>
                     </StackLayout>
-                    <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="FillAndExpand">
-                        <Button Text="Выбрать" Command="{Binding SelectSchemeCommand}" VerticalOptions="CenterAndExpand" HorizontalOptions="Start" />
-                        <Label Text="{Binding SchemeName}" VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center" />
+                    <StackLayout HorizontalOptions="FillAndExpand"
+                                 Spacing="10"
+                                 IsVisible="{Binding IsLatLonShow}"
+                                 >
+                        <Label Text="Координаты"
+                               HorizontalOptions="CenterAndExpand"
+                               FontSize="Large"
+                               />
+                        <StackLayout Orientation="Horizontal"
+                                     Spacing="10"
+                                     HorizontalOptions="FillAndExpand"
+                                     HeightRequest="400"
+                                     >
+                            <local:CustomMap x:Name="CoorMap"
+                                             MapType="Street"
+                                             HorizontalOptions="FillAndExpand"
+                                             VerticalOptions="FillAndExpand"
+                                             MapFunctions="{Binding MapFunctions}"
+                                             MapCenter="{Binding MapCenter}"
+                                             Zoom="{Binding Zoom}"
+                                             IsCameraAnimated="False"
+                                             IsRotateGesturesEnabled="True"
+                                             IsScrollGesturesEnabled="True"
+                                             IsTiltGesturesEnabled="True"
+                                             IsZoomGesturesEnabled="True"
+                                             UserPositionChangedCommand="{Binding UserPositionChangedCommand}"
+                                             MyLocationEnabled="{Binding MyLocationEnabled}"
+                                             IsShowInfoWindow="False"
+                                             CustomPins="{Binding CustomPins}"
+                                             MapClickCommand="{Binding MapClickCommand}"
+                                             />
+                        </StackLayout>
                     </StackLayout>
                 </StackLayout>
+                <ScrollView>
+                    <StackLayout Spacing="50" Padding="10">
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Spacing="10">
+                            <Label VerticalOptions="CenterAndExpand"
+                                   Text="Тип"
+                                   HorizontalOptions="Start"
+                                   />
+                            <Picker ItemsSource="{Binding PersonTypeList}"
+                                    SelectedIndex="{Binding PersonTypeIndex}"
+                                    HorizontalOptions="FillAndExpand"
+                                    />
+                        </StackLayout>
+                        <StackLayout HorizontalOptions="FillAndExpand" Spacing="10">
+                            <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
+                                <Label Text="Имя: "
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="Start"
+                                       WidthRequest="{StaticResource titleWidth}"
+                                       />
+                                <Entry Keyboard="Text"
+                                       Text="{Binding FirstName}"
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="FillAndExpand"
+                                       HorizontalTextAlignment="Center"
+                                       Placeholder="Обязательное поле"
+                                       PlaceholderColor="Red"
+                                       />
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
+                                <Label Text="Фамилия: "
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="Start"
+                                       WidthRequest="{StaticResource titleWidth}"
+                                       />
+                                <Entry Keyboard="Text"
+                                       Text="{Binding LastName}"
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="FillAndExpand"
+                                       HorizontalTextAlignment="Center"
+                                       />
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
+                                <Label Text="Отчество: "
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="Start"
+                                       WidthRequest="{StaticResource titleWidth}"
+                                       />
+                                <Entry Keyboard="Text"
+                                       Text="{Binding SecondName}"
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="FillAndExpand"
+                                       HorizontalTextAlignment="Center"
+                                       />
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
+                                <Label Text="Дата рождения: "
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="Start"
+                                       WidthRequest="{StaticResource titleWidth}"
+                                       />
+                                <DatePicker Date="{Binding Path=DateBirth, Converter={StaticResource NullableDateConverter}}"
+                                            VerticalOptions="CenterAndExpand"
+                                            HorizontalOptions="EndAndExpand"
+                                            />
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand" IsVisible="{Binding IsDeadPerson}">
+                                <Label Text="Дата смерти: "
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="Start"
+                                       WidthRequest="{StaticResource titleWidth}"
+                                       />
+                                <DatePicker Date="{Binding Path=DateDeath, Converter={StaticResource NullableDateConverter}}"
+                                            VerticalOptions="CenterAndExpand"
+                                            HorizontalOptions="EndAndExpand"
+                                            />
+                            </StackLayout>
+                        </StackLayout>
 
+                        <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" Padding="10">
+                            <StackLayout Orientation="Horizontal">
+                                <Button Text="Выбрать фото"
+                                        Command="{Binding PickPhotoCommand}"
+                                        HorizontalOptions="FillAndExpand"
+                                        />
+                                <Button Text="Сделать фото"
+                                        Command="{Binding MakePhotoCommand}"
+                                        HorizontalOptions="FillAndExpand"
+                                        />
+                            </StackLayout>
+                            <Image Source="{Binding PhotoSource}"/>
+                        </StackLayout>
+
+                        <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" IsVisible="{Binding IsDeadPerson}">
+                            <Label Text="Биография"
+                                   FontSize="Large"
+                                   HorizontalOptions="CenterAndExpand"
+                                   />
+                            <Editor Text="{Binding Text}"
+                                    HeightRequest="400"
+                                    HorizontalOptions="FillAndExpand"
+                                    BackgroundColor="#D8D8D8"
+                                    />
+                        </StackLayout>
+
+                        <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" IsVisible="{Binding IsDeadPerson}">
+                            <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
+                                <Label Text="Длина: "
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="Start"
+                                       WidthRequest="{StaticResource titleWidth}"
+                                       />
+                                <Entry Keyboard="Numeric"
+                                       Text="{Binding Path=Height, Converter={StaticResource NullableDoubleConverter}}"
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="FillAndExpand"
+                                       HorizontalTextAlignment="Center"
+                                       />
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" Spacing="0" HorizontalOptions="FillAndExpand">
+                                <Label Text="Ширина: "
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="Start"
+                                       WidthRequest="{StaticResource titleWidth}"
+                                       />
+                                <Entry Keyboard="Numeric"
+                                       Text="{Binding Path=Width, Converter={StaticResource NullableDoubleConverter}}"
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="FillAndExpand"
+                                       HorizontalTextAlignment="Center"
+                                       />
+                            </StackLayout>
+                        </StackLayout>
+
+                        <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" IsVisible="{Binding IsDeadPerson}">
+                            <Label Text="Схема захоронения"
+                                   HorizontalOptions="CenterAndExpand"
+                                   FontSize="Large" />
+                            <StackLayout Orientation="Horizontal"
+                                         HorizontalOptions="FillAndExpand"
+                                         Spacing="10"
+                                         IsVisible="{Binding IsSchemeCanDownload}"
+                                         >
+                                <Label Text="Схема захоронения:"
+                                       HorizontalOptions="Start"
+                                       VerticalOptions="CenterAndExpand"
+                                       />
+                                <Button Text="Открыть"
+                                        Command="{Binding SchemeDownloadCommand}"
+                                        HorizontalOptions="CenterAndExpand"
+                                        />
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="FillAndExpand">
+                                <Button Text="Выбрать"
+                                        Command="{Binding SelectSchemeCommand}"
+                                        VerticalOptions="CenterAndExpand"
+                                        HorizontalOptions="Start"
+                                        />
+                                <Label Text="{Binding SchemeName}"
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="FillAndExpand"
+                                       HorizontalTextAlignment="Center"
+                                       />
+                            </StackLayout>
+                        </StackLayout>
+
+                    </StackLayout>
+                </ScrollView>
             </StackLayout>
-        </ScrollView>
-    </StackLayout>
-    
-    
+            
+        </Grid>
+    </ContentPage.Content>
+
 </ContentPage>

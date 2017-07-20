@@ -69,33 +69,16 @@ namespace Libmemo {
             get => new Command<Position>((Position position) => PersonPosition = position);
         }
 
-        public ICommand CurrentGeoCommand {
-            get => new Command(() => {
-                if (UserPosition.HasValue) {
-                    PersonPosition = UserPosition.Value;
-                }
-            });
-        }
-
         private bool _isLatLonShow;
         public bool IsLatLonShow {
             get { return _isLatLonShow; }
             set {
                 if (_isLatLonShow != value) {
                     _isLatLonShow = value;
-                    if (value) _buttonShowHide = "Скрыть";
-                    else _buttonShowHide = "Редактировать";
-                    this.OnPropertyChanged(nameof(ButtonShowHide));
                     this.OnPropertyChanged(nameof(IsLatLonShow));
                 }
             }
         }
-        private string _buttonShowHide = "Редактировать";
-        public string ButtonShowHide {
-            get => _buttonShowHide;
-        }
-
-
 
         public ICommand ButtonShowHideClickCommand {
             get => new Command(() => {
