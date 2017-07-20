@@ -6,16 +6,95 @@
              Title="Меню"
              >
     <ContentPage.Content>
-        <StackLayout VerticalOptions="FillAndExpand">
-            <Label Text="Admin" IsVisible="{Binding IsUserAdminVisible}" />
-            <Label Text="{Binding UserEmail}" IsVisible="{Binding IsUserEmailVisible}" HorizontalOptions="CenterAndExpand" />
-            <ListView x:Name="listView" VerticalOptions="FillAndExpand" SeparatorVisibility="Default" ItemsSource="{Binding MenuList}">
+        <Grid x:Name="menuGrid" RowSpacing="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <BoxView Grid.Row="0"
+                     Grid.Column="0"
+                     BackgroundColor="#333333"
+                     HorizontalOptions="FillAndExpand"
+                     VerticalOptions="FillAndExpand"
+                     />
+            <StackLayout Grid.Column="0" 
+                         Grid.Row="1"
+                         HeightRequest="50"
+                         Orientation="Horizontal"
+                         BackgroundColor="#333333"
+                         Padding="5"
+                         Spacing="5"
+                         >
+                <Image Source="back.png"
+                       VerticalOptions="CenterAndExpand"
+                       HorizontalOptions="StartAndExpand"
+                       WidthRequest="40"
+                       HeightRequest="40" 
+                       Aspect="AspectFill"
+                       >
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding BackCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+
+                <Image Source="user.png"
+                       VerticalOptions="CenterAndExpand"
+                       HorizontalOptions="End"
+                       WidthRequest="40"
+                       HeightRequest="40" 
+                       Aspect="AspectFill"
+                       IsVisible="{Binding LKShow}"
+                       >
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding LKCommand}" />
+                    </Image.GestureRecognizers>
+                </Image>
+
+            </StackLayout>
+            <ListView x:Name="listView"
+                      Grid.Row="2"
+                      Grid.Column="0"
+                      HasUnevenRows="True"
+                      VerticalOptions="FillAndExpand"
+                      SeparatorVisibility="Default"
+                      ItemsSource="{Binding MenuList}"
+                      >
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextCell Text="{Binding Title}" Detail="{Binding Text}" />
+                        <ViewCell>
+                            <ViewCell.View>
+                                <StackLayout Orientation="Horizontal" 
+                                             Padding="10,5"
+                                             Spacing="0"
+                                             HeightRequest="70"
+                                             VerticalOptions="FillAndExpand"
+                                             >
+                                    <Image Source="{Binding Image}"
+                                           HeightRequest="60"
+                                           WidthRequest="60"
+                                           Aspect="AspectFill"
+                                           VerticalOptions="CenterAndExpand"
+                                           HorizontalOptions="Start"
+                                           />
+                                    <Label Text="{Binding Text}"
+                                           VerticalOptions="CenterAndExpand"
+                                           HorizontalOptions="FillAndExpand"
+                                           FontSize="Medium"
+                                           TextColor="Black"
+                                           HorizontalTextAlignment="Start"
+                                           VerticalTextAlignment="Center"
+                                           Margin="20,0,0,0"
+                                           />
+                                </StackLayout>
+                            </ViewCell.View>
+                        </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-        </StackLayout>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

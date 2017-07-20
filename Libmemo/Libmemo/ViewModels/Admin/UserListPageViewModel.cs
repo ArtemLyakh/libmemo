@@ -26,6 +26,9 @@ namespace Libmemo {
 
         public ICommand LoadCommand => new Command(async () => await Load());
 
+        public ICommand AddCommand => new Command(async () => await App.GlobalPage.Push(new RegisterAdminPage()));
+
+
         class JsonData {
             public int id { get; set; }
             public string fio { get; set; }

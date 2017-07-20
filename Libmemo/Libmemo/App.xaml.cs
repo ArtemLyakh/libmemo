@@ -43,8 +43,8 @@ namespace Libmemo {
 
         #region Pages
 
-        public static void SetShowMenu(bool show) {
-            (Application.Current.MainPage as MainPage).IsPresented = true;
+        public static void SetShowMenu(bool show = true) {
+            (Application.Current.MainPage as MainPage).IsPresented = show;
         }
 
         public static void InitMenu() {

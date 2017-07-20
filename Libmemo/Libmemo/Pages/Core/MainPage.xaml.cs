@@ -37,7 +37,7 @@ namespace Libmemo {
 
 
         private async void OnMenuItemSelected(object sender, SelectedItemChangedEventArgs e) {
-            var item = e.SelectedItem as MenuItem;
+            var item = e.SelectedItem as MenuPage.MenuItem;
             if (item != null) {
                 (Master as MenuPage).ListView.SelectedItem = null;
 
