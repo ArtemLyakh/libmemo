@@ -2,8 +2,9 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Libmemo.MenuPage"
-             Padding="0,40,0,0"
              Title="Меню"
+             Padding="0,24,0,0"
+             BackgroundColor="Transparent"
              >
     <ContentPage.Content>
         <Grid x:Name="menuGrid" RowSpacing="0">
@@ -11,18 +12,11 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="5" />
                 <RowDefinition Height="50" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <BoxView Grid.Row="0"
-                     Grid.Column="0"
-                     BackgroundColor="#333333"
-                     HorizontalOptions="FillAndExpand"
-                     VerticalOptions="FillAndExpand"
-                     />
             <StackLayout Grid.Column="0" 
-                         Grid.Row="1"
+                         Grid.Row="0"
                          HeightRequest="50"
                          Orientation="Horizontal"
                          BackgroundColor="#333333"
@@ -47,16 +41,25 @@
                        WidthRequest="40"
                        HeightRequest="40" 
                        Aspect="AspectFill"
-                       IsVisible="{Binding LKShow}"
+                       IsVisible="{Binding IsLogged}"
                        >
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding LKCommand}" />
                     </Image.GestureRecognizers>
+                    <Image.Triggers>
+                        <DataTrigger TargetType="Image"
+                                     Binding="{Binding IsAdmin}"
+                                     Value="True"
+                                     >
+                            <Setter Property="Source" Value="admin.png" />
+                        </DataTrigger>
+                    </Image.Triggers>
                 </Image>
 
             </StackLayout>
             <ListView x:Name="listView"
-                      Grid.Row="2"
+                      BackgroundColor="White"
+                      Grid.Row="1"
                       Grid.Column="0"
                       HasUnevenRows="True"
                       VerticalOptions="FillAndExpand"

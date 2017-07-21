@@ -34,7 +34,8 @@ namespace Libmemo {
             foreach (var item in GetMenuList()) {
                 MenuList.Add(item);
             }
-            OnPropertyChanged(nameof(LKShow));
+            OnPropertyChanged(nameof(IsLogged));
+            OnPropertyChanged(nameof(IsAdmin));
         }
 
 
@@ -57,12 +58,12 @@ namespace Libmemo {
             if (!AuthHelper.IsLogged) {
                 yield return new MenuItem {
                     Text = "Авторизация",
-                    Image = ImageSource.FromFile("menu_map"),
+                    Image = ImageSource.FromFile("menu_login"),
                     Action = () => App.GlobalPage.PushRoot(new LoginPage())
                 };
                 yield return new MenuItem {
-                    Text = "Авторизация",
-                    Image = ImageSource.FromFile("menu_map"),
+                    Text = "Регистрация",
+                    Image = ImageSource.FromFile("menu_reg"),
                     Action = () => App.GlobalPage.PushRoot(new RegisterPage())
                 };
             } else {
@@ -74,7 +75,7 @@ namespace Libmemo {
                     };
                     yield return new MenuItem {
                         Text = "Список пользователей",
-                        Image = ImageSource.FromFile("menu_map"),
+                        Image = ImageSource.FromFile("menu_login"),
                         Action = () => {
                             var page = new UserListPage();
                             page.ItemSelected += async (object sender, UserListPageViewModel.User user) =>
@@ -116,9 +117,12 @@ namespace Libmemo {
         public ICommand BackCommand => new Command(() => App.SetShowMenu(false));
 
         public ICommand LKCommand => new Command(async () => {
+            if (!AuthHelper.IsLogged || AuthHelper.IsAdmin) return;
             await App.GlobalPage.PushRoot(new PersonalDataPage());
             App.SetShowMenu(false);
         });
-        public bool LKShow => AuthHelper.IsLogged && !AuthHelper.IsAdmin;
+
+        public bool IsLogged => AuthHelper.IsLogged;
+        public bool IsAdmin => AuthHelper.IsAdmin;
     }
 }
