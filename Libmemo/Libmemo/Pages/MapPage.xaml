@@ -245,7 +245,7 @@
                                 <TapGestureRecognizer Command="{Binding SetCalculatedRouteCommand}" />
                             </Image.GestureRecognizers>
                         </Image>
-                        <Image Source="delete_route.png"
+                        <Image Source="route_delete.png"
                                WidthRequest="40"
                                HeightRequest="40" 
                                Aspect="AspectFill"
