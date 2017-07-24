@@ -79,7 +79,7 @@ namespace Libmemo {
                         Action = () => {
                             var page = new UserListPage();
                             page.ItemSelected += async (object sender, UserListPageViewModel.User user) =>
-                                await App.GlobalPage.PushRoot(new PersonalDataPageAdmin(user.Id));
+                                await App.GlobalPage.Push(new PersonalDataPageAdmin(user.Id));
                             return App.GlobalPage.Push(page);
                         }
                     };
@@ -89,7 +89,7 @@ namespace Libmemo {
                         Action = () => {
                             var page = new UserListPage();
                             page.ItemSelected += async (object sender, UserListPageViewModel.User user) =>
-                                await App.GlobalPage.PushRoot(new TreePageAdmin(user.Id));
+                                await App.GlobalPage.Push(new TreePageAdmin(user.Id));
                             return App.GlobalPage.Push(page);
                         }
                     };
