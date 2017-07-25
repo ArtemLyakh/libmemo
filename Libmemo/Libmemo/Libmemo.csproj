@@ -75,7 +75,9 @@
     <Compile Include="Helpers\Auth\AuthHelper.cs" />
     <Compile Include="Helpers\Auth\AuthInfo.cs" />
     <Compile Include="Helpers\Auth\AuthJson.cs" />
+    <Compile Include="Helpers\Exceptions.cs" />
     <Compile Include="Helpers\ImageResourseExtension.cs" />
+    <Compile Include="Helpers\Json.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Helpers\UtilsFunctions.cs" />
     <Compile Include="Pages\Admin\UserListPage.xaml.cs">
@@ -156,7 +158,6 @@
     <Compile Include="ViewModels\DetailPageViewModel.cs" />
     <Compile Include="ViewModels\PersonsManage\Edit\EditPersonPageAdminViewModel.cs" />
     <Compile Include="ViewModels\PersonsManage\Edit\EditPersonPageViewModel.cs" />
-    <Compile Include="ViewModels\Auth\Login\LoginPageViewModel.cs" />
     <Compile Include="ViewModels\MapPageViewModel.cs" />
     <Compile Include="ViewModels\PersonalData\PersonalDataPageAdminViewModel.cs" />
     <Compile Include="ViewModels\PersonalData\PersonalDataPageViewModel.cs" />
