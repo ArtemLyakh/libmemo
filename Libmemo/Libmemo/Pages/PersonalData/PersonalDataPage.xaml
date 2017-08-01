@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Libmemo.PersonalDataPage"
              xmlns:local="clr-namespace:Libmemo"
+             xmlns:ffi="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              NavigationPage.HasNavigationBar="False">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -137,7 +138,10 @@
                                     HorizontalOptions="FillAndExpand"
                                     />
                         </StackLayout>
-                        <Image Source="{Binding PhotoSource}"/>
+                        <ffi:CachedImage HorizontalOptions="Fill"
+                                         DownsampleToViewSize="true"
+                                         Source="{Binding PhotoSource}"
+                                         />
                     </StackLayout>
                 </StackLayout>
             </ScrollView>
