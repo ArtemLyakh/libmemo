@@ -1,4 +1,6 @@
-﻿using ImageCircle.Forms.Plugin.Abstractions;
+﻿using FFImageLoading.Forms;
+using FFImageLoading.Transformations;
+using ImageCircle.Forms.Plugin.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -106,7 +108,7 @@ namespace Libmemo {
 
 
         private const int LINE_WIDTH = 4;
-        private const int BORDER_THICKNESS = 5;
+        private const int BORDER_THICKNESS = 10;
 
         private const int ADD_BUTTON_WIDTH = 50;
         private const int ADD_BUTON_HEIGHT = 50;
@@ -280,7 +282,10 @@ namespace Libmemo {
                 Lines.Add(GetLine(topConnectPoint, new Point(topConnectPoint.X, levelLine)));
                 Lines.Add(GetLine(new Point(MotherConnectPoint.X, levelLine + LINE_WIDTH / 2), MotherConnectPoint));
                 Lines.Add(GetLine(new Point(FatherConnectPoint.X, levelLine + LINE_WIDTH / 2), FatherConnectPoint));
-                Lines.Add(GetLine(new Point(MotherConnectPoint.X - LINE_WIDTH / 2, levelLine), new Point(FatherConnectPoint.X + LINE_WIDTH / 2, levelLine)));
+                Lines.Add(GetLine(
+                    new Point(Math.Min(MotherConnectPoint.X - LINE_WIDTH / 2, topConnectPoint.X), levelLine),
+                    new Point(Math.Max(FatherConnectPoint.X + LINE_WIDTH / 2, topConnectPoint.X), levelLine)
+                ));
                 #endregion
 
                 #region Siblings
@@ -467,11 +472,12 @@ namespace Libmemo {
             return (view, point);
         }
         private (View, Point) GetAddNewButton(Point center, Action onTap) {
-            var button = new Image {
+            var button = new CachedImage {
                 WidthRequest = ADD_BUTTON_WIDTH,
                 HeightRequest = ADD_BUTON_HEIGHT,
-                Source = ImageSource.FromFile("tree_add_button.jpg"),
+                Source = ImageSource.FromFile("tree_add_button.jpg")              
             };
+
             button.GestureRecognizers.Add(new TapGestureRecognizer {
                 Command = new Command(() => onTap?.Invoke())
             });
@@ -481,17 +487,18 @@ namespace Libmemo {
             return (button, point);
         }
         private (View, Point) GetTreeItem (Point center, Person person, Action onTap) {
-            var element = new CircleImage {
-                BorderColor = person.PersonType == PersonType.Dead ? Color.Black : Color.White,
-                BorderThickness = BORDER_THICKNESS,
+            var element = new CachedImage {
                 HeightRequest = TREE_ITEM_HEIGHT,
                 WidthRequest = TREE_ITEM_WIDTH,
                 Aspect = Aspect.AspectFill,
-                HorizontalOptions = LayoutOptions.Center,
-                Source = person.SmallImageUrl != null
-                    ? ImageSource.FromUri(person.SmallImageUrl)
-                    : ImageSource.FromFile("no_tree_img")
+                LoadingPlaceholder = ImageSource.FromFile("no_tree_img"),
+                ErrorPlaceholder = ImageSource.FromFile("no_tree_img"),
+                Source = person.SmallImageUrl != null ? ImageSource.FromUri(person.SmallImageUrl) : ImageSource.FromFile("no_tree_img"),
+                Transformations = new List<FFImageLoading.Work.ITransformation> {
+                    new CircleTransformation(BORDER_THICKNESS, person.PersonType == PersonType.Dead ? "#000000" : "#FFFFFF")
+                }
             };
+
             element.GestureRecognizers.Add(new TapGestureRecognizer {
                 Command = new Command(() => onTap?.Invoke())
             });
