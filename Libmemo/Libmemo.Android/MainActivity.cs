@@ -19,7 +19,6 @@ namespace Libmemo.Droid {
             global::Xamarin.Forms.Forms.Init(this, bundle);
             global::Xamarin.FormsMaps.Init(this, bundle);
             FFImageLoading.Forms.Droid.CachedImageRenderer.Init();
-            ImageCircle.Forms.Plugin.Droid.ImageCircleRenderer.Init();
             LoadApplication(new App());
         }
 

@@ -481,50 +481,6 @@ namespace Libmemo.Droid {
         #endregion
 
         #region InfoWindow render
-        //public Android.Views.View GetInfoContents(Marker marker) {
-        //    var inflater = Android.App.Application.Context.GetSystemService(Context.LayoutInflaterService) as Android.Views.LayoutInflater;
-        //    if (inflater != null) {
-        //        Android.Views.View view;
-
-        //        var binding = _customPinsBindings.FirstOrDefault(i => i.Value.Id == marker.Id);
-        //        var customPin = binding.Key;
-
-        //        view = inflater.Inflate(Resource.Layout.MapInfoWindow, null);
-
-        //        var infoTitle = view.FindViewById<TextView>(Resource.Id.InfoWindowTitle);
-        //        var infoSubtitle = view.FindViewById<TextView>(Resource.Id.InfoWindowSubtitle);
-        //        var infoWindowButton = view.FindViewById<ImageButton>(Resource.Id.InfoWindowButton);
-
-        //        var b64 = string.IsNullOrWhiteSpace(customPin.Base64) ? null : customPin.Base64;
-        //        if (b64 != null) {
-        //            var imageBytes = Convert.FromBase64String(b64);
-        //            Android.Graphics.Bitmap bitmap;
-        //            try {
-        //                bitmap = Android.Graphics.BitmapFactory.DecodeByteArray(imageBytes, 0, imageBytes.Length);
-        //            } catch {
-        //                bitmap = null;
-        //            }
-
-        //            if (bitmap != null) {
-        //                infoWindowButton.SetMaxHeight(infoWindowButton.Height);
-        //                infoWindowButton.SetMaxWidth(infoWindowButton.Width);
-        //                infoWindowButton.SetBackgroundColor(Android.Graphics.Color.Transparent);
-        //                infoWindowButton.SetImageBitmap(bitmap);
-        //            }
-        //        }
-
-
-        //        if (infoTitle != null) {
-        //            infoTitle.Text = marker.Title;
-        //        }
-        //        if (infoSubtitle != null) {
-        //            infoSubtitle.Text = marker.Snippet;
-        //        }
-
-        //        return view;
-        //    }
-        //    return null;
-        //}
 
         private Dictionary<Uri, Android.Graphics.Bitmap> MarkerIconsDownloaded = new Dictionary<Uri, Android.Graphics.Bitmap>();
 
