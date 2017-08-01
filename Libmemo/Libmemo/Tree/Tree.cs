@@ -490,7 +490,7 @@ namespace Libmemo {
                 HorizontalOptions = LayoutOptions.Center,
                 Source = person.SmallImageUrl != null
                     ? ImageSource.FromUri(person.SmallImageUrl)
-                    : ImageSource.FromFile("no_img")
+                    : ImageSource.FromFile("no_tree_img")
             };
             element.GestureRecognizers.Add(new TapGestureRecognizer {
                 Command = new Command(() => onTap?.Invoke())
