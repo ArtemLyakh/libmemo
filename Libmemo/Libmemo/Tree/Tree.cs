@@ -286,7 +286,7 @@ namespace Libmemo {
                 #region Siblings
                 foreach (var sibling in item.Siblings) {
                     #region Line
-                    Lines.Add(GetLine(new Point(x, y), new Point(x + SPACE_BETWEEN_ITEMS + TREE_ITEM_WIDTH / 2, y)));
+                    Lines.Add(GetLine(new Point(x, y), new Point(x + SPACE_BETWEEN_ITEMS, y)));
                     x += SPACE_BETWEEN_ITEMS;
                     #endregion
 
