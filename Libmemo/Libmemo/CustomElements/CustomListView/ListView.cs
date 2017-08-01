@@ -16,9 +16,11 @@ namespace Libmemo {
             set { this.SetValue(ItemClickCommandProperty, value); }
         }
 
-
-
         public CustomListView() {
+            this.ItemTapped += this.OnItemTapped;
+        }
+
+        public CustomListView(ListViewCachingStrategy strategy) : base(strategy) {
             this.ItemTapped += this.OnItemTapped;
         }
 

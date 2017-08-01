@@ -28,17 +28,17 @@
                          Padding="5"
                          Spacing="5"
                          >
-                <Image Source="back.png"
-                       VerticalOptions="CenterAndExpand"
-                       HorizontalOptions="Start"
-                       WidthRequest="40"
-                       HeightRequest="40" 
-                       Aspect="AspectFill"
-                       >
-                    <Image.GestureRecognizers>
+                <ffi:CachedImage Source="back.png"
+                                 VerticalOptions="CenterAndExpand"
+                                 HorizontalOptions="Start"
+                                 WidthRequest="40"
+                                 HeightRequest="40" 
+                                 Aspect="AspectFill"
+                                 >
+                    <ffi:CachedImage.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding BackCommand}" />
-                    </Image.GestureRecognizers>
-                </Image>
+                    </ffi:CachedImage.GestureRecognizers>
+                </ffi:CachedImage>
                 <Label Text="Личный кабинет"
                        VerticalOptions="CenterAndExpand"
                        HorizontalOptions="FillAndExpand"
@@ -47,28 +47,28 @@
                        HorizontalTextAlignment="Start"
                        Margin="10,0"
                        />
-                <Image Source="reload.png"
-                       VerticalOptions="CenterAndExpand"
-                       HorizontalOptions="End"
-                       WidthRequest="40"
-                       HeightRequest="40" 
-                       Aspect="AspectFill"
-                       >
-                    <Image.GestureRecognizers>
+                <ffi:CachedImage Source="reload.png"
+                                 VerticalOptions="CenterAndExpand"
+                                 HorizontalOptions="End"
+                                 WidthRequest="40"
+                                 HeightRequest="40"
+                                 Aspect="AspectFill"
+                                 >
+                    <ffi:CachedImage.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ResetCommand}" />
-                    </Image.GestureRecognizers>
-                </Image>
-                <Image Source="save.png"
-                       VerticalOptions="CenterAndExpand"
-                       HorizontalOptions="End"
-                       WidthRequest="40"
-                       HeightRequest="40" 
-                       Aspect="AspectFill"
-                       >
-                    <Image.GestureRecognizers>
+                    </ffi:CachedImage.GestureRecognizers>
+                </ffi:CachedImage>
+                <ffi:CachedImage Source="save.png"
+                                 VerticalOptions="CenterAndExpand"
+                                 HorizontalOptions="End"
+                                 WidthRequest="40"
+                                 HeightRequest="40"
+                                 Aspect="AspectFill"
+                                 >
+                    <ffi:CachedImage.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding SendCommand}" />
-                    </Image.GestureRecognizers>
-                </Image>
+                    </ffi:CachedImage.GestureRecognizers>
+                </ffi:CachedImage>
             </StackLayout>
             <ScrollView Grid.Column="0"
                         Grid.Row="1"

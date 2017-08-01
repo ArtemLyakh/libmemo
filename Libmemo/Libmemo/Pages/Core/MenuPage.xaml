@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ffi="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              x:Class="Libmemo.MenuPage"
              Title="Меню"
              Padding="0,24,0,0"
@@ -23,38 +24,38 @@
                          Padding="5"
                          Spacing="5"
                          >
-                <Image Source="back.png"
-                       VerticalOptions="CenterAndExpand"
-                       HorizontalOptions="StartAndExpand"
-                       WidthRequest="40"
-                       HeightRequest="40" 
-                       Aspect="AspectFill"
-                       >
-                    <Image.GestureRecognizers>
+                <ffi:CachedImage Source="back.png"
+                                 VerticalOptions="CenterAndExpand"
+                                 HorizontalOptions="StartAndExpand"
+                                 WidthRequest="40"
+                                 HeightRequest="40"
+                                 Aspect="AspectFill"
+                                 >
+                    <ffi:CachedImage.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding BackCommand}" />
-                    </Image.GestureRecognizers>
-                </Image>
+                    </ffi:CachedImage.GestureRecognizers>
+                </ffi:CachedImage>
 
-                <Image Source="user.png"
-                       VerticalOptions="CenterAndExpand"
-                       HorizontalOptions="End"
-                       WidthRequest="40"
-                       HeightRequest="40" 
-                       Aspect="AspectFill"
-                       IsVisible="{Binding IsLogged}"
-                       >
-                    <Image.GestureRecognizers>
+                <ffi:CachedImage Source="user.png"
+                                 VerticalOptions="CenterAndExpand"
+                                 HorizontalOptions="End"
+                                 WidthRequest="40"
+                                 HeightRequest="40"
+                                 Aspect="AspectFill"
+                                 IsVisible="{Binding IsLogged}"
+                                 >
+                    <ffi:CachedImage.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding LKCommand}" />
-                    </Image.GestureRecognizers>
-                    <Image.Triggers>
-                        <DataTrigger TargetType="Image"
+                    </ffi:CachedImage.GestureRecognizers>
+                    <ffi:CachedImage.Triggers>
+                        <DataTrigger TargetType="ffi:CachedImage"
                                      Binding="{Binding IsAdmin}"
                                      Value="True"
                                      >
                             <Setter Property="Source" Value="admin.png" />
                         </DataTrigger>
-                    </Image.Triggers>
-                </Image>
+                    </ffi:CachedImage.Triggers>
+                </ffi:CachedImage>
 
             </StackLayout>
             <ListView x:Name="listView"
@@ -76,13 +77,13 @@
                                              HeightRequest="70"
                                              VerticalOptions="FillAndExpand"
                                              >
-                                    <Image Source="{Binding Image}"
-                                           HeightRequest="60"
-                                           WidthRequest="60"
-                                           Aspect="AspectFill"
-                                           VerticalOptions="CenterAndExpand"
-                                           HorizontalOptions="Start"
-                                           />
+                                    <ffi:CachedImage Source="{Binding Image}"
+                                                     HeightRequest="60"
+                                                     WidthRequest="60"
+                                                     Aspect="AspectFill"
+                                                     VerticalOptions="CenterAndExpand"
+                                                     HorizontalOptions="Start"
+                                                     />
                                     <Label Text="{Binding Text}"
                                            VerticalOptions="CenterAndExpand"
                                            HorizontalOptions="FillAndExpand"

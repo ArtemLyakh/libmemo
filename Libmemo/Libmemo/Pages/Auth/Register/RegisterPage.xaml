@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Libmemo.RegisterPage"
+             xmlns:ffi="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              NavigationPage.HasNavigationBar="False"
              >
     <ContentPage.Content>
@@ -21,17 +22,17 @@
                          Padding="5"
                          Spacing="5"
                          >
-                <Image Source="back.png"
-                       VerticalOptions="CenterAndExpand"
-                       HorizontalOptions="Start"
-                       WidthRequest="40"
-                       HeightRequest="40" 
-                       Aspect="AspectFill"
-                       >
-                    <Image.GestureRecognizers>
+                <ffi:CachedImage Source="back.png"
+                                 VerticalOptions="CenterAndExpand"
+                                 HorizontalOptions="Start"
+                                 WidthRequest="40"
+                                 HeightRequest="40"
+                                 Aspect="AspectFill"
+                                 >
+                    <ffi:CachedImage.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding BackCommand}" />
-                    </Image.GestureRecognizers>
-                </Image>
+                    </ffi:CachedImage.GestureRecognizers>
+                </ffi:CachedImage>
                 <Label Text="Регистрация"
                        VerticalOptions="CenterAndExpand"
                        HorizontalOptions="FillAndExpand"
