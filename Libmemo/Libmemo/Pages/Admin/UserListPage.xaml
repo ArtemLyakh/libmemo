@@ -67,9 +67,9 @@
                                   ItemClickCommand="{Binding ItemSelectedCommand}"
                                   HasUnevenRows="True"
                                   >
-                <!--<x:Arguments>
+                <x:Arguments>
                     <ListViewCachingStrategy>RecycleElement</ListViewCachingStrategy>
-                </x:Arguments>-->
+                </x:Arguments>
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <TextCell Text="{Binding ShowString}"

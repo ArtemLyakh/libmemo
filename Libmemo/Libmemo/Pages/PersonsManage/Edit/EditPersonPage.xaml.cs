@@ -11,11 +11,7 @@ namespace Libmemo {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class EditPersonPage : ContentPage {
         public EditPersonPage(int id) {
-            try {
-                InitializeComponent();
-            } catch (Exception e) {
-                var q = 1;
-            }
+            InitializeComponent();
             BindingContext = new EditPersonPageViewModel(id);
         }
 

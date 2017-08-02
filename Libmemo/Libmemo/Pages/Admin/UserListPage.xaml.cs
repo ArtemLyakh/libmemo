@@ -13,12 +13,11 @@ namespace Libmemo {
         public UserListPage() {
             InitializeComponent();
             var model = new UserListPageViewModel();
-            model.ItemSelected += (object sender, UserListPageViewModel.User e) =>
-                this.ItemSelected?.Invoke(this, e);
+            model.ItemSelected += (sender, e) => this.ItemSelected?.Invoke(this, e);
             BindingContext = model;
         }
 
-        public event EventHandler<UserListPageViewModel.User> ItemSelected;
+        public event EventHandler<ListElement.TextElement> ItemSelected;
 
         protected override void OnAppearing() {
             base.OnAppearing();

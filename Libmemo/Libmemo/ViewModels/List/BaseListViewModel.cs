@@ -8,10 +8,10 @@ using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Libmemo {
-    public abstract class BaseListViewModel<T> : INotifyPropertyChanged where T : ISearchFiltrable {
+    public abstract class BaseListViewModel<T> : INotifyPropertyChanged where T : ListElement.ISearchFilterable {
 
-        private IEnumerable<T> _data = null;
-        protected IEnumerable<T> Data {
+        private List<T> _data = null;
+        protected List<T> Data {
             get => _data;
             set {
                 _data = value;
@@ -19,11 +19,13 @@ namespace Libmemo {
             }
         }
 
-        public BaseListViewModel() { }
+        public BaseListViewModel() {
+            SearchChanged += (sender, e) => SearchCommand.Execute(null);
+        }
+
 
         public event EventHandler<T> ItemSelected;
         public event EventHandler<string> SearchChanged;
-
 
 
         private string _search;
@@ -38,8 +40,8 @@ namespace Libmemo {
             }
         }
 
-        private IEnumerable<T> _searchList = null;
-        public IEnumerable<T> SearchList {
+        private List<T> _searchList = null;
+        public List<T> SearchList {
             get => _searchList;
             private set {
                 if (_searchList != value) {
@@ -49,15 +51,16 @@ namespace Libmemo {
             }
         }
 
-        public ICommand SearchCommand {
-            get => new Command(() => {
-                if (this.Data == null) return;
-                var data = string.IsNullOrWhiteSpace(this.Search) 
-                    ? this.Data.AsEnumerable() 
-                    : this.Data.Where(i => i.FilterString.ToLowerInvariant().IndexOf(this.Search.ToLowerInvariant()) != -1);
-                this.SearchList = data.OrderBy(i => i.FilterString);
-            });
-        }
+        public ICommand SearchCommand => new Command(() => {
+            if (this.Data == null) return;
+
+            var data = string.IsNullOrWhiteSpace(this.Search) 
+                ? this.Data.AsEnumerable() 
+                : this.Data.Where(i => i.Filter.ToLowerInvariant().IndexOf(this.Search.ToLowerInvariant()) != -1);
+
+            this.SearchList = data.OrderBy(i => i.Filter).ToList();
+        });
+
 
         public ICommand ItemSelectedCommand => 
             new Command<object>(selected => ItemSelected?.Invoke(this, (T)selected));
@@ -69,7 +72,29 @@ namespace Libmemo {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    public interface ISearchFiltrable {
-        string FilterString { get; }
+
+    namespace ListElement {
+
+        public interface ISearchFilterable {
+            string Filter { get; }
+        }
+
+        public class ImageElement : ISearchFilterable {
+            public string Filter => FIO;
+
+            public string FIO { get; set; }
+            public ImageSource Image { get; set; }
+
+            public Person Person { get; set; }       
+        }
+
+        public class TextElement : ISearchFilterable {
+            public string Filter => Email;
+            public string ShowString => $"{Id}: {Email}";
+
+            public int Id { get; set; }
+            public string Email { get; set; }
+            public string Fio { get; set; }
+        }
     }
 }

@@ -63,6 +63,7 @@
     <Compile Include="CustomElements\CustomMap\IMapFunctions.cs" />
     <Compile Include="CustomElements\CustomMap\INativeMapFunctions.cs" />
     <Compile Include="CustomElements\CustomMap\PinImageEnum.cs" />
+    <Compile Include="CustomElements\CustomViewCell\CustomImageViewCell.cs" />
     <Compile Include="Database\JsonData.cs" />
     <Compile Include="Database\Classes.cs" />
     <Compile Include="Database\PersonRepository.cs" />

@@ -78,8 +78,8 @@ namespace Libmemo {
                         Image = ImageSource.FromFile("menu_login"),
                         Action = () => {
                             var page = new UserListPage();
-                            page.ItemSelected += async (object sender, UserListPageViewModel.User user) =>
-                                await App.GlobalPage.Push(new PersonalDataPageAdmin(user.Id));
+                            page.ItemSelected += async (sender, el) =>
+                                await App.GlobalPage.Push(new PersonalDataPageAdmin(el.Id));
                             return App.GlobalPage.Push(page);
                         }
                     };
@@ -88,8 +88,8 @@ namespace Libmemo {
                         Image = ImageSource.FromFile("menu_tree"),
                         Action = () => {
                             var page = new UserListPage();
-                            page.ItemSelected += async (object sender, UserListPageViewModel.User user) =>
-                                await App.GlobalPage.Push(new TreePageAdmin(user.Id));
+                            page.ItemSelected += async (sender, el) =>
+                                await App.GlobalPage.Push(new TreePageAdmin(el.Id));
                             return App.GlobalPage.Push(page);
                         }
                     };

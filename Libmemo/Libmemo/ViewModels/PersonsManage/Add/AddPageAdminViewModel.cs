@@ -33,7 +33,7 @@ namespace Libmemo {
         public ICommand SelectOwnerCommand {
             get => new Command(async () => {
                 var page = new UserListPage();
-                page.ItemSelected += async (object sender, UserListPageViewModel.User user) => {
+                page.ItemSelected += async (sender, user) => {
                     Owner = new User { Id = user.Id, Email = user.Fio, Fio = user.Fio };
                     await App.GlobalPage.Pop();
                 };

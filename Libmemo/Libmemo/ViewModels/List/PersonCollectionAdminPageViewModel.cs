@@ -8,19 +8,10 @@ using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Libmemo {
-    public class PersonCollectionAdminPageViewModel : BaseListViewModel<PersonCollectionAdminPageViewModel.Person> {
-        public class Person : ISearchFiltrable {
-            public string FilterString => Fio;
-
-            public object Image { get; set; }
-            public bool IsDead { get; set; }
-            public int Id { get; set; }
-            public string Fio { get; set; }
-        }
+    public class PersonCollectionAdminPageViewModel : BaseListViewModel<ListElement.ImageElement> {
 
         public PersonCollectionAdminPageViewModel() : base() {
-            this.SearchChanged += (sender, e) => SearchCommand.Execute(null);
-            this.ItemSelected += async (sender, e) => await App.GlobalPage.Push(new EditPersonPageAdmin(e.Id));
+            this.ItemSelected += async (sender, e) => await App.GlobalPage.Push(new EditPersonPageAdmin(e.Person.Id));
         }
 
         public ICommand AddCommand => new Command(async () => await App.GlobalPage.Push(new AddPageAdmin()));
@@ -36,12 +27,11 @@ namespace Libmemo {
             }
 
             this.Data = (await App.Database.GetList(new PersonType[] { PersonType.Alive, PersonType.Dead }))
-                .Select(i => new Person {
-                    Id = i.Id,
-                    Fio = i.FIO,
-                    IsDead = i.PersonType == PersonType.Dead,
-                    Image = i.SmallImageUrl == null ? "no_img.png" : ImageSource.FromUri(i.SmallImageUrl)
-                });
+                .Select(i => new ListElement.ImageElement {
+                    FIO = i.FIO,
+                    Image = i.SmallImageUrl == null ? ImageSource.FromFile("no_img.png") : ImageSource.FromUri(i.SmallImageUrl),
+                    Person = i
+                }).ToList();
 
         }
     }

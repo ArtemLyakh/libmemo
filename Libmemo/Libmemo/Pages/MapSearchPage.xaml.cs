@@ -25,7 +25,7 @@ namespace Libmemo {
             this.BindingContext = model;
         }
 
-        public event EventHandler<MapSearchPageViewModel.Person> ItemSelected;
+        public event EventHandler<ListElement.ImageElement> ItemSelected;
         public event EventHandler<string> SearchTextChanged;
 
         protected override void OnAppearing() {

@@ -8,19 +8,9 @@ using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Libmemo {
-    public class UserListPageViewModel : BaseListViewModel<UserListPageViewModel.User>{
-        public class User : ISearchFiltrable {
-            public string FilterString => Email;
-            public string ShowString => $"{Id}: {Email}";
+    public class UserListPageViewModel : BaseListViewModel<ListElement.TextElement>{
 
-            public int Id { get; set; }
-            public string Email { get; set; }
-            public string Fio { get; set; }
-        }
-
-        public UserListPageViewModel() : base() {
-            this.SearchChanged += (sender, e) => SearchCommand.Execute(null);
-        }
+        public UserListPageViewModel() : base() { }
 
         public ICommand BackCommand => new Command(async () => await App.GlobalPage.Pop());
 
@@ -49,7 +39,7 @@ namespace Libmemo {
                     var str = await responce.Content.ReadAsStringAsync();
                     var data = Newtonsoft.Json.JsonConvert.DeserializeObject<List<JsonData>>(str);
 
-                    this.Data = data.Select(i => new User { Id = i.id, Fio = i.fio, Email = i.email });
+                    this.Data = data.Select(i => new ListElement.TextElement { Id = i.id, Fio = i.fio, Email = i.email }).ToList();
                 }
             } catch (Exception) {
                 App.ToastNotificator.Show("Ошибка загрузки данных");

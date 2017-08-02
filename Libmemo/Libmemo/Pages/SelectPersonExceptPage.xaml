@@ -58,36 +58,12 @@
                                   SeparatorVisibility="Default"
                                   SeparatorColor="Gray"
                                   >
+                <x:Arguments>
+                    <ListViewCachingStrategy>RecycleElement</ListViewCachingStrategy>
+                </x:Arguments>
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <ViewCell>
-                            <ViewCell.View>
-                                <StackLayout Orientation="Horizontal" 
-                                             Padding="10,5"
-                                             Spacing="0"
-                                             HeightRequest="70"
-                                             VerticalOptions="FillAndExpand"
-                                             >
-                                    <ffi:CachedImage Source="{Binding Image}"
-                                                     DownsampleToViewSize="True"
-                                                     HeightRequest="60"
-                                                     WidthRequest="60"
-                                                     Aspect="AspectFill"
-                                                     VerticalOptions="CenterAndExpand"
-                                                     HorizontalOptions="Start"
-                                                     />
-                                    <Label Text="{Binding Fio}"
-                                           VerticalOptions="CenterAndExpand"
-                                           HorizontalOptions="FillAndExpand"
-                                           FontSize="Medium"
-                                           TextColor="Black"
-                                           HorizontalTextAlignment="Start"
-                                           VerticalTextAlignment="Center"
-                                           Margin="20,0,0,0"
-                                           />
-                                </StackLayout>
-                            </ViewCell.View>
-                        </ViewCell>
+                        <local:CustomImageViewCell />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </local:CustomListView>

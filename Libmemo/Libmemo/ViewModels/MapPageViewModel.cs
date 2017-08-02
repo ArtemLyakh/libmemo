@@ -334,7 +334,7 @@ namespace Libmemo {
             //page.SearchTextChanged += (sender, text) => this.SearchText = text;
             page.ItemSelected += async (sender, person) => {
                 await App.GlobalPage.Pop();
-                var pin = _customPins.FirstOrDefault(e => e.Id == person.Id.ToString());
+                var pin = _customPins.FirstOrDefault(e => e.Id == person.Person.Id.ToString());
                 if (pin != null) {
                     ShowAllPins();
                     this.SelectedPin = pin;
