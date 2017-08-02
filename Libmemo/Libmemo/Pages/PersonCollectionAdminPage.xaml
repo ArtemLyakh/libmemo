@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Libmemo"
+             xmlns:ffi="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              x:Class="Libmemo.PersonCollectionAdminPage"
              NavigationPage.HasNavigationBar="False"
              >
@@ -22,17 +23,17 @@
                          Padding="5"
                          Spacing="5"
                          >
-                <Image Source="back.png"
-                       VerticalOptions="CenterAndExpand"
-                       HorizontalOptions="Start"
-                       WidthRequest="40"
-                       HeightRequest="40" 
-                       Aspect="AspectFill"
-                       >
-                    <Image.GestureRecognizers>
+                <ffi:CachedImage Source="back.png"
+                                 VerticalOptions="CenterAndExpand"
+                                 HorizontalOptions="Start"
+                                 WidthRequest="40"
+                                 HeightRequest="40"
+                                 Aspect="AspectFill"
+                                 >
+                    <ffi:CachedImage.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding BackCommand}" />
-                    </Image.GestureRecognizers>
-                </Image>
+                    </ffi:CachedImage.GestureRecognizers>
+                </ffi:CachedImage>
                 <Entry Text="{Binding Search}"
                        VerticalOptions="CenterAndExpand"
                        HorizontalOptions="FillAndExpand"
@@ -48,17 +49,18 @@
                         <local:EntryChangedBehavior ChangedCommand="{Binding SearchChangedCommand}" />
                     </Entry.Behaviors>
                 </Entry>
-                <Image Source="add.png"
-                       VerticalOptions="CenterAndExpand"
-                       HorizontalOptions="End"
-                       WidthRequest="40"
-                       HeightRequest="40" 
-                       Aspect="AspectFill"
-                       >
-                    <Image.GestureRecognizers>
+                <ffi:CachedImage Source="add.png"
+                                 DownsampleToViewSize="True"
+                                 VerticalOptions="CenterAndExpand"
+                                 HorizontalOptions="End"
+                                 WidthRequest="40"
+                                 HeightRequest="40"
+                                 Aspect="AspectFill"
+                                 >
+                    <ffi:CachedImage.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding AddCommand}" />
-                    </Image.GestureRecognizers>
-                </Image>
+                    </ffi:CachedImage.GestureRecognizers>
+                </ffi:CachedImage>
             </StackLayout>
             <local:CustomListView Grid.Column="0"
                                   Grid.Row="1"
@@ -78,13 +80,13 @@
                                              HeightRequest="70"
                                              VerticalOptions="FillAndExpand"
                                              >
-                                    <Image Source="{Binding Image}"
-                                           HeightRequest="60"
-                                           WidthRequest="60"
-                                           Aspect="AspectFill"
-                                           VerticalOptions="CenterAndExpand"
-                                           HorizontalOptions="Start"
-                                           />
+                                    <ffi:CachedImage Source="{Binding Image}"
+                                                     HeightRequest="60"
+                                                     WidthRequest="60"
+                                                     Aspect="AspectFill"
+                                                     VerticalOptions="CenterAndExpand"
+                                                     HorizontalOptions="Start"
+                                                     />
                                     <Label Text="{Binding Fio}"
                                            VerticalOptions="CenterAndExpand"
                                            HorizontalOptions="FillAndExpand"
