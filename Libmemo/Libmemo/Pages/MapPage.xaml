@@ -178,7 +178,7 @@
                                WidthRequest="40"
                                HeightRequest="40" 
                                Aspect="AspectFill"
-                               IsVisible="{Binding Path=CurrentPlayed, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}"
+                               IsVisible="{Binding Path=CurrentPlayed, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}}"
                                >
                             <Image.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding StopTTSCommand}" />
@@ -229,7 +229,7 @@
                                WidthRequest="40"
                                HeightRequest="40" 
                                Aspect="AspectFill"
-                               IsVisible="{Binding Path=SelectedPin, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}"
+                               IsVisible="{Binding Path=SelectedPin, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}}"
                                >
                             <Image.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding SetLinearRouteCommand}" />
@@ -239,7 +239,7 @@
                                WidthRequest="40"
                                HeightRequest="40" 
                                Aspect="AspectFill"
-                               IsVisible="{Binding Path=SelectedPin, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}"
+                               IsVisible="{Binding Path=SelectedPin, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}}"
                                >
                             <Image.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding SetCalculatedRouteCommand}" />

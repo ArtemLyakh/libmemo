@@ -11,6 +11,7 @@
             <local:NullableDateConverter x:Key="NullableDateConverter"/>
             <local:NullableDoubleConverter x:Key="NullableDoubleConverter"/>
             <local:IsNullToColorConverter x:Key="IsNullToColorConverter"/>
+            <local:IsPropertyNullConverter x:Key="IsPropertyNullConverter"/>
             <x:Double x:Key="titleWidth">100</x:Double>
             <Color x:Key="invalidLatLngColor">Red</Color>
         </ResourceDictionary>
@@ -280,6 +281,7 @@
                         <ffi:CachedImage HorizontalOptions="Fill"
                                          DownsampleToViewSize="True"
                                          Source="{Binding PhotoSource}"
+                                         IsVisible="{Binding Path=PhotoSource, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}}"
                                          />
                     </StackLayout>
 

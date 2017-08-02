@@ -8,6 +8,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <local:NullableDateConverter x:Key="NullableDateConverter"/>
+            <local:IsPropertyNullConverter x:Key="IsPropertyNullConverter"/>
             <x:Double x:Key="titleWidth">100</x:Double>
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -141,6 +142,7 @@
                         <ffi:CachedImage HorizontalOptions="Fill"
                                          DownsampleToViewSize="true"
                                          Source="{Binding PhotoSource}"
+                                         IsVisible="{Binding Path=PhotoSource, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}}"
                                          />
                     </StackLayout>
                 </StackLayout>
