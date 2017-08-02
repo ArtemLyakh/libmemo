@@ -54,11 +54,11 @@
                                  >
                         <Label Text="{Binding LatLon}" HorizontalOptions="EndAndExpand" FontAttributes="Italic" FontSize="Small" />
                     </StackLayout>
-
-                    <ffi:CachedImage HorizontalOptions="Fill"
-                                     DownsampleToViewSize="True"
-                                     Source="{Binding ImageUri}"
-                                     />
+                    
+                    <ffi:CachedImage HorizontalOptions="CenterAndExpand"
+                                    DownsampleToViewSize="True"
+                                    Source="{Binding ImageUri}"
+                                    />
 
                     <Label Text="{Binding Text}" HorizontalOptions="FillAndExpand" LineBreakMode="WordWrap" />
 
