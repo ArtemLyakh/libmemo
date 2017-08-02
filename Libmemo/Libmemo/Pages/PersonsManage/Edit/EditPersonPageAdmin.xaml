@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Libmemo.EditPersonPageAdmin"
              xmlns:local="clr-namespace:Libmemo"
+             xmlns:ffi="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              NavigationPage.HasNavigationBar="False"
              >
     <ContentPage.Resources>
@@ -31,17 +32,17 @@
                          Padding="5"
                          Spacing="5"
                          >
-                <Image Source="back.png"
-                       VerticalOptions="CenterAndExpand"
-                       HorizontalOptions="Start"
-                       WidthRequest="40"
-                       HeightRequest="40" 
-                       Aspect="AspectFill"
-                       >
-                    <Image.GestureRecognizers>
+                <ffi:CachedImage Source="back.png"
+                                 VerticalOptions="CenterAndExpand"
+                                 HorizontalOptions="Start"
+                                 WidthRequest="40"
+                                 HeightRequest="40"
+                                 Aspect="AspectFill"
+                                 >
+                    <ffi:CachedImage.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding BackCommand}" />
-                    </Image.GestureRecognizers>
-                </Image>
+                    </ffi:CachedImage.GestureRecognizers>
+                </ffi:CachedImage>
                 <Label Text="Редактирование"
                        VerticalOptions="CenterAndExpand"
                        HorizontalOptions="FillAndExpand"
@@ -50,39 +51,39 @@
                        HorizontalTextAlignment="Start"
                        Margin="10,0"
                        />
-                <Image Source="reload.png"
-                       VerticalOptions="CenterAndExpand"
-                       HorizontalOptions="End"
-                       WidthRequest="40"
-                       HeightRequest="40" 
-                       Aspect="AspectFill"
-                       >
-                    <Image.GestureRecognizers>
+                <ffi:CachedImage Source="reload.png"
+                                 VerticalOptions="CenterAndExpand"
+                                 HorizontalOptions="End"
+                                 WidthRequest="40"
+                                 HeightRequest="40"
+                                 Aspect="AspectFill"
+                                 >
+                    <ffi:CachedImage.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding ResetCommand}" />
-                    </Image.GestureRecognizers>
-                </Image>
-                <Image Source="delete.png"
-                       VerticalOptions="CenterAndExpand"
-                       HorizontalOptions="End"
-                       WidthRequest="40"
-                       HeightRequest="40" 
-                       Aspect="AspectFill"
-                       >
-                    <Image.GestureRecognizers>
+                    </ffi:CachedImage.GestureRecognizers>
+                </ffi:CachedImage>
+                <ffi:CachedImage Source="delete.png"
+                                 VerticalOptions="CenterAndExpand"
+                                 HorizontalOptions="End"
+                                 WidthRequest="40"
+                                 HeightRequest="40"
+                                 Aspect="AspectFill"
+                                 >
+                    <ffi:CachedImage.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding DeleteCommand}" />
-                    </Image.GestureRecognizers>
-                </Image>
-                <Image Source="save.png"
-                       VerticalOptions="CenterAndExpand"
-                       HorizontalOptions="End"
-                       WidthRequest="40"
-                       HeightRequest="40" 
-                       Aspect="AspectFill"
-                       >
-                    <Image.GestureRecognizers>
+                    </ffi:CachedImage.GestureRecognizers>
+                </ffi:CachedImage>
+                <ffi:CachedImage Source="save.png"
+                                 VerticalOptions="CenterAndExpand"
+                                 HorizontalOptions="End"
+                                 WidthRequest="40"
+                                 HeightRequest="40"
+                                 Aspect="AspectFill"
+                                 >
+                    <ffi:CachedImage.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding SendCommand}" />
-                    </Image.GestureRecognizers>
-                </Image>
+                    </ffi:CachedImage.GestureRecognizers>
+                </ffi:CachedImage>
             </StackLayout>
             <StackLayout Grid.Column="0"
                          Grid.Row="1">
@@ -99,38 +100,38 @@
                                HorizontalOptions="StartAndExpand"
                                VerticalOptions="Center"
                                />
-                        <Image Source="gps_off.png"
-                               VerticalOptions="CenterAndExpand"
-                               HorizontalOptions="End"
-                               WidthRequest="40"
-                               HeightRequest="40"
-                               Aspect="AspectFill"
-                               IsVisible="{Binding IsLatLonShow}"
-                               >
-                            <Image.GestureRecognizers>
+                        <ffi:CachedImage Source="gps_off.png"
+                                         VerticalOptions="CenterAndExpand"
+                                         HorizontalOptions="End"
+                                         WidthRequest="40"
+                                         HeightRequest="40"
+                                         Aspect="AspectFill"
+                                         IsVisible="{Binding IsLatLonShow}"
+                                         >
+                            <ffi:CachedImage.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding GoToGeoCommand}" />
-                            </Image.GestureRecognizers>
-                        </Image>
-                        <Image Source="arrow_up.png"
-                               WidthRequest="40"
-                               HeightRequest="40" 
-                               Aspect="AspectFill"
-                               VerticalOptions="CenterAndExpand"
-                               HorizontalOptions="End"
-                               Margin="10,0,0,0"
-                               >
-                            <Image.GestureRecognizers>
+                            </ffi:CachedImage.GestureRecognizers>
+                        </ffi:CachedImage>
+                        <ffi:CachedImage Source="arrow_up.png"
+                                         WidthRequest="40"
+                                         HeightRequest="40"
+                                         Aspect="AspectFill"
+                                         VerticalOptions="CenterAndExpand"
+                                         HorizontalOptions="End"
+                                         Margin="10,0,0,0"
+                                         >
+                            <ffi:CachedImage.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ButtonShowHideClickCommand}" />
-                            </Image.GestureRecognizers>
-                            <Image.Triggers>
-                                <DataTrigger TargetType="Image"
+                            </ffi:CachedImage.GestureRecognizers>
+                            <ffi:CachedImage.Triggers>
+                                <DataTrigger TargetType="ffi:CachedImage"
                                              Binding="{Binding IsLatLonShow}"
                                              Value="True"
                                              >
                                     <Setter Property="Source" Value="arrow_down.png" />
                                 </DataTrigger>
-                            </Image.Triggers>
-                        </Image>
+                            </ffi:CachedImage.Triggers>
+                        </ffi:CachedImage>
                     </StackLayout>
                     <StackLayout HorizontalOptions="FillAndExpand"
                                  Spacing="10"
@@ -276,7 +277,10 @@
                                         HorizontalOptions="FillAndExpand"
                                         />
                             </StackLayout>
-                            <Image Source="{Binding PhotoSource}"/>
+                            <ffi:CachedImage HorizontalOptions="Fill"
+                                             DownsampleToViewSize="True"
+                                             Source="{Binding PhotoSource}"
+                                             />
                         </StackLayout>
 
                         <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" IsVisible="{Binding IsDeadPerson}">

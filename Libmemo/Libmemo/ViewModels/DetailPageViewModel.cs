@@ -26,7 +26,7 @@ namespace Libmemo {
                 this.LatLon = $"{person.Latitude.ToString(CultureInfo.InvariantCulture)}, {person.Longitude.ToString(CultureInfo.InvariantCulture)}";
 
                 if (person.ImageUrl != null) {
-                    this.ImageUri = person.ImageUrl;
+                    this.ImageUri = ImageSource.FromUri(person.ImageUrl);
                 } else {
                     this.ImageUri = null;
                 }
@@ -86,8 +86,8 @@ namespace Libmemo {
             }
         }
 
-        private Uri _imageUri;
-        public Uri ImageUri {
+        private ImageSource _imageUri;
+        public ImageSource ImageUri {
             get { return this._imageUri; }
             set {
                 if (this._imageUri != value) {
