@@ -14,10 +14,7 @@ namespace Libmemo {
                 var results = await Plugin.Permissions.CrossPermissions.Current.RequestPermissionsAsync(new[] { Plugin.Permissions.Abstractions.Permission.Location });
                 var status = results[Plugin.Permissions.Abstractions.Permission.Location];
                 if (status != Plugin.Permissions.Abstractions.PermissionStatus.Granted) {
-                    Device.BeginInvokeOnMainThread(async () => {
-                        await App.Current.MainPage.DisplayAlert("Ошибка", "Приложению требуется доступ к геолокации", "Завершить работу");
-                        DependencyService.Get<ICloseApplication>().CloseApplication();
-                    });
+                    DependencyService.Get<ICloseApplication>().CloseApplication();
                 }
             }
         }

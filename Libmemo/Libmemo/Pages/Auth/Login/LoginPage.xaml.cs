@@ -88,7 +88,7 @@ namespace Libmemo {
                 HttpClientHandler handler = new HttpClientHandler { CookieContainer = new CookieContainer() };
                 try {
                     App.ToastNotificator.Show("Авторизация");
-                    timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(1));
+                    timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(5));
                     cancelToken = CancellationTokenSource.CreateLinkedTokenSource(timeoutToken.Token);
 
                     using (var request = new HttpRequestMessage(HttpMethod.Post, Settings.LOGIN_URL) {
