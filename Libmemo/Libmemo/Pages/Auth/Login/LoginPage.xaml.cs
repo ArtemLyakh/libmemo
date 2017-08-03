@@ -27,23 +27,22 @@ namespace Libmemo {
 
         protected override void OnAppearing() {
             base.OnAppearing();
-            Model = new ViewModel();
+            (Model as ViewModel).OnAppearing();
         }
 
         protected override void OnDisappearing() {
             base.OnDisappearing();
-            Model.Dispose();
+            (Model as ViewModel).OnDisappearing();
         }
 
-        protected override bool OnBackButtonPressed() {
-            Device.BeginInvokeOnMainThread(async () => await App.GlobalPage.Pop());
-            return true;
-        }
+        public class ViewModel : BaseViewModel {
 
-        public class ViewModel : INotifyPropertyChanged, IDisposable {
+            public ViewModel() : base() { }
 
-            public ViewModel() { }
-
+            public override void OnDisappearing() {
+                base.OnDisappearing();
+                cancelToken?.Cancel();
+            }
 
             private string _email = AuthHelper.UserEmail;
             public string Email {
@@ -68,7 +67,6 @@ namespace Libmemo {
             }
 
 
-            public ICommand BackCommand => new Command(async () => await App.GlobalPage.Pop());
 
             private CancellationTokenSource cancelToken { get; set; }
             private CancellationTokenSource timeoutToken { get; set; }
@@ -144,13 +142,7 @@ namespace Libmemo {
 
             public ICommand RegisterCommand => new Command(async () => await App.GlobalPage.PushRoot(new RegisterPage()));
 
-            public void Dispose() {
-                cancelToken?.Cancel();
-            }
 
-            public event PropertyChangedEventHandler PropertyChanged;
-            protected void OnPropertyChanged(string propertyName = "") =>
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
     }

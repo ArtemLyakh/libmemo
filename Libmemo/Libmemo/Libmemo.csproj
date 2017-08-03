@@ -146,6 +146,7 @@
     <Compile Include="ToastNotificator\ToastNotificator.cs" />
     <Compile Include="Tree\Tree.cs" />
     <Compile Include="ViewModels\Admin\UserListPageViewModel.cs" />
+    <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\List\PersonCollectionAdminPageViewModel.cs" />
     <Compile Include="ViewModels\List\PersonCollectionPageViewModel.cs" />
     <Compile Include="ViewModels\List\SelectPersonExceptPageViewModel.cs" />
