@@ -23,16 +23,17 @@ namespace Libmemo {
 
         public LoginPage() {
             InitializeComponent();
+            BindingContext = new ViewModel();
         }
 
         protected override void OnAppearing() {
             base.OnAppearing();
-            (Model as ViewModel).OnAppearing();
+            Model.OnAppearing();
         }
 
         protected override void OnDisappearing() {
             base.OnDisappearing();
-            (Model as ViewModel).OnDisappearing();
+            Model.OnDisappearing();
         }
 
         public class ViewModel : BaseViewModel {
