@@ -105,6 +105,7 @@ namespace Libmemo {
                         await App.GlobalPage.Pop();
                     } catch (UnauthorizedAccessException) {
                         await AuthHelper.ReloginAsync();
+                        return;
                     } catch (HttpRequestException ex) {
                         App.ToastNotificator.Show(ex.Message);
                     } catch {

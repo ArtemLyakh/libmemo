@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -22,24 +23,44 @@ namespace Libmemo {
             Init();
         }
 
+        protected override void OnDisappearing() {
+            base.OnDisappearing();
+            cancelToken?.Cancel();
+        }
+
+
+        private CancellationTokenSource cancelToken { get; set; }
+        private CancellationTokenSource timeoutToken { get; set; }
 
         private async Task<Tree.Json> LoadData() {
             var builder = new UriBuilder(Settings.TREE_DATA_URL_ADMIN);
             builder.Query = $"id={UserId}";
             var uri = builder.Uri;
 
-            using (var handler = new HttpClientHandler { CookieContainer = AuthHelper.CookieContainer })
-            using (var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(5) })
-            using (var responce = await client.GetAsync(uri)) {
-                var str = await responce.Content.ReadAsStringAsync();
-                if (responce.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
-                    throw new UnauthorizedAccessException();
-                }
-                responce.EnsureSuccessStatusCode();
+            HttpResponseMessage responce = null;
+            try {
+                timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(15));
+                cancelToken = CancellationTokenSource.CreateLinkedTokenSource(timeoutToken.Token);
 
-                var json = Newtonsoft.Json.JsonConvert.DeserializeObject<Tree.Json>(str);
-                return json;
+                using (HttpClientHandler handler = new HttpClientHandler { CookieContainer = AuthHelper.CookieContainer })
+                using (var client = new HttpClient(handler)) {
+                    responce = await client.GetAsync(uri, cancelToken.Token);
+                }
+            } finally {
+                cancelToken = null;
+                timeoutToken = null;
             }
+
+
+            var str = await responce.Content.ReadAsStringAsync();
+
+            if (responce.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
+                throw new UnauthorizedAccessException();
+            }
+            responce.EnsureSuccessStatusCode();
+
+            var json = Newtonsoft.Json.JsonConvert.DeserializeObject<Tree.Json>(str);
+            return json;
         }
 
         private async void Init() {
@@ -51,19 +72,7 @@ namespace Libmemo {
             int id = UserId;
             Tree = new Tree(id, absolute, scroll);
 
-            try {
-                var data = await LoadData();
-                await Tree.LoadFromJson(data);
-            } catch (UnauthorizedAccessException) {
-                await AuthHelper.ReloginAsync();
-                return;
-            } catch {
-                Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка построения дерева", "Ок"));
-                await App.GlobalPage.PopToRootPage();
-                return;
-            }
-
-            Tree.DrawTree();
+            ResetCommand.Execute(null);
         }
 
 
@@ -95,23 +104,29 @@ namespace Libmemo {
         });
 
         public ICommand ResetCommand => new Command(async () => {
+            if (cancelToken != null) return;
+
+            Tree.Json data = null;
+
             try {
-                var data = await LoadData();
-                await Tree.LoadFromJson(data);
+                data = await LoadData();
+            } catch (OperationCanceledException) {
+                if (timeoutToken.Token.IsCancellationRequested) App.ToastNotificator.Show("Превышен интервал запроса");
+                return;
             } catch (UnauthorizedAccessException) {
                 await AuthHelper.ReloginAsync();
                 return;
             } catch {
-                Device.BeginInvokeOnMainThread(async () => await App.Current.MainPage.DisplayAlert("Ошибка", "Ошибка построения дерева", "Ок"));
-                await App.GlobalPage.PopToRootPage();
+                App.ToastNotificator.Show("Ошибка");
                 return;
             }
 
+            await Tree.LoadFromJson(data);
             Tree.DrawTree();
         });
 
-        public ICommand ZoomInCommand => new Command(async () => await Tree.ZoomIn());
-        public ICommand ZoomOutCommand => new Command(async () => await Tree.ZoomOut());
+        public ICommand ZoomInCommand => new Command(async () => await Tree?.ZoomIn());
+        public ICommand ZoomOutCommand => new Command(async () => await Tree?.ZoomOut());
 
     }
 }
