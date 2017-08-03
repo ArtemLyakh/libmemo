@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Libmemo {
-    public abstract class BaseRegisterViewModel : INotifyPropertyChanged {
+    public abstract class BaseRegisterViewModel : BaseViewModel {
 
         private string _email;
         public string Email {
@@ -61,15 +61,5 @@ namespace Libmemo {
             }
         }
 
-
-
-
-
-
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName = "") =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

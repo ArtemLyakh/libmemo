@@ -14,4 +14,8 @@ namespace Libmemo.Json {
     public class Message {
         public string message { get; set; }
     }
+    public class Register {
+        public Auth auth { get; set; }
+        public PersonJson.Update person { get; set; }
+    }
 }
