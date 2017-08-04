@@ -83,9 +83,9 @@ namespace Libmemo {
                 using (var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(15) })
                 using (var content = new MultipartFormDataContent(String.Format("----------{0:N}", Guid.NewGuid()))) {
                     content.Add(new StringContent(this.Id.ToString()), "id");
-                    content.Add(new StringContent(this.FirstName), "first_name");
-                    content.Add(new StringContent(this.SecondName), "second_name");
-                    content.Add(new StringContent(this.LastName), "last_name");
+                    content.Add(new StringContent(this.FirstName ?? string.Empty), "first_name");
+                    content.Add(new StringContent(this.SecondName ?? string.Empty), "second_name");
+                    content.Add(new StringContent(this.LastName ?? string.Empty), "last_name");
                     if (this.DateBirth.HasValue) {
                         content.Add(new StringContent(this.DateBirth.Value.ToString("yyyy-MM-dd")), "date_birth");
                     }
