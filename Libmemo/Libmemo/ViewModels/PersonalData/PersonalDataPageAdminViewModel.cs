@@ -47,7 +47,7 @@ namespace Libmemo {
 
             try {
                 using (var handler = new HttpClientHandler { CookieContainer = AuthHelper.CookieContainer })
-                using (var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(5) })
+                using (var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(10) })
                 using (var responce = await client.GetAsync(uri)) {
 
                     if (responce.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
