@@ -41,14 +41,13 @@ namespace Libmemo {
 
             public override void OnDisappearing() {
                 base.OnDisappearing();
-                cancelToken?.Cancel();
+                cancelTokenSource?.Cancel();
             }
 
 
-            private CancellationTokenSource cancelToken { get; set; }
-            private CancellationTokenSource timeoutToken { get; set; }
+            private CancellationTokenSource cancelTokenSource { get; set; }
             public ICommand RegisterCommand => new Command(async () => {
-                if (cancelToken != null) return;
+                if (cancelTokenSource != null) return;
 
                 var errors = this.Validate();
                 if (errors.Count() > 0) {
@@ -56,29 +55,28 @@ namespace Libmemo {
                     return;
                 }
 
-                HttpResponseMessage responce = null;
-                HttpClientHandler handler = new HttpClientHandler { CookieContainer = new CookieContainer() };
-                try {
-                    App.ToastNotificator.Show("Регистрация");
-                    timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-                    cancelToken = CancellationTokenSource.CreateLinkedTokenSource(timeoutToken.Token);
+                App.ToastNotificator.Show("Регистрация");
+                var uri = new Uri(Settings.REGISTER_URL);
+                var content = new FormUrlEncodedContent(new Dictionary<string, string> {
+                    {"email", this.Email },
+                    {"password", this.Password },
+                    {"confirm", this.ConfirmPassword }
+                });
 
-                    using (var request = new HttpRequestMessage(HttpMethod.Post, Settings.REGISTER_URL) {
-                        Content = new FormUrlEncodedContent(new Dictionary<string, string> {
-                            {"email", this.Email },
-                            {"password", this.Password },
-                            {"confirm", this.ConfirmPassword }
-                    })
-                    })
-                    using (HttpClient client = new HttpClient(handler)) {
-                        responce = await client.SendAsync(request, cancelToken.Token);
-                    }
-                } catch (OperationCanceledException) {
-                    if (timeoutToken.Token.IsCancellationRequested) App.ToastNotificator.Show("Превышен интервал запроса");
+                HttpResponseMessage responce = null;
+                try {
+                    cancelTokenSource = new CancellationTokenSource();
+                    responce = await WebClient.Instance.SendAsync(HttpMethod.Post, uri, content, 10, cancelTokenSource.Token);
+                } catch (TimeoutException) {
+                    App.ToastNotificator.Show("Превышен интервал запроса");
+                    return;
+                } catch (OperationCanceledException) { //cancel
+                    return;
+                } catch {
+                    App.ToastNotificator.Show("Ошибка");
                     return;
                 } finally {
-                    cancelToken = null;
-                    timeoutToken = null;
+                    cancelTokenSource = null;
                 }
 
                 if (responce != null) {
@@ -98,7 +96,7 @@ namespace Libmemo {
                             IsAdmin: json.auth.is_admin,
                             Email: json.auth.email,
                             Fio: json.auth.fio,
-                            CookieContainer: handler.CookieContainer
+                            CookieContainer: Settings.Cookies
                         );
                         var authCredentials = new AuthCredentials(
                             Email: Email,

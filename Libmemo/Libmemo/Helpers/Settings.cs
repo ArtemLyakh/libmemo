@@ -95,6 +95,51 @@ namespace Libmemo {
             }
         }
 
+
+        private static bool _cookiesCacheNeedReset = true;
+        private static CookieContainer _cookiesCache = null;
+        public static CookieContainer Cookies {
+            get {
+                if (_cookiesCacheNeedReset) {
+                    var str = AppSettings.GetValueOrDefault<string>("cookies", null);
+
+                    try {
+                        List<Cookie> cookieList = JsonConvert.DeserializeObject<List<Cookie>>(str);
+                        CookieCollection cookieCollection = new CookieCollection();
+                        foreach (var cookie in cookieList) {
+                            cookieCollection.Add(cookie);
+                        }
+
+                        _cookiesCache = new CookieContainer();
+                        _cookiesCache.Add(new Uri(Settings.SERVER_URL), cookieCollection);
+                    } catch {
+                        _cookiesCache = null;
+                    } finally {
+                        _cookiesCacheNeedReset = false;
+                    }
+                }
+
+                return _cookiesCache;
+            }
+            set {
+                _cookiesCacheNeedReset = true;
+
+                string str = null;
+                if (value != null) {
+                    List<Cookie> cookieList = new List<Cookie>();
+                    foreach (var item in value.GetCookies(new Uri(Settings.SERVER_URL))) {
+                        var cookie = (Cookie)item;
+                        cookieList.Add(cookie);
+                    }
+                    if (cookieList.Count > 0) {
+                        str = JsonConvert.SerializeObject(cookieList);
+                    }
+                }
+
+                AppSettings.AddOrUpdateValue("cookies", str);
+            }
+        }
+
     }
 
 }

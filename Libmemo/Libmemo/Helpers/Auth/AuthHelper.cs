@@ -41,7 +41,7 @@ namespace Libmemo {
 
         public static string UserEmail { get => Settings.AuthCredentials?.Email; }
         public static string UserPassword { get => Settings.AuthCredentials?.Password; }
-        public static CookieContainer CookieContainer { get => Settings.AuthInfo?.CookieContainer; }
+        public static CookieContainer CookieContainer { get => Settings.Cookies; }
     }
 
 

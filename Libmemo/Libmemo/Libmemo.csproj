@@ -81,6 +81,7 @@
     <Compile Include="Helpers\Json.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Helpers\UtilsFunctions.cs" />
+    <Compile Include="Helpers\WebClient.cs" />
     <Compile Include="Pages\Admin\UserListPage.xaml.cs">
       <DependentUpon>UserListPage.xaml</DependentUpon>
     </Compile>

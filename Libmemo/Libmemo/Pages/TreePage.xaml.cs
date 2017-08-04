@@ -40,7 +40,10 @@ namespace Libmemo {
 
                 using (HttpClientHandler handler = new HttpClientHandler { CookieContainer = AuthHelper.CookieContainer })
                 using (var client = new HttpClient(handler)) {
+                    var timer = System.Diagnostics.Stopwatch.StartNew();
                     responce = await client.GetAsync(Settings.TREE_DATA_URL, cancelToken.Token);
+                    timer.Stop();
+                    var time = timer.Elapsed;
                 }
             } finally {
                 cancelToken = null;
