@@ -8,7 +8,7 @@ using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Libmemo {
-    public abstract class BaseListViewModel<T> : INotifyPropertyChanged where T : ListElement.ISearchFilterable {
+    public abstract class BaseListViewModel<T> : BaseViewModel where T : ListElement.ISearchFilterable {
 
         private List<T> _data = null;
         protected List<T> Data {
@@ -65,11 +65,6 @@ namespace Libmemo {
         public ICommand ItemSelectedCommand => 
             new Command<object>(selected => ItemSelected?.Invoke(this, (T)selected));
 
-       
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName = "") =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
 
