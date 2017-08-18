@@ -136,10 +136,10 @@
     <Compile Include="Pages\SelectPersonExceptPage.xaml.cs">
       <DependentUpon>SelectPersonExceptPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\TreePage.xaml.cs">
+    <Compile Include="Pages\Tree\TreePage.xaml.cs">
       <DependentUpon>TreePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\TreePageAdmin.xaml.cs">
+    <Compile Include="Pages\Tree\TreePageAdmin.xaml.cs">
       <DependentUpon>TreePageAdmin.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -333,7 +333,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\TreePage.xaml">
+    <EmbeddedResource Include="Pages\Tree\TreePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -363,7 +363,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\TreePageAdmin.xaml">
+    <EmbeddedResource Include="Pages\Tree\TreePageAdmin.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

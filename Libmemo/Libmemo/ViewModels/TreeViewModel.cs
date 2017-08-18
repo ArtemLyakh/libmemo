@@ -11,19 +11,13 @@ namespace Libmemo {
 
         protected Tree Tree { get; set; }
 
-        protected abstract int? GetTreeId();
-        public TreeViewModel(ScrollView scroll, AbsoluteLayout absolute) : base() {
-            var id = GetTreeId();
-
+        public TreeViewModel(int? id, AbsoluteLayout absolute, ScrollView scroll) : base() {
             if (id.HasValue) {
                 Tree = new Tree(id.Value, absolute, scroll);
-                ResetCommand.Execute(null);
             } else {
                 AuthHelper.ReloginAsync().RunSynchronously();
             }
         }
-
-
 
         public ICommand ZoomInCommand => new Command(async () => await Tree?.ZoomIn());
         public ICommand ZoomOutCommand => new Command(async () => await Tree?.ZoomOut());

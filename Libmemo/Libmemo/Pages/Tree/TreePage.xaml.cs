@@ -21,7 +21,7 @@ namespace Libmemo {
 
         public TreePage() {
             InitializeComponent();
-            BindingContext = new ViewModel(scroll, absolute);
+            BindingContext = new ViewModel(absolute, scroll);
         }
 
         protected override void OnAppearing() {
@@ -36,9 +36,9 @@ namespace Libmemo {
 
         public class ViewModel : TreeViewModel {
 
-            public ViewModel(ScrollView scroll, AbsoluteLayout absolute) : base(scroll, absolute)  { }
-
-            protected override int? GetTreeId() => AuthHelper.CurrentUserId;
+            public ViewModel(AbsoluteLayout absolute, ScrollView scroll) : base(AuthHelper.CurrentUserId, absolute, scroll)  {
+                ResetCommand.Execute(null);
+            }
 
             protected override async void Save() {
                 if (cancelTokenSource != null) return;
