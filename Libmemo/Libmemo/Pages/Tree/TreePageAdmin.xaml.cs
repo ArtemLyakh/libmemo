@@ -32,7 +32,7 @@ namespace Libmemo {
             Model.OnDisappearing();
         }
 
-        public class ViewModel : TreeViewModel {
+        public class ViewModel : BaseTreeViewModel {
 
             private int Id { get; set; }
 

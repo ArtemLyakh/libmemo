@@ -7,11 +7,11 @@ using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Libmemo {
-    public abstract class TreeViewModel : BaseViewModel {
+    public abstract class BaseTreeViewModel : BaseViewModel {
 
         protected Tree Tree { get; set; }
 
-        public TreeViewModel(int? id, AbsoluteLayout absolute, ScrollView scroll) : base() {
+        public BaseTreeViewModel(int? id, AbsoluteLayout absolute, ScrollView scroll) : base() {
             if (id.HasValue) {
                 Tree = new Tree(id.Value, absolute, scroll);
             } else {

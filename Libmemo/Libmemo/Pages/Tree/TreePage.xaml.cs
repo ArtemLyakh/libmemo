@@ -34,7 +34,7 @@ namespace Libmemo {
             Model.OnDisappearing();
         }
 
-        public class ViewModel : TreeViewModel {
+        public class ViewModel : BaseTreeViewModel {
 
             public ViewModel(AbsoluteLayout absolute, ScrollView scroll) : base(AuthHelper.CurrentUserId, absolute, scroll)  {
                 ResetCommand.Execute(null);
