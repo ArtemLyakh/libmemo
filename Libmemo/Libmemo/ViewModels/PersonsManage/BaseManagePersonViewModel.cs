@@ -14,7 +14,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
 namespace Libmemo {
-    public abstract class BaseManagePersonViewModel : INotifyPropertyChanged {
+    public abstract class BaseManagePersonViewModel : BaseViewModel {
 
         protected const double DEFAULT_LATITUDE = 47.23135;
         protected const double DEFAULT_LONGITUDE = 39.72328;
@@ -326,24 +326,12 @@ namespace Libmemo {
             });
         }
 
-        public ICommand BackCommand => new Command(async () => await App.GlobalPage.Pop());
-
-        public ICommand ResetCommand {
-            get => new Command(Reset);
-        }
         protected abstract void Reset();
+        public ICommand ResetCommand => new Command(Reset);
 
-        public ICommand SendCommand {
-            get => new Command(Send);
-        }
         protected abstract void Send();
+        public ICommand SendCommand => new Command(Send);
 
-
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName = "") =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
     }
 }
