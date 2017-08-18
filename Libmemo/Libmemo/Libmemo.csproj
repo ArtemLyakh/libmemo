@@ -150,7 +150,6 @@
     <Compile Include="ViewModels\List\PersonCollectionAdminPageViewModel.cs" />
     <Compile Include="ViewModels\List\PersonCollectionPageViewModel.cs" />
     <Compile Include="ViewModels\List\SelectPersonExceptPageViewModel.cs" />
-    <Compile Include="ViewModels\PersonsManage\Add\AddPageAdminViewModel.cs" />
     <Compile Include="ViewModels\PersonsManage\Add\BaseAddViewModel.cs" />
     <Compile Include="ViewModels\PersonsManage\BaseManagePersonViewModel.cs" />
     <Compile Include="ViewModels\PersonsManage\Edit\BaseEditPersonViewModel.cs" />
