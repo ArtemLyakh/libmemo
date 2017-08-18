@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -15,7 +16,9 @@ namespace Libmemo {
         public ICommand BackCommand => new Command(async () => await App.GlobalPage.Pop());
 
         public virtual void OnAppearing() { }
-        public virtual void OnDisappearing() { }
+        public virtual void OnDisappearing() {
+            cancelTokenSource?.Cancel();
+        }
 
 
 
@@ -50,6 +53,8 @@ namespace Libmemo {
             IsLoading = false;
         }
 
+
+        protected CancellationTokenSource cancelTokenSource { get; set; }
 
 
         public event PropertyChangedEventHandler PropertyChanged;

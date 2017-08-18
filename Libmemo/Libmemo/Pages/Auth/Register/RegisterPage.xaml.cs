@@ -38,14 +38,7 @@ namespace Libmemo {
         public class ViewModel : BaseRegisterViewModel {
 
             public ViewModel() : base() { }
-
-            public override void OnDisappearing() {
-                base.OnDisappearing();
-                cancelTokenSource?.Cancel();
-            }
-
-
-            private CancellationTokenSource cancelTokenSource { get; set; }
+            
             public ICommand RegisterCommand => new Command(async () => {
                 if (cancelTokenSource != null) return;
 
@@ -55,7 +48,7 @@ namespace Libmemo {
                     return;
                 }
 
-                App.ToastNotificator.Show("Регистрация");
+                StartLoading("Регистрация");
                 var uri = new Uri(Settings.REGISTER_URL);
                 var content = new FormUrlEncodedContent(new Dictionary<string, string> {
                     {"email", this.Email },
@@ -66,7 +59,7 @@ namespace Libmemo {
                 HttpResponseMessage responce = null;
                 try {
                     cancelTokenSource = new CancellationTokenSource();
-                    responce = await WebClient.Instance.SendAsync(HttpMethod.Post, uri, content, 10, cancelTokenSource.Token);
+                    responce = await WebClient.Instance.SendAsync(HttpMethod.Post, uri, content, 20, cancelTokenSource.Token);
                 } catch (TimeoutException) {
                     App.ToastNotificator.Show("Превышен интервал запроса");
                     return;
@@ -77,6 +70,7 @@ namespace Libmemo {
                     return;
                 } finally {
                     cancelTokenSource = null;
+                    StopLoading();
                 }
 
                 if (responce != null) {

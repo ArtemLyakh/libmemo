@@ -40,11 +40,6 @@ namespace Libmemo {
 
             public ViewModel() : base() { }
 
-            public override void OnDisappearing() {
-                base.OnDisappearing();
-                cancelTokenSource?.Cancel();
-                StopLoading();
-            }
 
             private string _email = AuthHelper.UserEmail;
             public string Email {
@@ -70,7 +65,6 @@ namespace Libmemo {
 
 
 
-            private CancellationTokenSource cancelTokenSource { get; set; }
             public ICommand LoginCommand => new Command(async () => {
                 if (cancelTokenSource != null) return;
 
