@@ -82,7 +82,7 @@
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Helpers\UtilsFunctions.cs" />
     <Compile Include="Helpers\WebClient.cs" />
-    <Compile Include="Pages\Admin\UserListPage.xaml.cs">
+    <Compile Include="Pages\UserListPage.xaml.cs">
       <DependentUpon>UserListPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\PersonCollectionAdminPage.xaml.cs">
@@ -146,7 +146,6 @@
     <Compile Include="TextToSpeech\TextToSpeech.cs" />
     <Compile Include="ToastNotificator\ToastNotificator.cs" />
     <Compile Include="Tree\Tree.cs" />
-    <Compile Include="ViewModels\Admin\UserListPageViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\List\PersonCollectionAdminPageViewModel.cs" />
     <Compile Include="ViewModels\List\PersonCollectionPageViewModel.cs" />
@@ -351,7 +350,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\Admin\UserListPage.xaml">
+    <EmbeddedResource Include="Pages\UserListPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
