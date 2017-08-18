@@ -43,6 +43,7 @@ namespace Libmemo {
             public override void OnDisappearing() {
                 base.OnDisappearing();
                 cancelTokenSource?.Cancel();
+                StopLoading();
             }
 
             private string _email = AuthHelper.UserEmail;
@@ -82,7 +83,7 @@ namespace Libmemo {
                     return;
                 }
 
-                App.ToastNotificator.Show("Авторизация");
+                StartLoading("Авторизация");
                 var uri = new Uri(Settings.LOGIN_URL);
                 var content = new FormUrlEncodedContent(new Dictionary<string, string> {
                     {"email", this.Email },
@@ -103,6 +104,7 @@ namespace Libmemo {
                     return;
                 } finally {
                     cancelTokenSource = null;
+                    StopLoading();
                 }
 
                 if (responce != null) {

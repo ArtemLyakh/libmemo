@@ -18,6 +18,40 @@ namespace Libmemo {
         public virtual void OnDisappearing() { }
 
 
+
+        private bool _isLoading = false;
+        public bool IsLoading {
+            get => _isLoading;
+            private set {
+                if (_isLoading != value) {
+                    _isLoading = value;
+                    OnPropertyChanged(nameof(IsLoading));
+                }
+            }
+        }
+
+        private string _loadingString;
+        public string LoadingString {
+            get => _loadingString;
+            private set {
+                if (_loadingString != value) {
+                    _loadingString = value;
+                    OnPropertyChanged(nameof(LoadingString));
+                }
+            }
+        }
+
+        protected void StartLoading(string loadingString) {
+            LoadingString = loadingString;
+            IsLoading = true;
+        }
+        protected void StopLoading() {
+            LoadingString = null;
+            IsLoading = false;
+        }
+
+
+
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName = "") =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
