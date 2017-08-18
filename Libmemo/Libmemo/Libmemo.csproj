@@ -156,12 +156,11 @@
     <Compile Include="ViewModels\PersonsManage\BaseManagePersonViewModel.cs" />
     <Compile Include="ViewModels\PersonsManage\Edit\BaseEditPersonViewModel.cs" />
     <Compile Include="ViewModels\BaseRegisterViewModel.cs" />
-    <Compile Include="ViewModels\PersonalData\BasePersonalDataViewModel.cs" />
+    <Compile Include="ViewModels\BasePersonalDataViewModel.cs" />
     <Compile Include="ViewModels\DetailPageViewModel.cs" />
     <Compile Include="ViewModels\PersonsManage\Edit\EditPersonPageAdminViewModel.cs" />
     <Compile Include="ViewModels\PersonsManage\Edit\EditPersonPageViewModel.cs" />
     <Compile Include="ViewModels\MapPageViewModel.cs" />
-    <Compile Include="ViewModels\PersonalData\PersonalDataPageAdminViewModel.cs" />
     <Compile Include="ViewModels\MapSearchPageViewModel.cs" />
     <Compile Include="ViewModels\List\BaseListViewModel.cs" />
     <Compile Include="ViewModels\TreeViewModel.cs" />

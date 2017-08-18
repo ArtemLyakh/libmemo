@@ -34,4 +34,14 @@ namespace Libmemo.Json {
         public string date_birth { get; set; }
         public string photo_url { get; set; }
     }
+
+    public class AdminPersonalData {
+        public int id { get; set; }
+        public string email { get; set; }
+        public string first_name { get; set; }
+        public string second_name { get; set; }
+        public string last_name { get; set; }
+        public string date_birth { get; set; }
+        public string photo_url { get; set; }
+    }
 }
