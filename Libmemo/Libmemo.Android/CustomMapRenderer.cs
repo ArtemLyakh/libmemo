@@ -510,8 +510,8 @@ namespace Libmemo.Droid {
                             System.IO.Stream download;
                             try {
                                 using (var client = new HttpClient { Timeout = TimeSpan.FromSeconds(3) })
-                                using (var responce = await client.GetAsync(customPin.IconUri)) {
-                                    download = await responce.Content.ReadAsStreamAsync();
+                                using (var response = await client.GetAsync(customPin.IconUri)) {
+                                    download = await response.Content.ReadAsStreamAsync();
                                 }
                             } catch {
                                 download = null;

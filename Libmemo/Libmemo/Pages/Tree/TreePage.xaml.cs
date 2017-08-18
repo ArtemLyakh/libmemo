@@ -51,10 +51,10 @@ namespace Libmemo {
 
                 StartLoading("Сохранение");
 
-                HttpResponseMessage responce = null;
+                HttpResponseMessage response = null;
                 try {
                     cancelTokenSource = new CancellationTokenSource();
-                    responce = await WebClient.Instance.SendAsync(HttpMethod.Post, new Uri(Settings.TREE_DATA_URL), content, 20, cancelTokenSource.Token);
+                    response = await WebClient.Instance.SendAsync(HttpMethod.Post, new Uri(Settings.TREE_DATA_URL), content, 20, cancelTokenSource.Token);
                 } catch (TimeoutException) {
                     App.ToastNotificator.Show("Превышен интервал запроса");
                     return;
@@ -67,13 +67,13 @@ namespace Libmemo {
                     cancelTokenSource = null;
                     StopLoading();
                 }
-                if (responce == null) return;
+                if (response == null) return;
 
                 try {
-                    if (responce.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
+                    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
                         throw new UnauthorizedAccessException();
                     }
-                    responce.EnsureSuccessStatusCode();
+                    response.EnsureSuccessStatusCode();
                 } catch (UnauthorizedAccessException) {
                     await AuthHelper.ReloginAsync();
                     return;
@@ -91,10 +91,10 @@ namespace Libmemo {
 
                 StartLoading("Получение данных");
 
-                HttpResponseMessage responce = null;
+                HttpResponseMessage response = null;
                 try {
                     cancelTokenSource = new CancellationTokenSource();
-                    responce = await WebClient.Instance.SendAsync(HttpMethod.Get, new Uri(Settings.TREE_DATA_URL), null, 10, cancelTokenSource.Token);
+                    response = await WebClient.Instance.SendAsync(HttpMethod.Get, new Uri(Settings.TREE_DATA_URL), null, 10, cancelTokenSource.Token);
                 } catch (TimeoutException) {
                     App.ToastNotificator.Show("Превышен интервал запроса");
                     return;
@@ -107,16 +107,16 @@ namespace Libmemo {
                     cancelTokenSource = null;
                     StopLoading();
                 }
-                if (responce == null) return;
+                if (response == null) return;
 
                 Tree.Json json = null;
                 try {
-                    var str = await responce.Content.ReadAsStringAsync();
+                    var str = await response.Content.ReadAsStringAsync();
 
-                    if (responce.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
+                    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
                         throw new UnauthorizedAccessException();
                     }
-                    responce.EnsureSuccessStatusCode();
+                    response.EnsureSuccessStatusCode();
 
                     json = Newtonsoft.Json.JsonConvert.DeserializeObject<Tree.Json>(str);
                 } catch (UnauthorizedAccessException) {

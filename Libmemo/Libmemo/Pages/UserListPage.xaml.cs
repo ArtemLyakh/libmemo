@@ -54,10 +54,10 @@ namespace Libmemo {
 
                 StartLoading("Получение данных");
 
-                HttpResponseMessage responce = null;
+                HttpResponseMessage response = null;
                 try {
                     cancelTokenSource = new CancellationTokenSource();
-                    responce = await WebClient.Instance.SendAsync(HttpMethod.Get, new Uri(Settings.USER_LIST_URL), null, 15, cancelTokenSource.Token);
+                    response = await WebClient.Instance.SendAsync(HttpMethod.Get, new Uri(Settings.USER_LIST_URL), null, 15, cancelTokenSource.Token);
                 } catch (TimeoutException) {
                     App.ToastNotificator.Show("Превышен интервал запроса");
                     return;
@@ -70,13 +70,13 @@ namespace Libmemo {
                     cancelTokenSource = null;
                     StopLoading();
                 }
-                if (responce == null) return;
+                if (response == null) return;
 
                 try {
-                    if (responce.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
+                    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
                         throw new UnauthorizedAccessException();
                     }
-                    responce.EnsureSuccessStatusCode();
+                    response.EnsureSuccessStatusCode();
                 } catch (UnauthorizedAccessException) {
                     await AuthHelper.ReloginAsync();
                     return;
@@ -85,7 +85,7 @@ namespace Libmemo {
                     return;
                 }
 
-                var str = await responce.Content.ReadAsStringAsync();
+                var str = await response.Content.ReadAsStringAsync();
                 var data = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Json.User>>(str);
 
                 this.Data = data.Select(i => new ListElement.TextElement { Id = i.id, Fio = i.fio, Email = i.email }).ToList();

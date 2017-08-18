@@ -56,10 +56,10 @@ namespace Libmemo {
                     {"confirm", this.ConfirmPassword }
                 });
 
-                HttpResponseMessage responce = null;
+                HttpResponseMessage response = null;
                 try {
                     cancelTokenSource = new CancellationTokenSource();
-                    responce = await WebClient.Instance.SendAsync(HttpMethod.Post, uri, content, 20, cancelTokenSource.Token);
+                    response = await WebClient.Instance.SendAsync(HttpMethod.Post, uri, content, 20, cancelTokenSource.Token);
                 } catch (TimeoutException) {
                     App.ToastNotificator.Show("Превышен интервал запроса");
                     return;
@@ -72,20 +72,20 @@ namespace Libmemo {
                     cancelTokenSource = null;
                     StopLoading();
                 }
-                if (responce == null) return;
+                if (response == null) return;
 
                 try {
-                    if (responce.StatusCode == HttpStatusCode.Unauthorized)
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
                         throw new UnauthorizedAccessException();
 
-                    var str = await responce.Content.ReadAsStringAsync();
+                    var str = await response.Content.ReadAsStringAsync();
 
-                    if (responce.StatusCode == HttpStatusCode.BadRequest) {
+                    if (response.StatusCode == HttpStatusCode.BadRequest) {
                         var error = JsonConvert.DeserializeObject<Json.Message>(str).message;
                         throw new HttpRequestException(error);
                     }
 
-                    responce.EnsureSuccessStatusCode();
+                    response.EnsureSuccessStatusCode();
 
                     var json = JsonConvert.DeserializeObject<Json.Register>(str);
 

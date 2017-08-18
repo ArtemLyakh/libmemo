@@ -10,7 +10,7 @@ using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Libmemo {
-    public abstract class BasePersonalDataViewModel : INotifyPropertyChanged {
+    public abstract class BasePersonalDataViewModel : BaseViewModel {
 
         public BasePersonalDataViewModel() { }
 
@@ -70,41 +70,28 @@ namespace Libmemo {
         }
 
 
-        public ICommand PickPhotoCommand {
-            get => new Command(async () => {
-                if (CrossMedia.Current.IsPickPhotoSupported) {
-                    MediaFile photo = await CrossMedia.Current.PickPhotoAsync();
-                    if (photo == null) return;
-                    this.PhotoSource = ImageSource.FromFile(photo.Path);
-                }
-            });
-        }
-
-        public ICommand MakePhotoCommand {
-            get => new Command(async () => {
-                if (CrossMedia.Current.IsCameraAvailable && CrossMedia.Current.IsTakePhotoSupported) {
-                    var file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions { SaveToAlbum = false });
-                    if (file == null) return;
-                    PhotoSource = ImageSource.FromFile(file.Path);
-                }
-            });
-        }
-
-        public ICommand ResetCommand {
-            get => new Command(async () => await Reset());
-        }
-        protected abstract Task Reset();
-
-        public ICommand SendCommand {
-            get => new Command(async () => await Send());
-        }
-        protected abstract Task Send();
+        public ICommand PickPhotoCommand => new Command(async () => {
+            if (CrossMedia.Current.IsPickPhotoSupported) {
+                MediaFile photo = await CrossMedia.Current.PickPhotoAsync();
+                if (photo == null) return;
+                this.PhotoSource = ImageSource.FromFile(photo.Path);
+            }
+        });
 
 
+        public ICommand MakePhotoCommand => new Command(async () => {
+            if (CrossMedia.Current.IsCameraAvailable && CrossMedia.Current.IsTakePhotoSupported) {
+                var file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions { SaveToAlbum = false });
+                if (file == null) return;
+                PhotoSource = ImageSource.FromFile(file.Path);
+            }
+        });
 
+        protected abstract void Reset();
+        public ICommand ResetCommand => new Command(Reset);
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName = "") =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        protected abstract void Send();
+        public ICommand SendCommand => new Command(Send);
+
     }
 }

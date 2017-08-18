@@ -137,10 +137,10 @@ namespace Libmemo {
             var uri = builder.ToString();
 
             try {
-                var responce = await client.GetAsync(uri);
-                responce.EnsureSuccessStatusCode();
+                var response = await client.GetAsync(uri);
+                response.EnsureSuccessStatusCode();
 
-                var content = await responce.Content.ReadAsStringAsync();
+                var content = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<PersonJson>(content);
 
                 return result;
