@@ -44,4 +44,8 @@ namespace Libmemo.Json {
         public string date_birth { get; set; }
         public string photo_url { get; set; }
     }
+
+    class PersonDelete {
+        public int id { get; set; }
+    }
 }

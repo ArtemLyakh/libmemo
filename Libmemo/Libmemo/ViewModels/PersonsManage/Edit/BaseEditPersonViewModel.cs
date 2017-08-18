@@ -46,9 +46,7 @@ namespace Libmemo {
             }
         }
 
-        public string PersonLatLon {
-            get => $"{PersonPosition.Latitude}\n{PersonPosition.Longitude}";
-        }
+        public string PersonLatLon => $"{PersonPosition.Latitude}\n{PersonPosition.Longitude}";
 
         private Position _personPosition;
         public Position PersonPosition {
@@ -65,9 +63,7 @@ namespace Libmemo {
             }
         }
 
-        public ICommand MapClickCommand {
-            get => new Command<Position>((Position position) => PersonPosition = position);
-        }
+        public ICommand MapClickCommand => new Command<Position>((Position position) => PersonPosition = position);
 
         private bool _isLatLonShow;
         public bool IsLatLonShow {
@@ -80,19 +76,18 @@ namespace Libmemo {
             }
         }
 
-        public ICommand ButtonShowHideClickCommand {
-            get => new Command(() => {
-                IsLatLonShow = !IsLatLonShow;
-                if (IsLatLonShow) {
-                    if (this.PersonPosition != default(Position))
-                        this.MapCenter = this.PersonPosition;
-                    else if (this.UserPosition.HasValue)
-                        this.MapCenter = this.UserPosition.Value;
-                    else
-                        this.UserPositionChangedFirstTime += (object sender, Position position) => this.MapCenter = position;
-                }
-            });
-        }
+        public ICommand ButtonShowHideClickCommand => new Command(() => {
+            IsLatLonShow = !IsLatLonShow;
+            if (IsLatLonShow) {
+                if (this.PersonPosition != default(Position))
+                    this.MapCenter = this.PersonPosition;
+                else if (this.UserPosition.HasValue)
+                    this.MapCenter = this.UserPosition.Value;
+                else
+                    this.UserPositionChangedFirstTime += (object sender, Position position) => this.MapCenter = position;
+            }
+        });
+
 
 
         private Uri _schemeUrl = null;
@@ -117,11 +112,6 @@ namespace Libmemo {
             if (this.UserPosition.HasValue)
                 this.MapCenter = this.UserPosition.Value;
         });
-
-
-
-
-
 
 
 
@@ -150,8 +140,8 @@ namespace Libmemo {
         }
 
 
-        public ICommand DeleteCommand => new Command(async () => await Delete());
-        protected abstract Task Delete();
+        protected abstract void Delete();
+        public ICommand DeleteCommand => new Command(Delete);
 
     }
 }

@@ -154,7 +154,7 @@ namespace Libmemo {
         class JsonDelete {
             public int id { get; set; }
         }
-        protected override async Task Delete() {
+        protected override async void Delete() {
             var confirm = await App.Current.MainPage.DisplayAlert("Удаление", "Вы уверены?", "Да", "Нет");
 
             if (!confirm) return;
