@@ -100,40 +100,41 @@ namespace Libmemo {
                     cancelTokenSource = null;
                     StopLoading();
                 }
+                if (responce == null) return;
 
-                if (responce != null) {
-                    try {
-                        var str = await responce.Content.ReadAsStringAsync();
 
-                        if (responce.StatusCode == HttpStatusCode.BadRequest) {
-                            var error = JsonConvert.DeserializeObject<Json.Message>(str).message;
-                            throw new HttpRequestException(error);
-                        }
+                try {
+                    var str = await responce.Content.ReadAsStringAsync();
 
-                        responce.EnsureSuccessStatusCode();
-
-                        var authJson = JsonConvert.DeserializeObject<Json.Auth>(str);
-                        var authInfo = new AuthInfo(
-                            IsAdmin: authJson.is_admin,
-                            UserId: authJson.id,
-                            Email: authJson.email,
-                            Fio: authJson.fio,
-                            CookieContainer: Settings.Cookies
-                        );
-                        var authCredentials = new AuthCredentials(
-                            Email: Email,
-                            Password: Password
-                        );
-
-                        AuthHelper.Login(authInfo, authCredentials);
-
-                        await App.GlobalPage.PopToRootPage();
-                    } catch (HttpRequestException ex) {
-                        App.ToastNotificator.Show(ex.Message);
-                    } catch {
-                        App.ToastNotificator.Show("Ошибка");
+                    if (responce.StatusCode == HttpStatusCode.BadRequest) {
+                        var error = JsonConvert.DeserializeObject<Json.Message>(str).message;
+                        throw new HttpRequestException(error);
                     }
+
+                    responce.EnsureSuccessStatusCode();
+
+                    var authJson = JsonConvert.DeserializeObject<Json.Auth>(str);
+                    var authInfo = new AuthInfo(
+                        IsAdmin: authJson.is_admin,
+                        UserId: authJson.id,
+                        Email: authJson.email,
+                        Fio: authJson.fio,
+                        CookieContainer: Settings.Cookies
+                    );
+                    var authCredentials = new AuthCredentials(
+                        Email: Email,
+                        Password: Password
+                    );
+
+                    AuthHelper.Login(authInfo, authCredentials);
+
+                    await App.GlobalPage.PopToRootPage();
+                } catch (HttpRequestException ex) {
+                    App.ToastNotificator.Show(ex.Message);
+                } catch {
+                    App.ToastNotificator.Show("Ошибка");
                 }
+
             });
 
             public ICommand RegisterCommand => new Command(async () => await App.GlobalPage.PushRoot(new RegisterPage()));

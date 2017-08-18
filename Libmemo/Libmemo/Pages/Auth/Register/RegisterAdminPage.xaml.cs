@@ -72,38 +72,38 @@ namespace Libmemo {
                     cancelTokenSource = null;
                     StopLoading();
                 }
+                if (responce == null) return;
 
-                if (responce != null) {
-                    try {
-                        if (responce.StatusCode == HttpStatusCode.Unauthorized)
-                            throw new UnauthorizedAccessException();
+                try {
+                    if (responce.StatusCode == HttpStatusCode.Unauthorized)
+                        throw new UnauthorizedAccessException();
 
-                        var str = await responce.Content.ReadAsStringAsync();
+                    var str = await responce.Content.ReadAsStringAsync();
 
-                        if (responce.StatusCode == HttpStatusCode.BadRequest) {
-                            var error = JsonConvert.DeserializeObject<Json.Message>(str).message;
-                            throw new HttpRequestException(error);
-                        }
-
-                        responce.EnsureSuccessStatusCode();
-
-                        var json = JsonConvert.DeserializeObject<Json.Register>(str);
-
-                        var person = Person.ConvertFromJson(json.person);
-                        await App.Database.AddPerson(person);
-
-                        App.ToastNotificator.Show("Пользователь зарегистрирован");
-
-                        await App.GlobalPage.Pop();
-                    } catch (UnauthorizedAccessException) {
-                        await AuthHelper.ReloginAsync();
-                        return;
-                    } catch (HttpRequestException ex) {
-                        App.ToastNotificator.Show(ex.Message);
-                    } catch {
-                        App.ToastNotificator.Show("Ошибка");
+                    if (responce.StatusCode == HttpStatusCode.BadRequest) {
+                        var error = JsonConvert.DeserializeObject<Json.Message>(str).message;
+                        throw new HttpRequestException(error);
                     }
+
+                    responce.EnsureSuccessStatusCode();
+
+                    var json = JsonConvert.DeserializeObject<Json.Register>(str);
+
+                    var person = Person.ConvertFromJson(json.person);
+                    await App.Database.AddPerson(person);
+
+                    App.ToastNotificator.Show("Пользователь зарегистрирован");
+
+                    await App.GlobalPage.Pop();
+                } catch (UnauthorizedAccessException) {
+                    await AuthHelper.ReloginAsync();
+                    return;
+                } catch (HttpRequestException ex) {
+                    App.ToastNotificator.Show(ex.Message);
+                } catch {
+                    App.ToastNotificator.Show("Ошибка");
                 }
+
             });
 
             public ICommand LoginCommand => new Command(async () => await App.GlobalPage.PushRoot(new LoginPage()));

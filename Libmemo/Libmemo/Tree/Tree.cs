@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Libmemo {
-    class Tree {
+    public class Tree {
         private readonly int _userId;
         public int UserId => _userId;
 
