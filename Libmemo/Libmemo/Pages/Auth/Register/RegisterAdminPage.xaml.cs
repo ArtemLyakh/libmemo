@@ -39,16 +39,8 @@ namespace Libmemo {
 
             public ViewModel() : base() { }
 
-            public override void OnDisappearing() {
-                base.OnDisappearing();
-                cancelToken?.Cancel();
-            }
-
-
-            private CancellationTokenSource cancelToken { get; set; }
-            private CancellationTokenSource timeoutToken { get; set; }
             public ICommand RegisterCommand => new Command(async () => {
-                if (cancelToken != null) return;
+                if (cancelTokenSource != null) return;
 
                 var errors = this.Validate();
                 if (errors.Count() > 0) {
@@ -56,29 +48,29 @@ namespace Libmemo {
                     return;
                 }
 
+                StartLoading("Регистрация");
+                var uri = new Uri(Settings.REGISTER_URL_ADMIN);
+                var content = new FormUrlEncodedContent(new Dictionary<string, string> {
+                    {"email", this.Email },
+                    {"password", this.Password },
+                    {"confirm", this.ConfirmPassword }
+                });
+
                 HttpResponseMessage responce = null;
                 try {
-                    App.ToastNotificator.Show("Регистрация");
-                    timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-                    cancelToken = CancellationTokenSource.CreateLinkedTokenSource(timeoutToken.Token);
-
-                    using (var handler = new HttpClientHandler { CookieContainer = AuthHelper.CookieContainer })
-                    using (var request = new HttpRequestMessage(HttpMethod.Post, Settings.REGISTER_URL_ADMIN) {
-                        Content = new FormUrlEncodedContent(new Dictionary<string, string> {
-                            {"email", this.Email },
-                            {"password", this.Password },
-                            {"confirm", this.ConfirmPassword }
-                        })
-                    })
-                    using (HttpClient client = new HttpClient(handler)) {
-                        responce = await client.SendAsync(request, cancelToken.Token);
-                    }
-                } catch (OperationCanceledException) {
-                    if (timeoutToken.Token.IsCancellationRequested) App.ToastNotificator.Show("Превышен интервал запроса");
+                    cancelTokenSource = new CancellationTokenSource();
+                    responce = await WebClient.Instance.SendAsync(HttpMethod.Post, uri, content, 20, cancelTokenSource.Token);
+                } catch (TimeoutException) {
+                    App.ToastNotificator.Show("Превышен интервал запроса");
+                    return;
+                } catch (OperationCanceledException) { //cancel
+                    return;
+                } catch {
+                    App.ToastNotificator.Show("Ошибка");
                     return;
                 } finally {
-                    cancelToken = null;
-                    timeoutToken = null;
+                    cancelTokenSource = null;
+                    StopLoading();
                 }
 
                 if (responce != null) {
