@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Libmemo.MapPage"
@@ -15,250 +15,284 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.Content>
-        <Grid RowSpacing="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="50" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <StackLayout Grid.Column="0" 
-                         Grid.Row="0"
-                         HeightRequest="50"
-                         Orientation="Horizontal"
-                         BackgroundColor="#333333"
-                         Padding="5"
-                         Spacing="5"
-                         >
-                <ffi:CachedImage Source="menu.png"
-                                 VerticalOptions="CenterAndExpand"
-                                 HorizontalOptions="Start"
-                                 WidthRequest="40"
-                                 HeightRequest="40"
-                                 Aspect="AspectFill"
-                                 >
-                    <ffi:CachedImage.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding OpenMenuCommand}" />
-                    </ffi:CachedImage.GestureRecognizers>
-                </ffi:CachedImage>
-                <Label Text="Карта"
-                       VerticalOptions="CenterAndExpand"
-                       HorizontalOptions="StartAndExpand"
-                       TextColor="White"
-                       FontSize="Medium"
-                       HorizontalTextAlignment="Start"
-                       Margin="10,0"
-                       />
-                <ffi:CachedImage Source="search.png"
-                                 VerticalOptions="CenterAndExpand"
-                                 HorizontalOptions="End"
-                                 WidthRequest="40"
-                                 HeightRequest="40"
-                                 Aspect="AspectFill"
-                                 >
-                    <ffi:CachedImage.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SearchCommand}" />
-                    </ffi:CachedImage.GestureRecognizers>
-                </ffi:CachedImage>
-            </StackLayout>
-            <RelativeLayout Grid.Column="0"
-                            Grid.Row="1"
-                            >
-                <StackLayout x:Name="mapStack"
-                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent ,Property=Width,Factor=1,Constant=0}"
-                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent ,Property=Height,Factor=1,Constant=0}"
-                             >
-                    <local:CustomMap x:Name="mainMap"
-                                     CustomMapType="{Binding MapType}"
-                                     MapFunctions="{Binding MapFunctions}"
-                                     MapCenter="{Binding MapCenter}"
-                                     Zoom="{Binding Zoom}"
-                                     IsCameraAnimated="{Binding IsCameraAnimated}"
-                                     IsRotateGesturesEnabled="{Binding Path=IsRotateGesturesEnabled, Mode=OneWay}"
-                                     IsScrollGesturesEnabled="{Binding Path=IsScrollGesturesEnabled, Mode=OneWay}"
-                                     IsTiltGesturesEnabled="{Binding Path=IsTiltGesturesEnabled, Mode=OneWay}"
-                                     IsZoomGesturesEnabled="{Binding Path=IsZoomGesturesEnabled, Mode=OneWay}"
-                                     SelectedPin="{Binding SelectedPin}"
-                                     CustomPins="{Binding CustomPins}"
-                                     InfoWindowClickedCommand="{Binding InfoWindowClickedCommand}"
-                                     UserPositionChangedCommand="{Binding UserPositionChangedCommand}"
-                                     RouteTo="{Binding RouteTo}"
-                                     RouteInitializingSucceedCommand="{Binding RouteInitializingSucceedCommand}"
-                                     RouteInitializingFailedCommand="{Binding RouteInitializingFailedCommand}"
-                                     MyLocationEnabled="{Binding MyLocationEnabled}"
-                                     IsShowInfoWindow="True"
-                                     />
-                </StackLayout>
-                <StackLayout x:Name="left"
-                             Orientation="Vertical"
-                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0, Constant=50}"
-                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
-                             RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0,Constant=0}"
-                             RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"
-                             >
-                    <StackLayout x:Name="topLeft"
-                                 Orientation="Vertical"
-                                 VerticalOptions="StartAndExpand"
-                                 HorizontalOptions="Fill"
-                                 Spacing="5"
-                                 Padding="5"
-                                 >
-                        <ffi:CachedImage Source="pin_show.png"
-                                         WidthRequest="40"
-                                         HeightRequest="40"
-                                         Aspect="AspectFill"
-                                         IsVisible="{Binding IsShowOnlySelected}"
-                                         >
-                            <ffi:CachedImage.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ShowPinsCommand}" />
-                            </ffi:CachedImage.GestureRecognizers>
-                        </ffi:CachedImage>
-                        <ffi:CachedImage Source="pin_hide.png"
-                                         WidthRequest="40"
-                                         HeightRequest="40"
-                                         Aspect="AspectFill"
-                                         IsVisible="{Binding IsShowHideAnotherButton}"
-                                         >
-                            <Image.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding HidePinsCommand}" />
-                            </Image.GestureRecognizers>
-                        </ffi:CachedImage>
-                    </StackLayout>
-                    <StackLayout x:Name="bottomLeft"
-                                 Orientation="Vertical"
-                                 VerticalOptions="EndAndExpand"
-                                 HorizontalOptions="Fill"
-                                 Spacing="5"
-                                 Padding="5"
-                                 >
-                        <ffi:CachedImage Source="street_view.png"
-                                         WidthRequest="40"
-                                         HeightRequest="40"
-                                         Aspect="AspectFill"
-                                         >
-                            <ffi:CachedImage.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding StreetMapCommand}" />
-                            </ffi:CachedImage.GestureRecognizers>
-                        </ffi:CachedImage>
-                        <ffi:CachedImage Source="space_view.png"
-                                         WidthRequest="40"
-                                         HeightRequest="40"
-                                         Aspect="AspectFill"
-                                         >
-                            <ffi:CachedImage.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding SpaceMapCommand}" />
-                            </ffi:CachedImage.GestureRecognizers>
-                        </ffi:CachedImage>
-                    </StackLayout>
-                </StackLayout>
-                <StackLayout x:Name="right"
-                             Orientation="Vertical"
-                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0, Constant=50}"
-                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
-                             RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=1,Constant=-50}"
-                             RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"
-                             >
-                    <StackLayout x:Name="topRight"
-                                 VerticalOptions="StartAndExpand"
-                                 HorizontalOptions="Fill"
-                                 Spacing="5"
-                                 Padding="5"
-                                 >
-                        <ffi:CachedImage Source="sound_play.png"
-                                         WidthRequest="40"
-                                         HeightRequest="40"
-                                         Aspect="AspectFill"
-                                         IsVisible="{Binding Path=SelectedPin, Mode=OneWay, Converter={StaticResource IsPinSpeakable}"
-                                         >
-                            <ffi:CachedImage.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding StartTTSOnSelectedPinCommand}" />
-                            </ffi:CachedImage.GestureRecognizers>
-                        </ffi:CachedImage>
-                        <ffi:CachedImage Source="sound_stop.png"
-                                         WidthRequest="40"
-                                         HeightRequest="40"
-                                         Aspect="AspectFill"
-                                         IsVisible="{Binding Path=CurrentPlayed, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}}"
-                                         >
-                            <ffi:CachedImage.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding StopTTSCommand}" />
-                            </ffi:CachedImage.GestureRecognizers>
-                        </ffi:CachedImage>
-                    </StackLayout>
-                    <StackLayout x:Name="bottomRight"
-                                 Orientation="Vertical"
-                                 VerticalOptions="EndAndExpand"
-                                 HorizontalOptions="Fill"
-                                 Spacing="5"
-                                 Padding="5"
-                                 >
-                        <ffi:CachedImage Source="gps_off.png"
-                                         WidthRequest="40"
-                                         HeightRequest="40"
-                                         Aspect="AspectFill"
-                                         >
-                            <ffi:CachedImage.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding FollowUserToogleCommand}" />
-                            </ffi:CachedImage.GestureRecognizers>
-                            <ffi:CachedImage.Triggers>
-                                <DataTrigger TargetType="ffi:CachedImage"
-                                             Binding="{Binding FollowUser}"
-                                             Value="True"
-                                             >
-                                    <Setter Property="Source" Value="gps_on.png" />
-                                </DataTrigger>
-                            </ffi:CachedImage.Triggers>
-                        </ffi:CachedImage>
-                    </StackLayout>
-                </StackLayout>
-                <StackLayout x:Name="bottom"
+        <RelativeLayout>
+            <Grid RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
+                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0,Constant=0}"
+                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"
+                RowSpacing="0"
+                >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <StackLayout Grid.Column="0" 
+                             Grid.Row="0"
+                             HeightRequest="50"
                              Orientation="Horizontal"
-                             RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
-                             RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0, Constant=50}"
-                             RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0,Constant=0}"
-                             RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=1,Constant=-50}"
+                             BackgroundColor="#333333"
+                             Padding="5"
+                             Spacing="5"
                              >
-                    <StackLayout x:Name="bottomCenter"
-                                 Orientation="Horizontal"
-                                 VerticalOptions="Fill"
-                                 HorizontalOptions="CenterAndExpand"
-                                 Spacing="5"
-                                 Padding="5"
-                                 >
-                        <ffi:CachedImage Source="line_route.png"
-                                         WidthRequest="40"
-                                         HeightRequest="40"
-                                         Aspect="AspectFill"
-                                         IsVisible="{Binding Path=SelectedPin, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}}"
-                                         >
-                            <ffi:CachedImage.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding SetLinearRouteCommand}" />
-                            </ffi:CachedImage.GestureRecognizers>
-                        </ffi:CachedImage>
-                        <ffi:CachedImage Source="calc_route.png"
-                                         WidthRequest="40"
-                                         HeightRequest="40"
-                                         Aspect="AspectFill"
-                                         IsVisible="{Binding Path=SelectedPin, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}}"
-                                         >
-                            <ffi:CachedImage.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding SetCalculatedRouteCommand}" />
-                            </ffi:CachedImage.GestureRecognizers>
-                        </ffi:CachedImage>
-                        <ffi:CachedImage Source="route_delete.png"
-                                         WidthRequest="40"
-                                         HeightRequest="40"
-                                         Aspect="AspectFill"
-                                         IsVisible="{Binding IsRouteActive}"
-                                         >
-                            <ffi:CachedImage.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding DeleteRouteCommand}" />
-                            </ffi:CachedImage.GestureRecognizers>
-                        </ffi:CachedImage>
-                    </StackLayout>
+                    <ffi:CachedImage Source="menu.png"
+                                     VerticalOptions="CenterAndExpand"
+                                     HorizontalOptions="Start"
+                                     WidthRequest="40"
+                                     HeightRequest="40"
+                                     Aspect="AspectFill"
+                                     >
+                        <ffi:CachedImage.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenMenuCommand}" />
+                        </ffi:CachedImage.GestureRecognizers>
+                    </ffi:CachedImage>
+                    <Label Text="{Binding Title}"
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="StartAndExpand"
+                           TextColor="White"
+                           FontSize="Medium"
+                           HorizontalTextAlignment="Start"
+                           Margin="10,0"
+                           />
+                    <ffi:CachedImage Source="search.png"
+                                     VerticalOptions="CenterAndExpand"
+                                     HorizontalOptions="End"
+                                     WidthRequest="40"
+                                     HeightRequest="40"
+                                     Aspect="AspectFill"
+                                     >
+                        <ffi:CachedImage.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SearchCommand}" />
+                        </ffi:CachedImage.GestureRecognizers>
+                    </ffi:CachedImage>
                 </StackLayout>
-            </RelativeLayout>
-        </Grid>
+                <RelativeLayout Grid.Column="0"
+                                Grid.Row="1"
+                                >
+                    <StackLayout x:Name="mapStack"
+                                 RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent ,Property=Width,Factor=1,Constant=0}"
+                                 RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent ,Property=Height,Factor=1,Constant=0}"
+                                 >
+                        <local:CustomMap x:Name="mainMap"
+                                         CustomMapType="{Binding MapType}"
+                                         MapFunctions="{Binding MapFunctions}"
+                                         MapCenter="{Binding MapCenter}"
+                                         Zoom="{Binding Zoom}"
+                                         IsCameraAnimated="{Binding IsCameraAnimated}"
+                                         IsRotateGesturesEnabled="{Binding Path=IsRotateGesturesEnabled, Mode=OneWay}"
+                                         IsScrollGesturesEnabled="{Binding Path=IsScrollGesturesEnabled, Mode=OneWay}"
+                                         IsTiltGesturesEnabled="{Binding Path=IsTiltGesturesEnabled, Mode=OneWay}"
+                                         IsZoomGesturesEnabled="{Binding Path=IsZoomGesturesEnabled, Mode=OneWay}"
+                                         SelectedPin="{Binding SelectedPin}"
+                                         CustomPins="{Binding CustomPins}"
+                                         InfoWindowClickedCommand="{Binding InfoWindowClickedCommand}"
+                                         UserPositionChangedCommand="{Binding UserPositionChangedCommand}"
+                                         RouteTo="{Binding RouteTo}"
+                                         RouteInitializingSucceedCommand="{Binding RouteInitializingSucceedCommand}"
+                                         RouteInitializingFailedCommand="{Binding RouteInitializingFailedCommand}"
+                                         MyLocationEnabled="{Binding MyLocationEnabled}"
+                                         IsShowInfoWindow="True"
+                                         />
+                    </StackLayout>
+                    <StackLayout x:Name="left"
+                                 Orientation="Vertical"
+                                 RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0, Constant=50}"
+                                 RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
+                                 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0,Constant=0}"
+                                 RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"
+                                 >
+                        <StackLayout x:Name="topLeft"
+                                     Orientation="Vertical"
+                                     VerticalOptions="StartAndExpand"
+                                     HorizontalOptions="Fill"
+                                     Spacing="5"
+                                     Padding="5"
+                                     >
+                            <ffi:CachedImage Source="pin_show.png"
+                                             WidthRequest="40"
+                                             HeightRequest="40"
+                                             Aspect="AspectFill"
+                                             IsVisible="{Binding IsShowOnlySelected}"
+                                             >
+                                <ffi:CachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ShowPinsCommand}" />
+                                </ffi:CachedImage.GestureRecognizers>
+                            </ffi:CachedImage>
+                            <ffi:CachedImage Source="pin_hide.png"
+                                             WidthRequest="40"
+                                             HeightRequest="40"
+                                             Aspect="AspectFill"
+                                             IsVisible="{Binding IsShowHideAnotherButton}"
+                                             >
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding HidePinsCommand}" />
+                                </Image.GestureRecognizers>
+                            </ffi:CachedImage>
+                        </StackLayout>
+                        <StackLayout x:Name="bottomLeft"
+                                     Orientation="Vertical"
+                                     VerticalOptions="EndAndExpand"
+                                     HorizontalOptions="Fill"
+                                     Spacing="5"
+                                     Padding="5"
+                                     >
+                            <ffi:CachedImage Source="street_view.png"
+                                             WidthRequest="40"
+                                             HeightRequest="40"
+                                             Aspect="AspectFill"
+                                             >
+                                <ffi:CachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding StreetMapCommand}" />
+                                </ffi:CachedImage.GestureRecognizers>
+                            </ffi:CachedImage>
+                            <ffi:CachedImage Source="space_view.png"
+                                             WidthRequest="40"
+                                             HeightRequest="40"
+                                             Aspect="AspectFill"
+                                             >
+                                <ffi:CachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SpaceMapCommand}" />
+                                </ffi:CachedImage.GestureRecognizers>
+                            </ffi:CachedImage>
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout x:Name="right"
+                                 Orientation="Vertical"
+                                 RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0, Constant=50}"
+                                 RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
+                                 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=1,Constant=-50}"
+                                 RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"
+                                 >
+                        <StackLayout x:Name="topRight"
+                                     VerticalOptions="StartAndExpand"
+                                     HorizontalOptions="Fill"
+                                     Spacing="5"
+                                     Padding="5"
+                                     >
+                            <ffi:CachedImage Source="sound_play.png"
+                                             WidthRequest="40"
+                                             HeightRequest="40"
+                                             Aspect="AspectFill"
+                                             IsVisible="{Binding Path=SelectedPin, Mode=OneWay, Converter={StaticResource IsPinSpeakable}"
+                                             >
+                                <ffi:CachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding StartTTSOnSelectedPinCommand}" />
+                                </ffi:CachedImage.GestureRecognizers>
+                            </ffi:CachedImage>
+                            <ffi:CachedImage Source="sound_stop.png"
+                                             WidthRequest="40"
+                                             HeightRequest="40"
+                                             Aspect="AspectFill"
+                                             IsVisible="{Binding Path=CurrentPlayed, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}}"
+                                             >
+                                <ffi:CachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding StopTTSCommand}" />
+                                </ffi:CachedImage.GestureRecognizers>
+                            </ffi:CachedImage>
+                        </StackLayout>
+                        <StackLayout x:Name="bottomRight"
+                                     Orientation="Vertical"
+                                     VerticalOptions="EndAndExpand"
+                                     HorizontalOptions="Fill"
+                                     Spacing="5"
+                                     Padding="5"
+                                     >
+                            <ffi:CachedImage Source="gps_off.png"
+                                             WidthRequest="40"
+                                             HeightRequest="40"
+                                             Aspect="AspectFill"
+                                             >
+                                <ffi:CachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding FollowUserToogleCommand}" />
+                                </ffi:CachedImage.GestureRecognizers>
+                                <ffi:CachedImage.Triggers>
+                                    <DataTrigger TargetType="ffi:CachedImage"
+                                                 Binding="{Binding FollowUser}"
+                                                 Value="True"
+                                                 >
+                                        <Setter Property="Source" Value="gps_on.png" />
+                                    </DataTrigger>
+                                </ffi:CachedImage.Triggers>
+                            </ffi:CachedImage>
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout x:Name="bottom"
+                                 Orientation="Horizontal"
+                                 RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                                 RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0, Constant=50}"
+                                 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0,Constant=0}"
+                                 RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=1,Constant=-50}"
+                                 >
+                        <StackLayout x:Name="bottomCenter"
+                                     Orientation="Horizontal"
+                                     VerticalOptions="Fill"
+                                     HorizontalOptions="CenterAndExpand"
+                                     Spacing="5"
+                                     Padding="5"
+                                     >
+                            <ffi:CachedImage Source="line_route.png"
+                                             WidthRequest="40"
+                                             HeightRequest="40"
+                                             Aspect="AspectFill"
+                                             IsVisible="{Binding Path=SelectedPin, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}}"
+                                             >
+                                <ffi:CachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SetLinearRouteCommand}" />
+                                </ffi:CachedImage.GestureRecognizers>
+                            </ffi:CachedImage>
+                            <ffi:CachedImage Source="calc_route.png"
+                                             WidthRequest="40"
+                                             HeightRequest="40"
+                                             Aspect="AspectFill"
+                                             IsVisible="{Binding Path=SelectedPin, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}}"
+                                             >
+                                <ffi:CachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SetCalculatedRouteCommand}" />
+                                </ffi:CachedImage.GestureRecognizers>
+                            </ffi:CachedImage>
+                            <ffi:CachedImage Source="route_delete.png"
+                                             WidthRequest="40"
+                                             HeightRequest="40"
+                                             Aspect="AspectFill"
+                                             IsVisible="{Binding IsRouteActive}"
+                                             >
+                                <ffi:CachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding DeleteRouteCommand}" />
+                                </ffi:CachedImage.GestureRecognizers>
+                            </ffi:CachedImage>
+                        </StackLayout>
+                    </StackLayout>
+                </RelativeLayout>
+            </Grid>            
+            <StackLayout RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                         RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
+                         RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0,Constant=0}"
+                         RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"
+                         BackgroundColor="#80000000"
+                         IsVisible="{Binding IsLoading}"
+                         >
+                <StackLayout HorizontalOptions="CenterAndExpand"
+                             VerticalOptions="CenterAndExpand"
+                             BackgroundColor="White"
+                             Orientation="Horizontal"
+                             Padding="15"
+                             >
+                    <ActivityIndicator IsRunning="true"
+                                       Color="Black"                                   
+                                       HorizontalOptions="StartAndExpand"
+                                       VerticalOptions="CenterAndExpand"
+                                       Margin="0,0,20,0"
+                                       />
+                    <Label TextColor="Black"
+                           HorizontalOptions="End"
+                           VerticalOptions="CenterAndExpand"
+                           FontSize="Medium"
+                           Text="{Binding LoadingString}"
+                           />
+                </StackLayout>
+            </StackLayout>
+        </RelativeLayout>
     </ContentPage.Content>
 </ContentPage>
