@@ -71,8 +71,8 @@ namespace Libmemo {
                 if (this.DateBirth.HasValue)
                     content.Add(new StringContent(this.DateBirth.Value.ToString("yyyy-MM-dd")), "date_birth");
                 if (this.PhotoSource != null && this.PhotoSource is FileImageSource) {
-                    var result = DependencyService.Get<IFileStreamPicker>().GetStream((PhotoSource as FileImageSource).File);
-                    content.Add(new StreamContent(result), "photo", "photo.jpg");
+					var result = await DependencyService.Get<IFileStreamPicker>().GetResizedJpegAsync((PhotoSource as FileImageSource).File, 1000, 1000);
+					content.Add(new ByteArrayContent(result), "photo", "photo.jpg");
                 }
 
                 if (this.IsDeadPerson) {
