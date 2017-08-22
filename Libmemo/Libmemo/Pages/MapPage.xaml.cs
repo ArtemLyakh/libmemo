@@ -392,11 +392,13 @@ namespace Libmemo {
 					this.RouteTo = this.SelectedPin.Position;
 
 					var distance = CalculateDistance(RouteFrom.Value, RouteTo.Value);
-					this.Title = $"~ {distance.ToString()} м";
+					distance = Math.Round(distance);
+					this.Title = $"~ {distance.ToString("N0")} м";
 
 					this._routeProcessing = true;
 					this.MapFunctions.SetLinearRoute(this.UserPosition, this.SelectedPin.Position);
 
+                    UserPositionChanged -= OnUserPositionChangedUpdateLinearRoute;
                     UserPositionChanged += OnUserPositionChangedUpdateLinearRoute;
 				}
 			});
@@ -405,38 +407,27 @@ namespace Libmemo {
                 UpdateLinearRoute.Execute(position);
             }
             public ICommand UpdateLinearRoute => new Command<Position>(position => {
-                if (_routeProcessing || IsRouteActive || CurrentRoute != RouteType.Linear || !RouteTo.HasValue) return;
+                if (_routeProcessing || !IsRouteActive || CurrentRoute != RouteType.Linear || !RouteTo.HasValue) return;
 
                 this.RouteFrom = position;
                 this._routeProcessing = true;
                 this.MapFunctions.SetLinearRoute(RouteFrom.Value, RouteTo.Value);
 
                 var distance = CalculateDistance(RouteFrom.Value, RouteTo.Value);
-                this.Title = $"~ {distance.ToString()} км";
+                distance = Math.Round(distance);
+                this.Title = $"~ {distance.ToString("N0")} м";
             });
 
             private double CalculateDistance(Position A, Position B) {
-                //var R = 6372795.0;
-                var R = 6300.0;
-
-                var lat1 = A.Latitude * Math.PI / 180;
-                var lat2 = A.Longitude * Math.PI / 180;
-                var long1 = B.Latitude * Math.PI / 180;
-                var long2 = B.Longitude * Math.PI / 180;
-
-                var cl1 = Math.Cos(lat1);
-                var cl2 = Math.Cos(lat2);
-                var sl1 = Math.Sin(lat1);
-                var sl2 = Math.Sin(lat2);
-				var delta = long2 - long1;
-                var cdelta = Math.Cos(delta);
-                var sdelta = Math.Sin(delta);
-
-                var y = Math.Sqrt(Math.Pow(cl2 * sdelta, 2) + Math.Pow(cl1 * sl2 - sl1 * cl2 * cdelta, 2));
-				var x = sl1 * sl2 + cl1 * cl2 * cdelta;
-                var ad = Math.Atan2(y, x);
-				var dist = ad * R;
-                return dist;
+                double d1 = A.Latitude * 0.017453292519943295;
+                double d2 = A.Longitude * 0.017453292519943295;
+                double d3 = B.Latitude * 0.017453292519943295;
+                double d4 = B.Longitude * 0.017453292519943295;
+                double d5 = d4 - d2;
+                double d6 = d3 - d1;
+                double d7 = Math.Pow(Math.Sin(d6 / 2.0), 2.0) + ((Math.Cos(d1) * Math.Cos(d3)) * Math.Pow(Math.Sin(d5 / 2.0), 2.0));
+                double d8 = 2.0 * Math.Atan2(Math.Sqrt(d7), Math.Sqrt(1.0 - d7));
+				return (6376500.0 * d8);
             }
 
 			public ICommand SetCalculatedRouteCommand => new Command(() => {
