@@ -21,6 +21,8 @@ namespace Libmemo.Droid {
             return File.Open(path, FileMode.Open);
         }
 
+
+
 		public byte[] GetResizedJpeg(string path, int width, int height)
 		{
             var stream = File.Open(path, FileMode.Open);
@@ -50,7 +52,8 @@ namespace Libmemo.Droid {
             return arr;
 		}
 
-        public Task<byte[]> GetResizedJpegAsync(string path, int width, int height) => Task.Run(() => GetResizedJpeg(path, width, height));
+        public Task<byte[]> GetResizedJpegAsync(string path, int width, int height) =>
+            Task.Run(() => GetResizedJpeg(path, width, height));
 
 
     }

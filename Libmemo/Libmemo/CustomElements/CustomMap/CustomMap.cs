@@ -94,30 +94,6 @@ namespace Libmemo {
         }
         #endregion
 
-        #region RouteInitializingSucceed
-        public event EventHandler RouteInitializingSucceed;
-
-        void IMapFunctions.RaiseRouteInitializingSucceed() {
-            RouteInitializingSucceed?.Invoke(this, null);
-
-            if (RouteInitializingSucceedCommand != null && RouteInitializingSucceedCommand.CanExecute(null)) {
-                RouteInitializingSucceedCommand.Execute(null);
-            }
-        }
-        #endregion
-
-        #region RouteInitializingFailed
-        public event EventHandler RouteInitializingFailed;
-
-        void IMapFunctions.RaiseRouteInitializingFailed() {
-            RouteInitializingFailed?.Invoke(this, null);
-
-            if (RouteInitializingFailedCommand != null && RouteInitializingFailedCommand.CanExecute(null)) {
-                RouteInitializingFailedCommand.Execute(null);
-            }
-        }
-        #endregion
-
         #region MapClicked
         public class MapClickEventArgs {
             public Position Position { get; set; }
@@ -333,28 +309,6 @@ namespace Libmemo {
         public static readonly BindableProperty UserPositionChangedCommandProperty = BindableProperty.Create(
             nameof(UserPositionChangedCommand),
             typeof(Command<Position>),
-            typeof(CustomMap));
-        #endregion
-
-        #region RouteInitializingSucceed
-        public ICommand RouteInitializingSucceedCommand {
-            get { return (ICommand)this.GetValue(RouteInitializingSucceedCommandProperty); }
-            set { this.SetValue(RouteInitializingSucceedCommandProperty, value); }
-        }
-        public static readonly BindableProperty RouteInitializingSucceedCommandProperty = BindableProperty.Create(
-            nameof(RouteInitializingSucceedCommand),
-            typeof(Command),
-            typeof(CustomMap));
-        #endregion
-
-        #region RouteInitializingFailed
-        public ICommand RouteInitializingFailedCommand {
-            get { return (ICommand)this.GetValue(RouteInitializingFailedCommandProperty); }
-            set { this.SetValue(RouteInitializingFailedCommandProperty, value); }
-        }
-        public static readonly BindableProperty RouteInitializingFailedCommandProperty = BindableProperty.Create(
-            nameof(RouteInitializingFailedCommand),
-            typeof(Command),
             typeof(CustomMap));
         #endregion
 

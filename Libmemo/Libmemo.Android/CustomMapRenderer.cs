@@ -24,19 +24,21 @@ namespace Libmemo.Droid {
 
         #region INativeMapFunction
 
-        void INativeMapFunction.SetLinearRoute(Position from, Position to) {
-            DeleteExistingRoute();
-            AddLinearRoute(from, to);
-        }
-
-        void INativeMapFunction.SetCalculatedRoute(Position from, Position to) {
-            DeleteExistingRoute();
-            AddCalculatedRoute(from, to);
-        }
-
         void INativeMapFunction.DeleteRoute() {
             DeleteExistingRoute();
         }
+
+		async Task INativeMapFunction.SetLinearRouteAsync(Position from, Position to)
+		{
+			DeleteExistingRoute();
+            await AddLinearRoute(from, to);
+		}
+
+		async Task INativeMapFunction.SetCalculatedRouteAsync(Position from, Position to)
+		{
+			DeleteExistingRoute();
+            await AddCalculatedRoute(from, to);
+		}
 
         #endregion
 
@@ -282,26 +284,31 @@ namespace Libmemo.Droid {
             }
         }
 
-        private void AddLinearRoute(Position from, Position to) {
-            SetLinearRoute(from, to);
+        private async Task AddLinearRoute(Position from, Position to) {
+            await SetLinearRoute(from, to);
             this._route = DrawRoute();
-            if (this._route == null) {
-                this.MapFunctions?.RaiseRouteInitializingFailed();
-            } else {
-                this.MapFunctions?.RaiseRouteInitializingSucceed();
-            }
+            if (_route == null) throw new Exception("Route exception");
+
+            //if (this._route == null) {
+            //    this.MapFunctions?.RaiseRouteInitializingFailed();
+            //} else {
+            //    this.MapFunctions?.RaiseRouteInitializingSucceed();
+            //}
         }
-        private async void AddCalculatedRoute(Position from, Position to) {
+        private async Task AddCalculatedRoute(Position from, Position to) {
             await DrawCalculatedRoute(from, to);
             this._route = DrawRoute();
-            if (this._route == null) {
-                this.MapFunctions?.RaiseRouteInitializingFailed();
-            } else {
-                this.MapFunctions?.RaiseRouteInitializingSucceed();
-            }
+            if (_route == null) throw new Exception("Route exception");
+
+
+            //if (this._route == null) {
+            //    this.MapFunctions?.RaiseRouteInitializingFailed();
+            //} else {
+            //    this.MapFunctions?.RaiseRouteInitializingSucceed();
+            //}
         }
 
-        private void SetLinearRoute(Position from, Position to) {        
+        private async Task SetLinearRoute(Position from, Position to) {        
             _routePoints = new List<LatLng>() {
                 new LatLng(from.Latitude, from.Longitude),
                 new LatLng(to.Latitude, to.Longitude)

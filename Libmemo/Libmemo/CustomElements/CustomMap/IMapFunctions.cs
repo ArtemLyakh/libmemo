@@ -5,8 +5,6 @@ namespace Libmemo {
         void RaiseCameraPositionChange(Position position, float zoom);
         void RaiseInfoWindowClick(CustomPin pin);
         void RaiseUserLocationChange(Position position);
-        void RaiseRouteInitializingSucceed();
-        void RaiseRouteInitializingFailed();
         void RaiseMapClick(Position position);
 
         void SetRenderer(INativeMapFunction renderer);

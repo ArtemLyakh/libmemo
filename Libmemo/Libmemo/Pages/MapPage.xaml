@@ -90,8 +90,6 @@
                                          InfoWindowClickedCommand="{Binding InfoWindowClickedCommand}"
                                          UserPositionChangedCommand="{Binding UserPositionChangedCommand}"
                                          RouteTo="{Binding RouteTo}"
-                                         RouteInitializingSucceedCommand="{Binding RouteInitializingSucceedCommand}"
-                                         RouteInitializingFailedCommand="{Binding RouteInitializingFailedCommand}"
                                          MyLocationEnabled="{Binding MyLocationEnabled}"
                                          IsShowInfoWindow="True"
                                          />

@@ -1,9 +1,11 @@
-﻿using Xamarin.Forms.Maps;
+﻿using System.Threading.Tasks;
+using Xamarin.Forms.Maps;
 
 namespace Libmemo {
     public interface INativeMapFunction {
-        void SetLinearRoute(Position from, Position to);
-        void SetCalculatedRoute(Position from, Position to);
+        Task SetLinearRouteAsync(Position from, Position to);
+        Task SetCalculatedRouteAsync(Position from, Position to);
+
         void DeleteRoute();
     }
 }

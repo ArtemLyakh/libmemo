@@ -362,41 +362,52 @@ namespace Libmemo {
                 None, Linear, Calculated
             }
 
-			private bool _isRouteActive = false;
-			public bool IsRouteActive
-			{
-				get { return this._isRouteActive; }
-				set
-				{
-					if (this._isRouteActive != value)
-					{
-						this._isRouteActive = value;
-						this.OnPropertyChanged(nameof(IsRouteActive));
-					}
-				}
-			}
+            private RouteType _currentRoute = RouteType.None;
+            private RouteType CurrentRoute {
+                get => _currentRoute;
+                set {
+                    if (_currentRoute != value) {
+                        _currentRoute = value;
+                        OnPropertyChanged(nameof(CurrentRoute));
+                        OnPropertyChanged(nameof(IsRouteActive));
+                    }
+                }
+            }
 
-            private RouteType CurrentRoute { get; set; } = RouteType.None;
+            public bool IsRouteActive => CurrentRoute != RouteType.None;
 
 			private Position? RouteFrom { get; set; }
 			private Position? RouteTo { get; set; }
 
 			private bool _routeProcessing = false;
 
-			public ICommand SetLinearRouteCommand => new Command(() => {
+			public ICommand SetLinearRouteCommand => new Command(async () => {
 				if (this._routeProcessing) return;
+
+                DeleteRouteCommand.Execute(null);
+
 				if (this.UserPosition != default(Position) && this.SelectedPin != null)
 				{
+                    var from = this.UserPosition;
+                    var to = this.SelectedPin.Position;
+
+                    try {
+                        _routeProcessing = true;
+                        await this.MapFunctions.SetLinearRouteAsync(from, to);
+                    } catch {
+                        App.ToastNotificator.Show("Ошибка построения маршрута");
+                        return;
+                    } finally {
+                        _routeProcessing = false;
+                    }
+
                     this.CurrentRoute = RouteType.Linear;
-					this.RouteFrom = this.UserPosition;
-					this.RouteTo = this.SelectedPin.Position;
+                    this.RouteFrom = from;
+                    this.RouteTo = to;
 
 					var distance = CalculateDistance(RouteFrom.Value, RouteTo.Value);
 					distance = Math.Round(distance);
 					this.Title = $"~ {distance.ToString("N0")} м";
-
-					this._routeProcessing = true;
-					this.MapFunctions.SetLinearRoute(this.UserPosition, this.SelectedPin.Position);
 
                     UserPositionChanged -= OnUserPositionChangedUpdateLinearRoute;
                     UserPositionChanged += OnUserPositionChangedUpdateLinearRoute;
@@ -406,12 +417,24 @@ namespace Libmemo {
             private void OnUserPositionChangedUpdateLinearRoute(object sender, Position position) {
                 UpdateLinearRoute.Execute(position);
             }
-            public ICommand UpdateLinearRoute => new Command<Position>(position => {
-                if (_routeProcessing || !IsRouteActive || CurrentRoute != RouteType.Linear || !RouteTo.HasValue) return;
+            public ICommand UpdateLinearRoute => new Command<Position>(async position => {
+                if (_routeProcessing || CurrentRoute != RouteType.Linear || !RouteTo.HasValue) return;
 
-                this.RouteFrom = position;
-                this._routeProcessing = true;
-                this.MapFunctions.SetLinearRoute(RouteFrom.Value, RouteTo.Value);
+                var from = position;
+                var to = RouteTo.Value;
+
+                try {
+					_routeProcessing = true;
+					await this.MapFunctions.SetLinearRouteAsync(from, to);
+                } catch {
+					App.ToastNotificator.Show("Ошибка построения маршрута");
+                    UserPositionChanged -= OnUserPositionChangedUpdateLinearRoute;
+					return;
+				} finally {
+					_routeProcessing = false;
+				}
+
+                this.RouteFrom = from;
 
                 var distance = CalculateDistance(RouteFrom.Value, RouteTo.Value);
                 distance = Math.Round(distance);
@@ -430,15 +453,29 @@ namespace Libmemo {
 				return (6376500.0 * d8);
             }
 
-			public ICommand SetCalculatedRouteCommand => new Command(() => {
+			public ICommand SetCalculatedRouteCommand => new Command(async () => {
 				if (this._routeProcessing) return;
+
+				DeleteRouteCommand.Execute(null);
+
 				if (this.UserPosition != default(Position) && this.SelectedPin != null)
 				{
+					var from = this.UserPosition;
+					var to = this.SelectedPin.Position;
+
+					try	{
+						_routeProcessing = true;
+						await this.MapFunctions.SetCalculatedRouteAsync(from, to);
+					} catch {
+						App.ToastNotificator.Show("Ошибка построения маршрута");
+						return;
+					} finally {
+						_routeProcessing = false;
+					}
+
                     this.CurrentRoute = RouteType.Calculated;
-					this.RouteFrom = this.UserPosition;
-					this.RouteTo = this.SelectedPin.Position;
-					this._routeProcessing = true;
-					this.MapFunctions.SetCalculatedRoute(this.UserPosition, this.SelectedPin.Position);
+					this.RouteFrom = from;
+					this.RouteTo = to;
 				}
 			});
 
@@ -446,26 +483,10 @@ namespace Libmemo {
 			public ICommand DeleteRouteCommand => new Command(() => {
 				this.MapFunctions.DeleteRoute();
                 this.CurrentRoute = RouteType.None;
-				this.IsRouteActive = false;
-				this._routeProcessing = false; //на всякий случай
 
                 UserPositionChanged -= OnUserPositionChangedUpdateLinearRoute;
                 SetDefaultTitle();
             });
-
-
-			public ICommand RouteInitializingSucceedCommand => new Command(() => {
-				this.IsRouteActive = true;
-				this._routeProcessing = false;
-			});
-
-
-			public ICommand RouteInitializingFailedCommand => new Command<CustomPin>(pin => {
-				this._routeProcessing = false;
-				this.IsRouteActive = false;
-				App.ToastNotificator.Show("Ошибка построения маршрута");
-			});
-
 
 			#endregion
 
