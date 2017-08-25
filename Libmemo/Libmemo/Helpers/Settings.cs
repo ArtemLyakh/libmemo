@@ -37,6 +37,9 @@ namespace Libmemo {
         public const string TREE_DATA_URL = SERVER_URL + "/api/tree/data.php";
         public const string TREE_DATA_URL_ADMIN = SERVER_URL + "/api/tree/data_admin.php";
 
+
+        public const string RELATIVES_URL = SERVER_URL + "/rest/relatives/";
+
         #endregion
 
 
