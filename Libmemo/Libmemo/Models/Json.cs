@@ -8,7 +8,6 @@ namespace Libmemo.Json {
     public class Person {
         public string type { get; set; }
         public int? id { get; set; }
-        public long? modified { get; set; }
         public int? owner { get; set; }
 
         public string first_name { get; set; }
@@ -26,5 +25,10 @@ namespace Libmemo.Json {
         public string height { get; set; }
         public string width { get; set; }
         public string scheme_url { get; set; }
+    }
+
+    public class Error
+    {
+        public string error { get; set; }
     }
 }

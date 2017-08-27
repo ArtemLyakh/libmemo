@@ -25,9 +25,11 @@ namespace Libmemo.Droid {
 
 		public byte[] GetResizedJpeg(string path, int width, int height)
 		{
-            var stream = File.Open(path, FileMode.Open);
+            Bitmap originalImage;
 
-            Bitmap originalImage = BitmapFactory.DecodeStream(stream);
+            using (var stream = File.Open(path, FileMode.Open)) {
+                originalImage = BitmapFactory.DecodeStream(stream);
+            }
 
             var resultWidth = originalImage.Width;
             var resultHeight = originalImage.Height;

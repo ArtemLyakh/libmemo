@@ -86,7 +86,7 @@ namespace Libmemo.Pages {
 
 
 
-            public ICommand AddCommand => new Command(async () => await App.GlobalPage.Push(new AddPage()));
+            public ICommand AddCommand => new Command(async () => await App.GlobalPage.Push(new AddRelative()));
 
             public class Json
             {

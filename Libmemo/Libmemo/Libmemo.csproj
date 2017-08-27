@@ -83,6 +83,7 @@
     <Compile Include="Helpers\UtilsFunctions.cs" />
     <Compile Include="Helpers\WebClient.cs" />
     <Compile Include="Models\Json.cs" />
+    <Compile Include="Models\PersonType.cs" />
     <Compile Include="Pages\Relatives\AddRelative.xaml.cs">
       <DependentUpon>AddRelative.xaml</DependentUpon>
     </Compile>
