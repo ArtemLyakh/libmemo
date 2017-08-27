@@ -7,15 +7,21 @@
              NavigationPage.HasNavigationBar="False"
              >
     <ContentPage.Content>
-        <Grid RowSpacing="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="50" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <StackLayout Grid.Column="0" 
+        <RelativeLayout>
+            <Grid RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                  RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
+                  RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0,Constant=0}"
+                  RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"
+                  RowSpacing="0"
+                  >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <StackLayout Grid.Column="0" 
                          Grid.Row="0"
                          HeightRequest="50"
                          Orientation="Horizontal"
@@ -23,18 +29,18 @@
                          Padding="5"
                          Spacing="5"
                          >
-                <ffi:CachedImage Source="back.png"
+                    <ffi:CachedImage Source="back.png"
                                  VerticalOptions="CenterAndExpand"
                                  HorizontalOptions="Start"
                                  WidthRequest="40"
                                  HeightRequest="40"
                                  Aspect="AspectFill"
                                  >
-                    <ffi:CachedImage.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding BackCommand}" />
-                    </ffi:CachedImage.GestureRecognizers>
-                </ffi:CachedImage>
-                <Entry Text="{Binding Search}"
+                        <ffi:CachedImage.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BackCommand}" />
+                        </ffi:CachedImage.GestureRecognizers>
+                    </ffi:CachedImage>
+                    <Entry Text="{Binding Filter}"
                        VerticalOptions="CenterAndExpand"
                        HorizontalOptions="FillAndExpand"
                        Placeholder="Поиск"
@@ -44,40 +50,102 @@
                        HorizontalTextAlignment="Start"
                        Margin="10,0"
                        >
-                    <Entry.Behaviors>
-                        <local:EntrySelectedBehavior SelectedCommand="{Binding SearchSelectedCommand}" />
-                        <local:EntryChangedBehavior ChangedCommand="{Binding SearchChangedCommand}" />
-                    </Entry.Behaviors>
-                </Entry>
-                <ffi:CachedImage Source="add.png"
+                        <Entry.Behaviors>
+                            <local:EntrySelectedBehavior SelectedCommand="{Binding FilterCommand}" />
+                            <local:EntryChangedBehavior ChangedCommand="{Binding FilterCommand}" />
+                        </Entry.Behaviors>
+                    </Entry>
+                    <ffi:CachedImage Source="reload.png"
                                  VerticalOptions="CenterAndExpand"
                                  HorizontalOptions="End"
                                  WidthRequest="40"
                                  HeightRequest="40"
                                  Aspect="AspectFill"
                                  >
-                    <ffi:CachedImage.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding AddCommand}" />
-                    </ffi:CachedImage.GestureRecognizers>
-                </ffi:CachedImage>
-            </StackLayout>
-            <local:CustomListView Grid.Column="0"
+                        <ffi:CachedImage.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ResetCommand}" />
+                        </ffi:CachedImage.GestureRecognizers>
+                    </ffi:CachedImage>
+                    <ffi:CachedImage Source="add.png"
+                                 VerticalOptions="CenterAndExpand"
+                                 HorizontalOptions="End"
+                                 WidthRequest="40"
+                                 HeightRequest="40"
+                                 Aspect="AspectFill"
+                                 >
+                        <ffi:CachedImage.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding AddCommand}" />
+                        </ffi:CachedImage.GestureRecognizers>
+                    </ffi:CachedImage>
+                </StackLayout>
+                <local:CustomListView Grid.Column="0"
                                   Grid.Row="1"
                                   HasUnevenRows="True"
-                                  ItemsSource="{Binding SearchList}"
+                                  ItemsSource="{Binding Data}"
                                   ItemClickCommand="{Binding ItemSelectedCommand}"
                                   SeparatorVisibility="Default"
                                   SeparatorColor="Gray"
                                   >
-                <x:Arguments>
-                    <ListViewCachingStrategy>RecycleElement</ListViewCachingStrategy>
-                </x:Arguments>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <local:CustomImageViewCell />
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </local:CustomListView>
-        </Grid>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <ViewCell.View>
+                                    <StackLayout Orientation="Horizontal"
+                                             Padding="10, 5"
+                                             HeightRequest="70"
+                                             VerticalOptions="FillAndExpand"
+                                             >
+                                        <ffi:CachedImage Source="{Binding Image}"
+                                                     DownsampleToViewSize="True"
+                                                     HeightRequest="60"
+                                                     WidthRequest="60"
+                                                     Aspect="AspectFill"
+                                                     VerticalOptions="CenterAndExpand"
+                                                     HorizontalOptions="Start"
+                                                     />
+                                        <Label Text="{Binding Text}"
+                                           VerticalOptions="CenterAndExpand"
+                                           HorizontalOptions="FillAndExpand"
+                                           FontSize="Medium"
+                                           TextColor="Black"
+                                           HorizontalTextAlignment="Start"
+                                           VerticalTextAlignment="Center"
+                                           Margin="20,0,0,0"
+                                           />
+                                    </StackLayout>
+                                </ViewCell.View>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </local:CustomListView>
+            </Grid>
+            <StackLayout RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                         RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
+                         RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0,Constant=0}"
+                         RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"
+                         BackgroundColor="#80000000"
+                         IsVisible="{Binding IsLoading}"
+                         >
+                <StackLayout HorizontalOptions="CenterAndExpand"
+                             VerticalOptions="CenterAndExpand"
+                             BackgroundColor="White"
+                             Orientation="Horizontal"
+                             Padding="15"
+                             >
+                    <ActivityIndicator IsRunning="true"
+                                       Color="Black"                                   
+                                       HorizontalOptions="StartAndExpand"
+                                       VerticalOptions="CenterAndExpand"
+                                       Margin="0,0,20,0"
+                                       />
+                    <Label TextColor="Black"
+                           HorizontalOptions="End"
+                           VerticalOptions="CenterAndExpand"
+                           FontSize="Medium"
+                           Text="{Binding LoadingString}"
+                           />
+                </StackLayout>
+            </StackLayout>
+        </RelativeLayout>
     </ContentPage.Content>
 </ContentPage>
