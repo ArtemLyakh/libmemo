@@ -97,7 +97,7 @@ namespace Libmemo {
                     yield return new MenuItem {
                         Text = "Родственники",
                         Image = ImageSource.FromFile("menu_rel"),
-                        Action = () => App.GlobalPage.PushRoot(new RelativesPage())
+                        Action = () => App.GlobalPage.PushRoot(new Pages.Relatives())
                     };
                     yield return new MenuItem {
                         Text = "Древо",

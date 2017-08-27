@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Libmemo"
              xmlns:ffi="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
-             x:Class="Libmemo.RelativesPage"
+             x:Class="Libmemo.Pages.Relatives"
              NavigationPage.HasNavigationBar="False"
              >
     <ContentPage.Content>

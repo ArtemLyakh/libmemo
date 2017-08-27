@@ -9,9 +9,9 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Libmemo {
+namespace Libmemo.Pages {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class RelativesPage : ContentPage
+    public partial class Relatives : ContentPage
     {
 		private ViewModel Model
 		{
@@ -19,7 +19,7 @@ namespace Libmemo {
 			set => BindingContext = value;
 		}
 
-		public RelativesPage()
+		public Relatives()
 		{
 			InitializeComponent();
 			BindingContext = new ViewModel();
