@@ -185,7 +185,7 @@ namespace Libmemo.Pages {
 
             public ICommand ItemSelectedCommand => new Command<object>(async selected => {
                 var entry = (Entry)selected;
-                await App.GlobalPage.Push(new EditPersonPage(entry.Id));
+                await App.GlobalPage.Push(new EditRelative(entry.Id));
             });
         }
 
