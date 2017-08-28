@@ -389,7 +389,32 @@ namespace Libmemo.Pages
 
 
 
+            private void SetData(Models.Person.Person person)
+            {
+                this.FirstName = person.FirstName;
+                this.LastName = person.LastName;
+                this.SecondName = person.SecondName;
+                if (person.DateBirth.HasValue) this.DateBirth = person.DateBirth.Value;
+                if (person.Image != null) this.PhotoSource = ImageSource.FromUri(person.Image);
 
+                if (person is Models.Person.DeadPerson) {
+                    var deadPerson = (Models.Person.DeadPerson)person;
+
+                    this.PersonPosition = new Position(deadPerson.Latitude, deadPerson.Longitude);
+                    if (deadPerson.DateDeath.HasValue) this.DateDeath = deadPerson.DateDeath.Value;
+                    this.Height = deadPerson.Height;
+                    this.Width = deadPerson.Width;
+                    this.Text = deadPerson.Text;
+
+                    if (deadPerson.Scheme != null) {
+                        SchemeUrl = deadPerson.Scheme;
+                    }
+
+
+
+                    MapCenter = this.PersonPosition.Value;
+                }
+            }
 
             public ICommand ResetCommand => new Command(async () => {
                 if (cancelTokenSource != null) return;
@@ -449,40 +474,14 @@ namespace Libmemo.Pages
                     return;
                 }
 
-                this.FirstName = person.FirstName;
-                this.LastName = person.LastName;
-                this.SecondName = person.SecondName;
-                if (person.DateBirth.HasValue) this.DateBirth = person.DateBirth.Value;
-                if (person.Image != null) this.PhotoSource = ImageSource.FromUri(person.Image);
-
-                if (person is Models.Person.DeadPerson) {
-                    var deadPerson = (Models.Person.DeadPerson)person;
-
-                    this.PersonPosition = new Position(deadPerson.Latitude, deadPerson.Longitude);                  
-                    if (deadPerson.DateDeath.HasValue) this.DateDeath = deadPerson.DateDeath.Value;
-                    this.Height = deadPerson.Height;
-                    this.Width = deadPerson.Width;
-                    this.Text = deadPerson.Text;
-
-                    if (deadPerson.Scheme != null) {
-                        SchemeUrl = deadPerson.Scheme;
-                    }
-
-
-
-                    MapCenter = this.PersonPosition.Value;
-                }
+                SetData(person);
             });
 
-
-            public ICommand SendCommand => new Command(async () => {
-                throw new NotImplementedException();
-
+            public ICommand SaveCommand => new Command(async () => {
                 if (cancelTokenSource != null) return;
 
-
-                if (this.IsDeadPerson && !this.UserPosition.HasValue) {
-                    App.ToastNotificator.Show("Ошибка определения местоположения");
+                if (this.IsDeadPerson && !this.PersonPosition.HasValue) {
+                    App.ToastNotificator.Show("Не указано местоположение");
                     return;
                 }
                 if (string.IsNullOrWhiteSpace(this.FirstName)) {
@@ -490,16 +489,14 @@ namespace Libmemo.Pages
                     return;
                 }
 
-
                 StartLoading("Сохранение");
 
-
                 var content = new MultipartFormDataContent(String.Format("----------{0:N}", Guid.NewGuid()));
-                content.Add(new StringContent(this.IsDeadPerson ? "dead" : "alive"), "type");
+                content.Add(new StringContent(IsDeadPerson ? "dead" : "alive"), "type");
                 content.Add(new StringContent(this.FirstName), "first_name");
-                if (!string.IsNullOrWhiteSpace(this.SecondName))
+                if (this.SecondName != null)
                     content.Add(new StringContent(this.SecondName), "second_name");
-                if (!string.IsNullOrWhiteSpace(this.LastName))
+                if (this.LastName != null)
                     content.Add(new StringContent(this.LastName), "last_name");
                 if (this.DateBirth.HasValue)
                     content.Add(new StringContent(this.DateBirth.Value.ToString("yyyy-MM-dd")), "date_birth");
@@ -507,14 +504,13 @@ namespace Libmemo.Pages
                     var result = await DependencyService.Get<IFileStreamPicker>().GetResizedJpegAsync((PhotoSource as FileImageSource).File, 1000, 1000);
                     content.Add(new ByteArrayContent(result), "photo", "photo.jpg");
                 }
-
                 if (this.IsDeadPerson) {
-                    content.Add(new StringContent(this.UserPosition.Value.Latitude.ToString(CultureInfo.InvariantCulture)), "latitude");
-                    content.Add(new StringContent(this.UserPosition.Value.Longitude.ToString(CultureInfo.InvariantCulture)), "longitude");
+                    content.Add(new StringContent(this.PersonPosition.Value.Latitude.ToString(CultureInfo.InvariantCulture)), "latitude");
+                    content.Add(new StringContent(this.PersonPosition.Value.Longitude.ToString(CultureInfo.InvariantCulture)), "longitude");
 
                     if (this.DateDeath.HasValue)
                         content.Add(new StringContent(this.DateDeath.Value.ToString("yyyy-MM-dd")), "date_death");
-                    if (!string.IsNullOrWhiteSpace(this.Text))
+                    if (this.Text != null)
                         content.Add(new StringContent(this.Text), "text");
                     if (this.Height.HasValue)
                         content.Add(new StringContent(this.Height.Value.ToString(CultureInfo.InvariantCulture)), "height");
@@ -526,10 +522,11 @@ namespace Libmemo.Pages
                 }
 
 
+
                 HttpResponseMessage response;
                 try {
                     cancelTokenSource = new CancellationTokenSource();
-                    response = await WebClient.Instance.SendAsync(HttpMethod.Post, new Uri(Settings.RELATIVES_URL), content, 60, cancelTokenSource.Token);
+                    response = await WebClient.Instance.SendAsync(HttpMethod.Post, new Uri($"{Settings.RELATIVES_URL}{Id}/"), content, 60, cancelTokenSource.Token);
                 } catch (TimeoutException) {
                     App.ToastNotificator.Show("Превышен интервал запроса");
                     return;
@@ -549,7 +546,10 @@ namespace Libmemo.Pages
                     if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
                         throw new UnauthorizedAccessException();
                     }
-                    if (response.StatusCode == System.Net.HttpStatusCode.BadRequest) {
+                    if (response.StatusCode == System.Net.HttpStatusCode.BadRequest
+                        || response.StatusCode == System.Net.HttpStatusCode.NotFound
+                        || response.StatusCode == System.Net.HttpStatusCode.Forbidden
+                    ) {
                         var msg = Newtonsoft.Json.JsonConvert.DeserializeObject<Json.Error>(str);
                         throw new HttpRequestException(msg.error);
                     }
@@ -566,20 +566,73 @@ namespace Libmemo.Pages
                 }
 
 
-                Json.Person data;
+                Models.Person.Person person;
                 try {
-                    data = Newtonsoft.Json.JsonConvert.DeserializeObject<Json.Person>(str);
+                    var json = Newtonsoft.Json.JsonConvert.DeserializeObject<Json.Person>(str);
+                    person = Models.Person.Person.Convert(json);
                 } catch {
                     App.ToastNotificator.Show("Ошибка ответа сервера");
                     return;
                 }
-                //var person = Models.Person.Person.Convert(json);
 
+
+                SetData(person);
                 App.ToastNotificator.Show("Сохранено");
-                ResetCommand.Execute(null);
             });
 
+            public ICommand DeleteCommand => new Command(async () => {
+                if (cancelTokenSource != null) return;
 
+                if (!await App.Current.MainPage.DisplayAlert("Удаление", "Вы уверены?", "Да", "Нет")) return;
+
+                StartLoading("Удаление");
+
+                HttpResponseMessage response;
+                try {
+                    cancelTokenSource = new CancellationTokenSource();
+                    response = await WebClient.Instance.SendAsync(HttpMethod.Delete, new Uri($"{Settings.RELATIVES_URL}{Id}/"), null, 30, cancelTokenSource.Token);
+                } catch (TimeoutException) {
+                    App.ToastNotificator.Show("Превышен интервал запроса");
+                    return;
+                } catch (OperationCanceledException) { //cancel
+                    return;
+                } catch {
+                    App.ToastNotificator.Show("Ошибка запроса");
+                    return;
+                } finally {
+                    cancelTokenSource = null;
+                    StopLoading();
+                }
+
+                var str = await response.Content.ReadAsStringAsync();
+
+                try {
+                    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
+                        throw new UnauthorizedAccessException();
+                    }
+                    if (response.StatusCode == System.Net.HttpStatusCode.BadRequest
+                        || response.StatusCode == System.Net.HttpStatusCode.NotFound
+                        || response.StatusCode == System.Net.HttpStatusCode.Forbidden
+                    ) {
+                        var msg = Newtonsoft.Json.JsonConvert.DeserializeObject<Json.Error>(str);
+                        throw new HttpRequestException(msg.error);
+                    }
+                    response.EnsureSuccessStatusCode();
+                } catch (UnauthorizedAccessException) {
+                    await AuthHelper.ReloginAsync();
+                    return;
+                } catch (HttpRequestException ex) {
+                    App.ToastNotificator.Show(ex.Message);
+                    return;
+                } catch {
+                    App.ToastNotificator.Show("Ошибка");
+                    return;
+                }
+
+
+                App.ToastNotificator.Show("Удалено");
+                await App.GlobalPage.Pop();
+            });
         }
     }
 }

@@ -86,7 +86,7 @@
                                      Aspect="AspectFill"
                                      >
                         <ffi:CachedImage.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding SendCommand}" />
+                            <TapGestureRecognizer Command="{Binding SaveCommand}" />
                         </ffi:CachedImage.GestureRecognizers>
                     </ffi:CachedImage>
                 </StackLayout>
