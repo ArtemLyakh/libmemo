@@ -444,10 +444,6 @@ namespace Libmemo.Pages
                     if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
                         throw new UnauthorizedAccessException();
                     }
-                    if (response.StatusCode == System.Net.HttpStatusCode.BadRequest) {
-                        var msg = Newtonsoft.Json.JsonConvert.DeserializeObject<Json.Error>(str);
-                        throw new HttpRequestException(msg.error);
-                    }
                     if (response.StatusCode == System.Net.HttpStatusCode.NotFound) {
                         var msg = Newtonsoft.Json.JsonConvert.DeserializeObject<Json.Error>(str);
                         throw new HttpRequestException(msg.error);
@@ -549,6 +545,7 @@ namespace Libmemo.Pages
                     if (response.StatusCode == System.Net.HttpStatusCode.BadRequest
                         || response.StatusCode == System.Net.HttpStatusCode.NotFound
                         || response.StatusCode == System.Net.HttpStatusCode.Forbidden
+                        || response.StatusCode == System.Net.HttpStatusCode.InternalServerError
                     ) {
                         var msg = Newtonsoft.Json.JsonConvert.DeserializeObject<Json.Error>(str);
                         throw new HttpRequestException(msg.error);
@@ -610,9 +607,9 @@ namespace Libmemo.Pages
                     if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
                         throw new UnauthorizedAccessException();
                     }
-                    if (response.StatusCode == System.Net.HttpStatusCode.BadRequest
-                        || response.StatusCode == System.Net.HttpStatusCode.NotFound
+                    if (response.StatusCode == System.Net.HttpStatusCode.NotFound
                         || response.StatusCode == System.Net.HttpStatusCode.Forbidden
+                        || response.StatusCode == System.Net.HttpStatusCode.InternalServerError
                     ) {
                         var msg = Newtonsoft.Json.JsonConvert.DeserializeObject<Json.Error>(str);
                         throw new HttpRequestException(msg.error);

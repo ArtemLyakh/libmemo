@@ -409,7 +409,9 @@ namespace Libmemo.Pages
                     if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) {
                         throw new UnauthorizedAccessException();
                     }
-                    if (response.StatusCode == System.Net.HttpStatusCode.BadRequest) {
+                    if (response.StatusCode == System.Net.HttpStatusCode.BadRequest
+                        || response.StatusCode == System.Net.HttpStatusCode.InternalServerError
+                    ) {
                         var msg = Newtonsoft.Json.JsonConvert.DeserializeObject<Json.Error>(str);
                         throw new HttpRequestException(msg.error);
                     }
