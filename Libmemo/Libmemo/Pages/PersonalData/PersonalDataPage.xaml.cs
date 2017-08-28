@@ -75,7 +75,7 @@ namespace Libmemo {
                 }
 
                 var str = await response.Content.ReadAsStringAsync();
-                var data = JsonConvert.DeserializeObject<Json.PersonalData>(str);
+                var data = JsonConvert.DeserializeObject<Json.AccountData>(str);
 
                 this.FirstName = data.first_name;
                 this.SecondName = data.second_name;

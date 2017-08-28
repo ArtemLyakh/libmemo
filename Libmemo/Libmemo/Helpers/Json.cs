@@ -27,7 +27,7 @@ namespace Libmemo.Json {
         public string email { get; set; }
     }
 
-    public class PersonalData {
+    public class AccountData {
         public string first_name { get; set; }
         public string second_name { get; set; }
         public string last_name { get; set; }

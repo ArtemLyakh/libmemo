@@ -39,6 +39,7 @@ namespace Libmemo {
 
 
         public const string RELATIVES_URL = SERVER_URL + "/api2/relatives/";
+        public const string ACCOUNT_URL = SERVER_URL + "/api2/account/";
 
         #endregion
 

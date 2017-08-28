@@ -118,7 +118,7 @@ namespace Libmemo {
 
         public ICommand LKCommand => new Command(async () => {
             if (!AuthHelper.IsLogged || AuthHelper.IsAdmin) return;
-            await App.GlobalPage.PushRoot(new PersonalDataPage());
+            await App.GlobalPage.PushRoot(new Pages.Account());
             App.SetShowMenu(false);
         });
 
