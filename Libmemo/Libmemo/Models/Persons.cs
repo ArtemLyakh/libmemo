@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Libmemo.Models.Person
+namespace Libmemo.Models
 {
     public abstract class Person
     {

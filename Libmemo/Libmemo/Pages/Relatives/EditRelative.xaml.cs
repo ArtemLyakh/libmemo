@@ -389,7 +389,7 @@ namespace Libmemo.Pages
 
 
 
-            private void SetData(Models.Person.Person person)
+            private void SetData(Models.Person person)
             {
                 this.FirstName = person.FirstName;
                 this.LastName = person.LastName;
@@ -397,8 +397,8 @@ namespace Libmemo.Pages
                 if (person.DateBirth.HasValue) this.DateBirth = person.DateBirth.Value;
                 if (person.Image != null) this.PhotoSource = ImageSource.FromUri(person.Image);
 
-                if (person is Models.Person.DeadPerson) {
-                    var deadPerson = (Models.Person.DeadPerson)person;
+                if (person is Models.DeadPerson) {
+                    var deadPerson = (Models.DeadPerson)person;
 
                     this.PersonPosition = new Position(deadPerson.Latitude, deadPerson.Longitude);
                     if (deadPerson.DateDeath.HasValue) this.DateDeath = deadPerson.DateDeath.Value;
@@ -461,10 +461,10 @@ namespace Libmemo.Pages
                 }
 
 
-                Models.Person.Person person;
+                Models.Person person;
                 try {
                     var json = Newtonsoft.Json.JsonConvert.DeserializeObject<Json.Person>(str);
-                    person = Models.Person.Person.Convert(json);
+                    person = Models.Person.Convert(json);
                 } catch {
                     App.ToastNotificator.Show("Ошибка ответа сервера");
                     return;
@@ -563,10 +563,10 @@ namespace Libmemo.Pages
                 }
 
 
-                Models.Person.Person person;
+                Models.Person person;
                 try {
                     var json = Newtonsoft.Json.JsonConvert.DeserializeObject<Json.Person>(str);
-                    person = Models.Person.Person.Convert(json);
+                    person = Models.Person.Convert(json);
                 } catch {
                     App.ToastNotificator.Show("Ошибка ответа сервера");
                     return;
