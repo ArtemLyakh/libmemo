@@ -114,8 +114,8 @@
     <Compile Include="Pages\PersonsManage\Edit\EditPersonPageAdmin.xaml.cs">
       <DependentUpon>EditPersonPageAdmin.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Auth\Login\LoginPage.xaml.cs">
-      <DependentUpon>LoginPage.xaml</DependentUpon>
+    <Compile Include="Pages\Auth\Login\Login.xaml.cs">
+      <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Core\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -284,7 +284,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\Auth\Login\LoginPage.xaml">
+    <EmbeddedResource Include="Pages\Auth\Login\Login.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

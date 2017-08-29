@@ -106,7 +106,7 @@ namespace Libmemo {
 
             });
 
-            public ICommand LoginCommand => new Command(async () => await App.GlobalPage.PushRoot(new LoginPage()));
+            public ICommand LoginCommand => new Command(async () => await App.GlobalPage.PushRoot(new Pages.Login()));
 
         }
     }

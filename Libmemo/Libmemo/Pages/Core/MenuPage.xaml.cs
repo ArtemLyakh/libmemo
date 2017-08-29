@@ -59,7 +59,7 @@ namespace Libmemo {
                 yield return new MenuItem {
                     Text = "Авторизация",
                     Image = ImageSource.FromFile("menu_login"),
-                    Action = () => App.GlobalPage.PushRoot(new LoginPage())
+                    Action = () => App.GlobalPage.PushRoot(new Pages.Login())
                 };
                 yield return new MenuItem {
                     Text = "Регистрация",

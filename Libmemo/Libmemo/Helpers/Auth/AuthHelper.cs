@@ -32,7 +32,7 @@ namespace Libmemo {
         public static async Task ReloginAsync() {
             InnerLogout();
 
-            await App.GlobalPage.PushRoot(new LoginPage());
+            await App.GlobalPage.PushRoot(new Pages.Login());
         }
 
         public static bool IsLogged { get => Settings.AuthInfo != null; }

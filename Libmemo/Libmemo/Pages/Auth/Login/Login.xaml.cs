@@ -12,16 +12,16 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Libmemo {
+namespace Libmemo.Pages {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class LoginPage : ContentPage {
+    public partial class Login : ContentPage {
 
         private ViewModel Model {
             get => (ViewModel)BindingContext;
             set => BindingContext = value;
         }
 
-        public LoginPage() {
+        public Login() {
             InitializeComponent();
             BindingContext = new ViewModel();
         }
@@ -78,16 +78,18 @@ namespace Libmemo {
                 }
 
                 StartLoading("Авторизация");
-                var uri = new Uri(Settings.LOGIN_URL);
+
+
                 var content = new FormUrlEncodedContent(new Dictionary<string, string> {
                     {"email", this.Email },
                     {"password", this.Password }
                 });
+
                 
-                HttpResponseMessage response = null;
+                HttpResponseMessage response;
                 try {
                     cancelTokenSource = new CancellationTokenSource();
-                    response = await WebClient.Instance.SendAsync(HttpMethod.Post, uri, content, 10, cancelTokenSource.Token);
+                    response = await WebClient.Instance.SendAsync(HttpMethod.Post, new Uri(Settings.LOGIN_URL), content, 30, cancelTokenSource.Token);
                 } catch (TimeoutException) {
                     App.ToastNotificator.Show("Превышен интервал запроса");
                     return;
@@ -100,40 +102,56 @@ namespace Libmemo {
                     cancelTokenSource = null;
                     StopLoading();
                 }
-                if (response == null) return;
 
 
-                try {
-                    var str = await response.Content.ReadAsStringAsync();
+                var str = await response.Content.ReadAsStringAsync();
 
-                    if (response.StatusCode == HttpStatusCode.BadRequest) {
-                        var error = JsonConvert.DeserializeObject<Json.Message>(str).message;
-                        throw new HttpRequestException(error);
-                    }
 
-                    response.EnsureSuccessStatusCode();
+				try
+				{
+					if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+					{
+						throw new UnauthorizedAccessException();
+					}
+					if (response.StatusCode == System.Net.HttpStatusCode.BadRequest) {
+						var msg = Newtonsoft.Json.JsonConvert.DeserializeObject<Json.Error>(str);
+						throw new HttpRequestException(msg.error);
+					}
+					response.EnsureSuccessStatusCode();
+				}
+				catch (UnauthorizedAccessException)
+				{
+					await AuthHelper.ReloginAsync();
+					return;
+				}
+				catch (HttpRequestException ex)
+				{
+					App.ToastNotificator.Show(ex.Message);
+					return;
+				}
+				catch
+				{
+					App.ToastNotificator.Show("Ошибка");
+					return;
+				}
 
-                    var authJson = JsonConvert.DeserializeObject<Json.Auth>(str);
-                    var authInfo = new AuthInfo(
-                        IsAdmin: authJson.is_admin,
-                        UserId: authJson.id,
-                        Email: authJson.email,
-                        Fio: authJson.fio,
-                        CookieContainer: Settings.Cookies
-                    );
-                    var authCredentials = new AuthCredentials(
-                        Email: Email,
-                        Password: Password
-                    );
 
-                    AuthHelper.Login(authInfo, authCredentials);
 
-                    await App.GlobalPage.PopToRootPage();
-                } catch (HttpRequestException ex) {
-                    App.ToastNotificator.Show(ex.Message);
-                } catch {
-                    App.ToastNotificator.Show("Ошибка");
-                }
+				var authJson = JsonConvert.DeserializeObject<Json.Auth>(str);
+				var authInfo = new AuthInfo(
+					IsAdmin: authJson.is_admin,
+					UserId: authJson.id,
+					Email: authJson.email,
+					Fio: authJson.fio,
+					CookieContainer: Settings.Cookies
+				);
+				var authCredentials = new AuthCredentials(
+					Email: Email,
+					Password: Password
+				);
+
+				AuthHelper.Login(authInfo, authCredentials);
+                await App.GlobalPage.Pop();
 
             });
 
