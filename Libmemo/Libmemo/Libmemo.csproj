@@ -132,8 +132,8 @@
     <Compile Include="Pages\Auth\Register\RegisterAdminPage.xaml.cs">
       <DependentUpon>RegisterAdminPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Auth\Register\RegisterPage.xaml.cs">
-      <DependentUpon>RegisterPage.xaml</DependentUpon>
+    <Compile Include="Pages\Auth\Register\Register.xaml.cs">
+      <DependentUpon>Register.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\MapSearchPage.xaml.cs">
       <DependentUpon>MapSearchPage.xaml</DependentUpon>
@@ -290,7 +290,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\Auth\Register\RegisterPage.xaml">
+    <EmbeddedResource Include="Pages\Auth\Register\Register.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

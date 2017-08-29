@@ -64,7 +64,7 @@ namespace Libmemo {
                 yield return new MenuItem {
                     Text = "Регистрация",
                     Image = ImageSource.FromFile("menu_reg"),
-                    Action = () => App.GlobalPage.PushRoot(new RegisterPage())
+                    Action = () => App.GlobalPage.PushRoot(new Pages.Register())
                 };
             } else {
                 if (AuthHelper.IsAdmin) {

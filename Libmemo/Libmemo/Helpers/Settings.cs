@@ -19,7 +19,7 @@ namespace Libmemo {
 
 
 
-        public const string REGISTER_URL = SERVER_URL + "/api/auth/register.php";
+
         public const string REGISTER_URL_ADMIN = SERVER_URL + "/api/auth/register_admin.php";
 
         public const string PERSONAL_DATA_URL = SERVER_URL + "/api/personal/personal_data.php";
@@ -41,7 +41,7 @@ namespace Libmemo {
         public const string RELATIVES_URL = SERVER_URL + "/api2/relatives/";
         public const string ACCOUNT_URL = SERVER_URL + "/api2/account/";
         public const string LOGIN_URL = SERVER_URL + "/api2/auth/login/";
-
+        public const string REGISTER_URL = SERVER_URL + "/api2/auth/register/";
         #endregion
 
 

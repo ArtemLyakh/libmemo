@@ -151,11 +151,11 @@ namespace Libmemo.Pages {
 				);
 
 				AuthHelper.Login(authInfo, authCredentials);
-                await App.GlobalPage.Pop();
+                await App.GlobalPage.PopToRootPage();
 
             });
 
-            public ICommand RegisterCommand => new Command(async () => await App.GlobalPage.PushRoot(new RegisterPage()));
+            public ICommand RegisterCommand => new Command(async () => await App.GlobalPage.PushRoot(new Pages.Register()));
 
 
         }
