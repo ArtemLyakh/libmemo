@@ -171,6 +171,7 @@
     <Compile Include="Pages\Tree\Tree.xaml.cs">
       <DependentUpon>Tree.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Tree.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml">
