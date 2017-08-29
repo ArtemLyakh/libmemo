@@ -102,7 +102,7 @@ namespace Libmemo {
                     yield return new MenuItem {
                         Text = "Древо",
                         Image = ImageSource.FromFile("menu_tree"),
-                        Action = () => App.GlobalPage.PushRoot(new TreePage())
+                        Action = () => App.GlobalPage.PushRoot(new Pages.Tree())
                     };
                 }
 

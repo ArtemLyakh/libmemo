@@ -48,4 +48,43 @@ namespace Libmemo.Json {
     class PersonDelete {
         public int id { get; set; }
     }
+
+
+
+
+
+
+	public class UserListEntry
+	{
+		public int id { get; set; }
+		public string type { get; set; }
+		public string first_name { get; set; }
+		public string second_name { get; set; }
+		public string last_name { get; set; }
+		public string preview_image_url { get; set; }
+	}
+	public class UserList
+	{
+		public List<UserListEntry> relatives { get; set; }
+	}
+
+
+
+
+
+
+	public class Tree
+	{
+		public class Structure
+		{
+			public int current { get; set; }
+			public int? mother { get; set; }
+			public int? father { get; set; }
+			public List<int> siblings { get; set; }
+		}
+
+		public int user { get; set; }
+		public Dictionary<int, UserListEntry> persons { get; set; }
+		public List<Structure> structure { get; set; }
+	}
 }

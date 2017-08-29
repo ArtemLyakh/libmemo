@@ -168,6 +168,9 @@
       <DependentUpon>Relatives.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Persons.cs" />
+    <Compile Include="Pages\Tree\Tree.xaml.cs">
+      <DependentUpon>Tree.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml">
@@ -177,6 +180,9 @@
     <EmbeddedResource Include="Pages\Relatives\Relatives.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Tree\Tree.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+    x:Class="Libmemo.Pages.Tree"
+    xmlns:local="clr-namespace:Libmemo"
+    xmlns:ffi="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    NavigationPage.HasNavigationBar="False"
+    >
+	<ContentPage.Content>
+        <RelativeLayout>
+            <Grid RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                  RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
+                  RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0,Constant=0}"
+                  RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"
+                  RowSpacing="0"
+                  >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <StackLayout Grid.Column="0"
+                             Grid.Row="0"
+                             HeightRequest="50"
+                             Orientation="Horizontal"
+                             BackgroundColor="#333333"
+                             Padding="5"
+                             Spacing="5"
+                             >
+                    <ffi:CachedImage Source="back.png"
+                                     VerticalOptions="CenterAndExpand"
+                                     HorizontalOptions="Start"
+                                     WidthRequest="40"
+                                     HeightRequest="40"
+                                     Aspect="AspectFill"
+                                     >
+                        <ffi:CachedImage.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding BackCommand}" />
+                        </ffi:CachedImage.GestureRecognizers>
+                    </ffi:CachedImage>
+                    <Label Text="Древо"
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="StartAndExpand"
+                           TextColor="White"
+                           FontSize="Medium"
+                           HorizontalTextAlignment="Start"
+                           Margin="10,0"
+                           />
+                    <ffi:CachedImage Source="reload.png"
+                                     VerticalOptions="CenterAndExpand"
+                                     HorizontalOptions="End"
+                                     WidthRequest="40"
+                                     HeightRequest="40"
+                                     Aspect="AspectFill"
+                                     >
+                        <ffi:CachedImage.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ResetCommand}" />
+                        </ffi:CachedImage.GestureRecognizers>
+                    </ffi:CachedImage>
+                    <ffi:CachedImage Source="save.png"
+                                     VerticalOptions="CenterAndExpand"
+                                     HorizontalOptions="End"
+                                     WidthRequest="40"
+                                     HeightRequest="40"
+                                     Aspect="AspectFill"
+                                     >
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SaveCommand}" />
+                        </Image.GestureRecognizers>
+                    </ffi:CachedImage>
+                </StackLayout>
+                <RelativeLayout Grid.Column="0"
+                                Grid.Row="1"
+                                BackgroundColor="#EEEFF1"
+                                >
+                    <ScrollView x:Name="scroll"
+                                Orientation="Both"
+                                RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                                RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
+                                RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0}"
+                                RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0}"
+                                >
+                        <AbsoluteLayout x:Name="absolute" />
+                    </ScrollView>
+
+                    <StackLayout x:Name="right"
+                                 Orientation="Vertical"
+                                 Spacing="0"
+                                 RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0, Constant=50}"
+                                 RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
+                                 RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=1,Constant=-50}"
+                                 RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"
+                                 >
+                        <StackLayout x:Name="bottomRight"
+                                     VerticalOptions="EndAndExpand"
+                                     HorizontalOptions="Fill"
+                                     Spacing="5"
+                                     Padding="5"
+                                     >
+                            <ffi:CachedImage Source="zoom_in.png"
+                                             WidthRequest="40"
+                                             HeightRequest="40"
+                                             Aspect="AspectFill"
+                                             >
+                                <ffi:CachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ZoomInCommand}" />
+                                </ffi:CachedImage.GestureRecognizers>
+                            </ffi:CachedImage>
+                            <ffi:CachedImage Source="zoom_out.png"
+                                             WidthRequest="40"
+                                             HeightRequest="40"
+                                             Aspect="AspectFill"
+                                             >
+                                <ffi:CachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ZoomOutCommand}" />
+                                </ffi:CachedImage.GestureRecognizers>
+                            </ffi:CachedImage>
+                        </StackLayout>
+                    </StackLayout>
+                </RelativeLayout>
+            </Grid>
+            <StackLayout RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                         RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
+                         RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0,Constant=0}"
+                         RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=0,Constant=0}"
+                         BackgroundColor="#80000000"
+                         IsVisible="{Binding IsLoading}"
+                         >
+                <StackLayout HorizontalOptions="CenterAndExpand"
+                             VerticalOptions="CenterAndExpand"
+                             BackgroundColor="White"
+                             Orientation="Horizontal"
+                             Padding="15"
+                             >
+                    <ActivityIndicator IsRunning="true"
+                                       Color="Black"                                   
+                                       HorizontalOptions="StartAndExpand"
+                                       VerticalOptions="CenterAndExpand"
+                                       Margin="0,0,20,0"
+                                       />
+                    <Label TextColor="Black"
+                           HorizontalOptions="End"
+                           VerticalOptions="CenterAndExpand"
+                           FontSize="Medium"
+                           Text="{Binding LoadingString}"
+                           />
+                </StackLayout>
+            </StackLayout>
+        </RelativeLayout>
+	</ContentPage.Content>
+</ContentPage>
