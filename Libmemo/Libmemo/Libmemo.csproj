@@ -172,6 +172,9 @@
       <DependentUpon>Tree.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Tree.cs" />
+    <Compile Include="Pages\ServerSearch.xaml.cs">
+      <DependentUpon>ServerSearch.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml">
@@ -183,6 +186,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\Tree\Tree.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\ServerSearch.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

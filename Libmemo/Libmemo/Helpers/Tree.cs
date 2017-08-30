@@ -327,7 +327,7 @@ namespace Libmemo.Helpers
 
 				#region Button
 				x += ADD_BUTTON_WIDTH / 2;
-				element = GetAddNewButton(new Point(x, y), null); //() => AddClickHandler(item.Person, AddPersonType.Sibling)
+				element = GetAddNewButton(new Point(x, y), () => AddClickHandler(null, AddPersonType.Sibling)); //() => AddClickHandler(item.Person, AddPersonType.Sibling)
 				Views.Add(element);
 				#endregion
 
@@ -371,6 +371,9 @@ namespace Libmemo.Helpers
 		}
 		private async void AddClickHandler(Item person, AddPersonType type)
 		{
+            await App.GlobalPage.Push(new Pages.ServerSearch(json => {
+                var q = 1;
+            }));
 			//var page = new SelectPersonExceptPage(presentPersonIds);
 			//page.ItemSelected += async (sender, selected) => {
 			//	await App.GlobalPage.Pop();
