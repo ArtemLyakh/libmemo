@@ -85,6 +85,6 @@ namespace Libmemo.Json {
 
 		public int user { get; set; }
 		public Dictionary<int, UserListEntry> persons { get; set; }
-		public List<Structure> structure { get; set; }
+		public Dictionary<int, Structure> structure { get; set; }
 	}
 }
