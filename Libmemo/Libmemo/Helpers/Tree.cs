@@ -31,6 +31,16 @@ namespace Libmemo.Helpers
                     : ImageSource.FromFile("no_tree_img");
 			}
 
+            public static Item Construct(Json.UserListEntry json, AddPersonType type) 
+            {
+                switch (type) {
+					case AddPersonType.Sibling:
+                        return new Item.SiblingItem(json.id, Tree.ConstructFioFromPerson(json), json.type == "alive" || json.type == "user", json.preview_image_url);
+                    case AddPersonType.Mother: case AddPersonType.Father:
+                        return new Item.NormalItem(json.id, Tree.ConstructFioFromPerson(json), json.type == "alive" || json.type == "user", json.preview_image_url);
+                    default: throw new NotSupportedException();
+                }
+            }
 
             public class SiblingItem : Item
             {
@@ -58,7 +68,7 @@ namespace Libmemo.Helpers
             this.Scroll = scroll;
         }
 
-        private string ConstructFio(string firstName, string secondName, string lastname)
+        private static string ConstructFio(string firstName, string secondName, string lastname)
         {
             var fio = new List<string>();
             if (!string.IsNullOrWhiteSpace(lastname)) fio.Add(lastname);
@@ -67,7 +77,7 @@ namespace Libmemo.Helpers
 
             return string.Join(" ", fio);
         }
-        private string ConstructFioFromPerson(Json.UserListEntry person)
+        private static string ConstructFioFromPerson(Json.UserListEntry person)
         {
             return ConstructFio(person.first_name, person.last_name, person.second_name);
         }
@@ -271,11 +281,11 @@ namespace Libmemo.Helpers
 				var y = LayoutHeight - LEVEL_HEIGHT / 2 - (level - 1) * LEVEL_HEIGHT;
 
 				Point MotherConnectPoint = item.Mother == null
-					? IterationAddButton(item.Columns.First(), level + 1, item, null) //() => AddClickHandler(item.Person, AddPersonType.Mother)
+                    ? IterationAddButton(item.Columns.First(), level + 1, item, GetSelectPersonAction(item, AddPersonType.Mother))
 					: Iteration(item.Mother, level + 1);
 
 				Point FatherConnectPoint = item.Father == null
-					? IterationAddButton(item.Columns.Last(), level + 1, item, null) //() => AddClickHandler(item.Person, AddPersonType.Father)
+                    ? IterationAddButton(item.Columns.Last(), level + 1, item, GetSelectPersonAction(item, AddPersonType.Father))
 					: Iteration(item.Father, level + 1);
 
 				#region Draw
@@ -286,7 +296,7 @@ namespace Libmemo.Helpers
 				var bottomConnectPoint = new Point(x, y + TREE_ITEM_HEIGHT / 2);
 				var topConnectPoint = new Point(x, y - TREE_ITEM_HEIGHT / 2);
 				var levelLine = y - LEVEL_HEIGHT / 2;
-				element = GetTreeItem(new Point(x, y), item, null); //() => TreeItemClickHandler(item.Person)
+				element = GetTreeItem(new Point(x, y), item, GetOnElementClickAction(item)); //() => TreeItemClickHandler(item.Person)
 				Views.Add(element);
 				x += TREE_ITEM_WIDTH / 2;
 				#endregion
@@ -311,7 +321,7 @@ namespace Libmemo.Helpers
 
 					#region Sibling
 					x += TREE_ITEM_WIDTH / 2;
-					element = GetTreeItem(new Point(x, y), sibling, null); //() => TreeItemClickHandler(sibling)
+					element = GetTreeItem(new Point(x, y), sibling, GetOnElementClickAction(sibling)); //() => TreeItemClickHandler(sibling)
 					Views.Add(element);
 					x += TREE_ITEM_WIDTH / 2;
 					#endregion
@@ -327,7 +337,7 @@ namespace Libmemo.Helpers
 
 				#region Button
 				x += ADD_BUTTON_WIDTH / 2;
-				element = GetAddNewButton(new Point(x, y), () => AddClickHandler(null, AddPersonType.Sibling)); //() => AddClickHandler(item.Person, AddPersonType.Sibling)
+                element = GetAddNewButton(new Point(x, y), GetSelectPersonAction(item, AddPersonType.Sibling));
 				Views.Add(element);
 				#endregion
 
@@ -365,38 +375,28 @@ namespace Libmemo.Helpers
 
 
 
-		private enum AddPersonType
+		public enum AddPersonType
 		{
 			Mother, Father, Sibling
 		}
-		private async void AddClickHandler(Item person, AddPersonType type)
-		{
-            await App.GlobalPage.Push(new Pages.ServerSearch(json => {
-                var q = 1;
-            }));
-			//var page = new SelectPersonExceptPage(presentPersonIds);
-			//page.ItemSelected += async (sender, selected) => {
-			//	await App.GlobalPage.Pop();
+        private Action GetSelectPersonAction(Item.NormalItem person, AddPersonType type) => async () => await App.GlobalPage.Push(new Pages.ServerSearch(async json =>
+        {
+            switch (type) {
+                case AddPersonType.Sibling:
+                    person.Siblings.Add((Item.SiblingItem)Item.Construct(json, type));
+                    break;
+                case AddPersonType.Mother:
+                    person.Mother = (Item.NormalItem)Item.Construct(json, type);
+                    break;
+                case AddPersonType.Father:
+                    person.Father = (Item.NormalItem)Item.Construct(json, type);
+					break;
+            }
 
-			//	var item = SearchInTree(person.Id);
-			//	if (item == null) return;
-			//	switch (type)
-			//	{
-			//		case AddPersonType.Sibling:
-			//			item.Siblings.Add(selected);
-			//			break;
-			//		case AddPersonType.Mother:
-			//			item.Mother = new Item(selected);
-			//			break;
-			//		case AddPersonType.Father:
-			//			item.Father = new Item(selected);
-			//			break;
-			//	}
-			//	RedrawTree();
-			//};
+            await App.GlobalPage.Pop();
+            await RedrawTree();
+        }));
 
-			//await App.GlobalPage.Push(page);
-		}
 
 		private enum TreeItemAction
 		{
@@ -404,8 +404,7 @@ namespace Libmemo.Helpers
 			Details, Replace, Delete
 		}
 
-		private async void TreeItemClickHandler(Person person)
-		{
+        private Action GetOnElementClickAction(Item item) => async () => {
 			var actions = new Dictionary<string, TreeItemAction> {
 				{ "Просмотреть", TreeItemAction.Details },
 				{ "Заменить", TreeItemAction.Replace },
@@ -414,7 +413,7 @@ namespace Libmemo.Helpers
 			var cancel = new KeyValuePair<string, TreeItemAction>("Отмена", TreeItemAction.Cancel);
 
 			var action = (await App.Current.MainPage.DisplayActionSheet(
-				person.FIO,
+                item.Fio,
 				cancel.Key,
 				null,
 				actions.Select(i => i.Key).ToArray())
@@ -426,47 +425,46 @@ namespace Libmemo.Helpers
 			switch (selectedAction)
 			{
 				case TreeItemAction.Details:
-					TreeItemDetails(person);
+					await TreeItemDetails(item);
 					break;
 				case TreeItemAction.Replace:
-					TreeItemReplace(person);
+					await TreeItemReplace(item);
 					break;
 				case TreeItemAction.Delete:
-					TreeItemDelete(person);
+					TreeItemDelete(item);
 					break;
 				case TreeItemAction.Cancel:
 				default:
 					return;
 			}
-		}
-		private async void TreeItemDetails(Person person)
+        };
+
+		private async Task TreeItemDetails(Item item)
 		{
             throw new NotImplementedException();
 			//var page = new DetailPage(person.Id);
 			//await App.GlobalPage.Push(page);
 		}
-		private async void TreeItemReplace(Person person)
+		private async Task TreeItemReplace(Item item)
 		{
-            throw new NotImplementedException();
-			//if (person.Id == Root.Person.Id)
-			//{
-			//	App.ToastNotificator.Show("Невозможно заменить корневой элемент");
-			//	return;
-			//}
+			if (item == Root) {
+				App.ToastNotificator.Show("Невозможно заменить корневой элемент");
+				return;
+			}
+            await App.GlobalPage.Push(new Pages.ServerSearch(async json =>
+            {
+                item.Fio = ConstructFioFromPerson(json);
+                item.Id = json.id;
+                item.IsAlive = json.type == "alive" || json.type == "user";
+                item.Image = json.preview_image_url != null && Uri.TryCreate(json.preview_image_url, UriKind.Absolute, out Uri uri)
+					? ImageSource.FromUri(uri)
+					: ImageSource.FromFile("no_tree_img");
 
-			//var presentPersonIds = this.GetInTreePersonIds();
-			//var page = new SelectPersonExceptPage(presentPersonIds);
-			//page.ItemSelected += async (sender, selected) => {
-			//	await App.GlobalPage.Pop();
-
-			//	var item = SearchInTree(person.Id);
-			//	item.Person = selected;
-			//	RedrawTree();
-			//};
-
-			//await App.GlobalPage.Push(page);
+                await App.GlobalPage.Pop();
+                await RedrawTree();
+            }));
 		}
-		private void TreeItemDelete(Person person)
+		private void TreeItemDelete(Item item)
 		{
             throw new NotImplementedException();
 			//if (person.Id == Root.Person.Id)
