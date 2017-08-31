@@ -296,7 +296,7 @@ namespace Libmemo.Helpers
 				var bottomConnectPoint = new Point(x, y + TREE_ITEM_HEIGHT / 2);
 				var topConnectPoint = new Point(x, y - TREE_ITEM_HEIGHT / 2);
 				var levelLine = y - LEVEL_HEIGHT / 2;
-				element = GetTreeItem(new Point(x, y), item, GetOnElementClickAction(item)); //() => TreeItemClickHandler(item.Person)
+				element = GetTreeItem(new Point(x, y), item, GetOnElementClickAction(item));
 				Views.Add(element);
 				x += TREE_ITEM_WIDTH / 2;
 				#endregion
@@ -321,7 +321,7 @@ namespace Libmemo.Helpers
 
 					#region Sibling
 					x += TREE_ITEM_WIDTH / 2;
-					element = GetTreeItem(new Point(x, y), sibling, GetOnElementClickAction(sibling)); //() => TreeItemClickHandler(sibling)
+					element = GetTreeItem(new Point(x, y), sibling, GetOnElementClickAction(sibling));
 					Views.Add(element);
 					x += TREE_ITEM_WIDTH / 2;
 					#endregion
@@ -431,7 +431,7 @@ namespace Libmemo.Helpers
 					await TreeItemReplace(item);
 					break;
 				case TreeItemAction.Delete:
-					TreeItemDelete(item);
+					await TreeItemDelete(item);
 					break;
 				case TreeItemAction.Cancel:
 				default:
@@ -464,34 +464,27 @@ namespace Libmemo.Helpers
                 await RedrawTree();
             }));
 		}
-		private void TreeItemDelete(Item item)
+		private async Task TreeItemDelete(Item delete)
 		{
-            throw new NotImplementedException();
-			//if (person.Id == Root.Person.Id)
-			//{
-			//	App.ToastNotificator.Show("Невозможно удалить корневой элемент");
-			//	return;
-			//}
+            if (delete == Root) {
+				App.ToastNotificator.Show("Невозможно удалить корневой элемент");
+				return;
+			}
 
-			//void Iteration(Item item)
-			//{
-			//	if (item.Mother != null && item.Mother.Person.Id == person.Id)
-			//	{
-			//		item.Mother = null;
-			//	}
-			//	if (item.Father != null && item.Father.Person.Id == person.Id)
-			//	{
-			//		item.Father = null;
-			//	}
-			//	item.Siblings.RemoveAll(i => i.Id == person.Id);
+            void Iteration(Item.NormalItem item)
+			{
+                if (item.Mother == delete) item.Mother = null;
+                if (item.Father == delete) item.Father = null;
+                item.Siblings.RemoveAll(i => i == delete);
 
-			//	if (item.Mother != null) Iteration(item.Mother);
-			//	if (item.Father != null) Iteration(item.Father);
-			//}
-			//Iteration(Root);
+				if (item.Mother != null) Iteration(item.Mother);
+				if (item.Father != null) Iteration(item.Father);
+			}
+			Iteration(Root);
 
-			//RedrawTree();
+			await RedrawTree();
 		}
+
 
 		private (View, Point) GetLine(Point A, Point B)
 		{
