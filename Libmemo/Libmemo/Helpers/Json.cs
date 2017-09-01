@@ -87,4 +87,11 @@ namespace Libmemo.Json {
 		public Dictionary<int, UserListEntry> persons { get; set; }
 		public Dictionary<int, Structure> structure { get; set; }
 	}
+    public class TreeSave
+    {
+		public int person { get; set; }
+		public int? mother { get; set; }
+		public int? father { get; set; }
+		public List<int> siblings { get; set; }
+    }
 }

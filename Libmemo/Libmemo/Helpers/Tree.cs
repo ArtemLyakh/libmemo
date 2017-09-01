@@ -90,7 +90,7 @@ namespace Libmemo.Helpers
                 var structure = data.structure[id];
                 var person = data.persons[id];
 
-                var item = new Item.NormalItem(person.id, ConstructFioFromPerson(person), person.type == "alive", person.preview_image_url);
+                var item = new Item.NormalItem(person.id, ConstructFioFromPerson(person), person.type == "alive" || person.type == "user", person.preview_image_url);
 
                 if (structure.mother.HasValue) item.Mother = DecodeItem(structure.mother.Value);
                 if (structure.father.HasValue) item.Father = DecodeItem(structure.father.Value);
@@ -98,7 +98,7 @@ namespace Libmemo.Helpers
                 foreach (var sibling in structure.siblings)
                 {
                     var siblingPerson = data.persons[sibling];
-                    item.Siblings.Add(new Item.SiblingItem(siblingPerson.id, ConstructFioFromPerson(siblingPerson), siblingPerson.type == "alive", siblingPerson.preview_image_url));
+                    item.Siblings.Add(new Item.SiblingItem(siblingPerson.id, ConstructFioFromPerson(siblingPerson), siblingPerson.type == "alive" || siblingPerson.type == "user", siblingPerson.preview_image_url));
                 }
 
                 return item;
@@ -544,6 +544,35 @@ namespace Libmemo.Helpers
 			return (element, point);
 		}
 
-        #endregion
+		#endregion
+
+        public List<Json.TreeSave> GetTreeAsJson()
+		{
+            var list = new List<Json.TreeSave>();
+
+            if (Root == null) throw new Exception("Tree is not initialized");
+
+            void Iteration(Item.NormalItem item)
+			{
+                var row = new Json.TreeSave() {
+                    siblings = new List<int>()
+                };
+
+                row.person = item.Id;
+                row.mother = item.Mother?.Id;
+                row.father = item.Father?.Id;
+                foreach (var sibling in item.Siblings) {
+                    row.siblings.Add(sibling.Id);
+                }
+
+                list.Add(row);
+
+				if (item.Mother != null) Iteration(item.Mother);
+				if (item.Father != null) Iteration(item.Father);
+			}
+			Iteration(Root);
+
+			return list;
+		}
     }
 }

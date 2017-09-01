@@ -141,74 +141,79 @@ namespace Libmemo.Pages
 			public ICommand ZoomOutCommand => new Command(async () => await Tree?.ZoomOut());
 
 
-			public ICommand SaveCommand => new Command(() => { var q = 1; });
+			public ICommand SaveCommand => new Command(async () => { 
+                if (cancelTokenSource != null) return;
+
+                List<Json.TreeSave> list;
+                try {
+                    list = Tree.GetTreeAsJson();
+                } catch {
+                    App.ToastNotificator.Show("Древо не инициализировано");
+                    return;
+                }
+
+				var json = Newtonsoft.Json.JsonConvert.SerializeObject(list);
+				var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                StartLoading("Сохранение");
+
+				HttpResponseMessage response;
+				try
+				{
+					cancelTokenSource = new CancellationTokenSource();
+                    response = await WebClient.Instance.SendAsync(HttpMethod.Post, new Uri(Settings.TREE_URL), content, 60, cancelTokenSource.Token);
+				}
+				catch (TimeoutException)
+				{
+					App.ToastNotificator.Show("Превышен интервал запроса");
+					return;
+				}
+				catch (OperationCanceledException)
+				{ //cancel
+					return;
+				}
+				catch
+				{
+					App.ToastNotificator.Show("Ошибка");
+					return;
+				}
+				finally
+				{
+					cancelTokenSource = null;
+					StopLoading();
+				}
 
 
 
+				var str = await response.Content.ReadAsStringAsync();
 
 
 
-			protected async void Save()
-			{
-				//if (cancelTokenSource != null) return;
-
-				//var data = Tree?.GetTreeAsJson();
-				//if (data == null) return;
-
-				//var json = Newtonsoft.Json.JsonConvert.SerializeObject(data);
-				//var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-				//StartLoading("Сохранение");
-
-				//HttpResponseMessage response = null;
-				//try
-				//{
-				//	cancelTokenSource = new CancellationTokenSource();
-				//	response = await WebClient.Instance.SendAsync(HttpMethod.Post, new Uri(Settings.TREE_DATA_URL), content, 20, cancelTokenSource.Token);
-				//}
-				//catch (TimeoutException)
-				//{
-				//	App.ToastNotificator.Show("Превышен интервал запроса");
-				//	return;
-				//}
-				//catch (OperationCanceledException)
-				//{ //cancel
-				//	return;
-				//}
-				//catch
-				//{
-				//	App.ToastNotificator.Show("Ошибка");
-				//	return;
-				//}
-				//finally
-				//{
-				//	cancelTokenSource = null;
-				//	StopLoading();
-				//}
-				//if (response == null) return;
-
-				//try
-				//{
-				//	if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-				//	{
-				//		throw new UnauthorizedAccessException();
-				//	}
-				//	response.EnsureSuccessStatusCode();
-				//}
-				//catch (UnauthorizedAccessException)
-				//{
-				//	await AuthHelper.ReloginAsync();
-				//	return;
-				//}
-				//catch
-				//{
-				//	App.ToastNotificator.Show("Ошибка");
-				//	return;
-				//}
+				try
+				{
+					if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+					{
+						throw new UnauthorizedAccessException();
+					}
+					response.EnsureSuccessStatusCode();
+				}
+				catch (UnauthorizedAccessException)
+				{
+					await AuthHelper.ReloginAsync();
+					return;
+				}
+				catch
+				{
+					App.ToastNotificator.Show("Ошибка");
+					return;
+				}
 
 
-				//App.ToastNotificator.Show("Сохранено");
-			}
+
+                App.ToastNotificator.Show("Сохранено");
+
+			});
+
 
 		}
     }
