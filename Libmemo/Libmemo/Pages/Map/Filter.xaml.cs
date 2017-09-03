@@ -384,7 +384,7 @@ namespace Libmemo.Pages.Map
                 SearchCompleted?.Invoke(this, null);
             });
 
-            public ICommand ShowCommand => new Command(() => {
+            public ICommand ShowCommand => new Command(async () => {
                 if (Data == null) {
                     App.ToastNotificator.Show("Отсутствуют элементы");
                     return;
@@ -398,7 +398,7 @@ namespace Libmemo.Pages.Map
 
                 var list = elements.ToList();
 
-                throw new NotImplementedException();
+                await App.GlobalPage.Push(new Pages.Map.Map(list));
             });
 
 
