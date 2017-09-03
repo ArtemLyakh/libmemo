@@ -44,6 +44,7 @@ namespace Libmemo {
         public const string REGISTER_URL = SERVER_URL + "/api2/auth/register/";
         public const string TREE_URL = SERVER_URL + "/api2/tree/";
         public const string PERSONS_URL = SERVER_URL + "/api2/persons/";
+        public const string MAP_URL = SERVER_URL + "/api2/map/";
         #endregion
 
 

@@ -54,6 +54,9 @@ namespace Libmemo.Models
         public string Section { get; set; }
         public double? GraveNumber { get; set; }
 
+        public string Address { get; set; }
+        public string City { get; set; }
+
         public DeadPerson(int id, int owner, string firstName, double latitude, double longitude) : base(id, owner, firstName)
         {
             Latitude = latitude;
@@ -117,6 +120,12 @@ namespace Libmemo.Models
                 person.Section = json.section;
             if (double.TryParse(json.grave_number, NumberStyles.Any, CultureInfo.InvariantCulture, out double graveNumber))
                 person.GraveNumber = graveNumber;
+
+            if (!string.IsNullOrWhiteSpace(json.address))
+                person.Address = json.address;
+            if (!string.IsNullOrWhiteSpace(json.city))
+                person.City = json.city;
+
 
             return person;
         }

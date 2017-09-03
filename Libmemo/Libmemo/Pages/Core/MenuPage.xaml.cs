@@ -104,6 +104,11 @@ namespace Libmemo {
                         Image = ImageSource.FromFile("menu_tree"),
                         Action = () => App.GlobalPage.PushRoot(new Pages.Tree())
                     };
+                    yield return new MenuItem {
+                        Text = "Фильтр",
+                        Image = ImageSource.FromFile("menu_map"),
+                        Action = () => App.GlobalPage.PushRoot(new Pages.Map.Filter())
+                    };
                 }
 
                 yield return new MenuItem {

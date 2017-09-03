@@ -15,6 +15,8 @@ namespace Libmemo {
 
         public ICommand BackCommand => new Command(async () => await App.GlobalPage.Pop());
 
+        public ICommand OpenMenuCommand => new Command(() => App.SetShowMenu(true));
+
         public virtual void OnAppearing() { }
         public virtual void OnDisappearing() {
             cancelTokenSource?.Cancel();
