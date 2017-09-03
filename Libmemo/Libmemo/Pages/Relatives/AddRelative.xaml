@@ -316,6 +316,37 @@
                                        HorizontalTextAlignment="Center"
                                        />
                             </StackLayout>
+                            <StackLayout Orientation="Horizontal"
+                                         Spacing="0"
+                                         HorizontalOptions="FillAndExpand"
+                                         >
+                                <Label Text="Квартал: "
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="Start"
+                                       WidthRequest="{StaticResource titleWidth}"
+                                       />
+                                <Entry Text="{Binding Section}"
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="FillAndExpand"
+                                       HorizontalTextAlignment="Center"
+                                       />
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal"
+                                         Spacing="0"
+                                         HorizontalOptions="FillAndExpand"
+                                         >
+                                <Label Text="Номер могилы: "
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="Start"
+                                       WidthRequest="{StaticResource titleWidth}"
+                                       />
+                                <Entry Keyboard="Numeric"
+                                       Text="{Binding Path=GraveNumber, Converter={StaticResource NullableDoubleConverter}}"
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="FillAndExpand"
+                                       HorizontalTextAlignment="Center"
+                                       />
+                            </StackLayout>
                         </StackLayout>
 
                         <StackLayout HorizontalOptions="FillAndExpand"

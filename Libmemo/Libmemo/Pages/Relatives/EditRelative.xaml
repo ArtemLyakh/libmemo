@@ -243,6 +243,37 @@
                                         HorizontalTextAlignment="Center"
                                         />
                             </StackLayout>
+                            <StackLayout Orientation="Horizontal"
+                                         Spacing="0"
+                                         HorizontalOptions="FillAndExpand"
+                                         >
+                                <Label Text="Квартал: "
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="Start"
+                                       WidthRequest="{StaticResource titleWidth}"
+                                       />
+                                <Entry Text="{Binding Section}"
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="FillAndExpand"
+                                       HorizontalTextAlignment="Center"
+                                       />
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal"
+                                         Spacing="0"
+                                         HorizontalOptions="FillAndExpand"
+                                         >
+                                <Label Text="Номер могилы: "
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="Start"
+                                       WidthRequest="{StaticResource titleWidth}"
+                                       />
+                                <Entry Keyboard="Numeric"
+                                       Text="{Binding Path=GraveNumber, Converter={StaticResource NullableDoubleConverter}}"
+                                       VerticalOptions="CenterAndExpand"
+                                       HorizontalOptions="FillAndExpand"
+                                       HorizontalTextAlignment="Center"
+                                       />
+                            </StackLayout>
                         </StackLayout>
 
                         <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" IsVisible="{Binding IsDeadPerson}">
@@ -321,99 +352,6 @@
                                 />
                 </StackLayout>
             </StackLayout>
-
-
-            <!--
-            <StackLayout HorizontalOptions="FillAndExpand"
-                                 Spacing="15"
-                                 IsVisible="{Binding IsDeadPerson}"
-                                 >
-                        <StackLayout Orientation="Horizontal"
-                                     HorizontalOptions="FillAndExpand"
-                                     Padding="10"
-                                     Spacing="0"
-                                     >
-                            <Label Text="{Binding PersonLatLon}"
-                                   HorizontalOptions="StartAndExpand"
-                                   VerticalOptions="Center"
-                                   />
-                            <ffi:CachedImage Source="gps_off.png"
-                                             VerticalOptions="CenterAndExpand"
-                                             HorizontalOptions="End"
-                                             WidthRequest="40"
-                                             HeightRequest="40"
-                                             Aspect="AspectFill"
-                                             IsVisible="{Binding IsLatLonShow}"
-                                             >
-                                <ffi:CachedImage.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding GoToGeoCommand}" />
-                                </ffi:CachedImage.GestureRecognizers>
-                            </ffi:CachedImage>
-                            <ffi:CachedImage Source="arrow_up.png"
-                                             WidthRequest="40"
-                                             HeightRequest="40"
-                                             Aspect="AspectFill"
-                                             VerticalOptions="CenterAndExpand"
-                                             HorizontalOptions="End"
-                                             Margin="10,0,0,0"
-                                             >
-                                <ffi:CachedImage.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding ButtonShowHideClickCommand}" />
-                                </ffi:CachedImage.GestureRecognizers>
-                                <ffi:CachedImage.Triggers>
-                                    <DataTrigger TargetType="ffi:CachedImage"
-                                                 Binding="{Binding IsLatLonShow}"
-                                                 Value="True"
-                                                 >
-                                        <Setter Property="Source" Value="arrow_down.png" />
-                                    </DataTrigger>
-                                </ffi:CachedImage.Triggers>
-                            </ffi:CachedImage>
-                        </StackLayout>
-                        <StackLayout HorizontalOptions="FillAndExpand"
-                                     Spacing="10"
-                                     IsVisible="{Binding IsLatLonShow}"
-                                     >
-                            <Label Text="Координаты"
-                                   HorizontalOptions="CenterAndExpand"
-                                   FontSize="Large"
-                                   />
-                            <StackLayout Orientation="Horizontal"
-                                         Spacing="10"
-                                         HorizontalOptions="FillAndExpand"
-                                         HeightRequest="400"
-                                         >
-                                <local:CustomMap x:Name="CoorMap"
-                                                 MapType="Street"
-                                                 HorizontalOptions="FillAndExpand"
-                                                 VerticalOptions="FillAndExpand"
-                                                 MapFunctions="{Binding MapFunctions}"
-                                                 MapCenter="{Binding MapCenter}"
-                                                 Zoom="{Binding Zoom}"
-                                                 IsCameraAnimated="False"
-                                                 IsRotateGesturesEnabled="True"
-                                                 IsScrollGesturesEnabled="True"
-                                                 IsTiltGesturesEnabled="True"
-                                                 IsZoomGesturesEnabled="True"
-                                                 UserPositionChangedCommand="{Binding UserPositionChangedCommand}"
-                                                 MyLocationEnabled="{Binding MyLocationEnabled}"
-                                                 IsShowInfoWindow="False"
-                                                 CustomPins="{Binding CustomPins}"
-                                                 MapClickCommand="{Binding MapClickCommand}"
-                                                 />
-                            </StackLayout>
-                        </StackLayout>
-                    </StackLayout>
-            -->
-            
-            
-            
-            
-            
-            
-            
-            
-            
             <StackLayout RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
                          RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
                          RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor=0,Constant=0}"

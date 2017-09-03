@@ -51,6 +51,9 @@ namespace Libmemo.Models
 		public double? Width { get; set; }
 		public Uri Scheme { get; set; }
 
+        public string Section { get; set; }
+        public double? GraveNumber { get; set; }
+
         public DeadPerson(int id, int owner, string firstName, double latitude, double longitude) : base(id, owner, firstName)
         {
             Latitude = latitude;
@@ -110,7 +113,10 @@ namespace Libmemo.Models
             if (!string.IsNullOrWhiteSpace(json.scheme_url) && Uri.TryCreate(json.scheme_url, UriKind.Absolute, out Uri scheme))
                 person.Scheme = scheme;
 
-
+            if (!string.IsNullOrWhiteSpace(json.section))
+                person.Section = json.section;
+            if (double.TryParse(json.grave_number, NumberStyles.Any, CultureInfo.InvariantCulture, out double graveNumber))
+                person.GraveNumber = graveNumber;
 
             return person;
         }

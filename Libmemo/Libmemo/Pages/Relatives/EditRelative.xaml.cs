@@ -388,6 +388,28 @@ namespace Libmemo.Pages
             });
 
 
+            private string _section;
+            public string Section {
+                get => _section;
+                set {
+                    if (_section != value) {
+                        _section = value;
+                        OnPropertyChanged(nameof(Section));
+                    }
+                }
+            }
+
+            private double? _graveNumber;
+            public double? GraveNumber {
+                get => _graveNumber;
+                set {
+                    if (_graveNumber != value) {
+                        _graveNumber = value;
+                        OnPropertyChanged(nameof(GraveNumber));
+                    }
+                }
+            }
+
 
             private void SetData(Models.Person person)
             {
@@ -409,6 +431,9 @@ namespace Libmemo.Pages
                     if (deadPerson.Scheme != null) {
                         SchemeUrl = deadPerson.Scheme;
                     }
+
+                    this.Section = deadPerson.Section;
+                    this.GraveNumber = deadPerson.GraveNumber;
 
 
 
@@ -514,6 +539,12 @@ namespace Libmemo.Pages
                         content.Add(new StringContent(this.Width.Value.ToString(CultureInfo.InvariantCulture)), "width");
                     if (this.SchemeStream != null) {
                         content.Add(new StreamContent(this.SchemeStream), "scheme", this.SchemeName);
+                    }
+                    if (!string.IsNullOrWhiteSpace(this.Section)) {
+                        content.Add(new StringContent(this.Section), "section");
+                    }
+                    if (this.GraveNumber.HasValue) {
+                        content.Add(new StringContent(this.GraveNumber.Value.ToString(CultureInfo.InvariantCulture)), "grave_number");
                     }
                 }
 
