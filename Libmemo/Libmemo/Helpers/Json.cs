@@ -94,4 +94,18 @@ namespace Libmemo.Json {
 		public int? father { get; set; }
 		public List<int> siblings { get; set; }
     }
+
+
+
+    public class PersonDetail
+    {
+        public class Tree
+        {
+            int id { get; set; }
+            string fio { get; set; }
+        }
+
+        public List<Tree> trees { get; set; }
+        public Json.Person person { get; set; }
+    }
 }

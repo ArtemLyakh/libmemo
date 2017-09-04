@@ -120,7 +120,7 @@ namespace Libmemo.Pages
 				{
 					json = Newtonsoft.Json.JsonConvert.DeserializeObject<Json.Tree>(str);
 				}
-				catch
+                catch
 				{
 					App.ToastNotificator.Show("Ошибка ответа сервера");
 					return;

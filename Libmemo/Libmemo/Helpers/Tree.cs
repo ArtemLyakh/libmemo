@@ -441,9 +441,7 @@ namespace Libmemo.Helpers
 
 		private async Task TreeItemDetails(Item item)
 		{
-            throw new NotImplementedException();
-			//var page = new DetailPage(person.Id);
-			//await App.GlobalPage.Push(page);
+            await App.GlobalPage.Push(new Pages.Detail(item.Id));
 		}
 		private async Task TreeItemReplace(Item item)
 		{

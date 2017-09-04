@@ -122,12 +122,8 @@ namespace Libmemo.Pages.Map
                 }
             }
 
-            public ICommand InfoWindowClickedCommand => new Command<CustomPin>((CustomPin pin) => {
-                throw new NotImplementedException();
-                //if (int.TryParse(pin.Id, out int id)) {
-                //    var page = new DetailPage(id);
-                //    await App.GlobalPage.Push(page);
-                //}
+            public ICommand InfoWindowClickedCommand => new Command<CustomPin>(async (CustomPin pin) => {
+                await App.GlobalPage.Push(new Pages.Detail(int.Parse(pin.Id)));
             });
 
             private static CustomPin CreatePin(Models.DeadPerson person) => new CustomPin() {
