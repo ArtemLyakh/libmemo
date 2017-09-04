@@ -195,8 +195,9 @@ namespace Libmemo.Pages
             }
             public bool IsTreeButtonShow => Trees != null && Trees.Count > 0;
 
-            public ICommand TreeShowCommand => new Command(() => {
-                throw new NotSupportedException();
+            public ICommand TreeShowCommand => new Command(async () => {
+                if (Trees == null || Trees.Count == 0) return;
+                await App.GlobalPage.Push(new Pages.TreeList(Trees));
             });
 
 

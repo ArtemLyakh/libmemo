@@ -101,8 +101,8 @@ namespace Libmemo.Json {
     {
         public class Tree
         {
-            int id { get; set; }
-            string fio { get; set; }
+            public int id { get; set; }
+            public string fio { get; set; }
         }
 
         public List<Tree> trees { get; set; }
