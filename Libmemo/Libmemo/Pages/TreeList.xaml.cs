@@ -64,9 +64,9 @@ namespace Libmemo.Pages
 				}
 			}
 
-			public ICommand ItemSelectedCommand => new Command<object>(selected => {
+			public ICommand ItemSelectedCommand => new Command<object>(async selected => {
 				var entry = (Entry)selected;
-                App.ToastNotificator.Show($"id: {entry.Id}");
+                await App.GlobalPage.Push(new Pages.ViewTree(entry.Id));
 			});
 		}
     }

@@ -61,11 +61,13 @@ namespace Libmemo.Helpers
 
         }
 
+        private bool ViewOnly { get; set; }
 
-        public Tree(AbsoluteLayout absolute, ScrollView scroll)
+        public Tree(AbsoluteLayout absolute, ScrollView scroll, bool viewOnly = false)
         {
             this.Layout = absolute;
             this.Scroll = scroll;
+            this.ViewOnly = viewOnly;
         }
 
         private static string ConstructFio(string firstName, string secondName, string lastname)
@@ -256,8 +258,11 @@ namespace Libmemo.Helpers
 
 				var bottomConnectPoint = new Point(x, y + ADD_BUTON_HEIGHT / 2);
 
-				(View, Point) element = GetAddNewButton(new Point(x, y), action);
-				Views.Add(element);
+                if (!ViewOnly) {
+					(View, Point) element = GetAddNewButton(new Point(x, y), action);
+					Views.Add(element);
+                }
+				
 				return bottomConnectPoint;
 			}
 
@@ -299,16 +304,31 @@ namespace Libmemo.Helpers
 				element = GetTreeItem(new Point(x, y), item, GetOnElementClickAction(item));
 				Views.Add(element);
 				x += TREE_ITEM_WIDTH / 2;
-				#endregion
+                #endregion
 
-				#region Connect lines
-				Lines.Add(GetLine(topConnectPoint, new Point(topConnectPoint.X, levelLine)));
-				Lines.Add(GetLine(new Point(MotherConnectPoint.X, levelLine + LINE_WIDTH / 2), MotherConnectPoint));
-				Lines.Add(GetLine(new Point(FatherConnectPoint.X, levelLine + LINE_WIDTH / 2), FatherConnectPoint));
-				Lines.Add(GetLine(
-					new Point(Math.Min(MotherConnectPoint.X - LINE_WIDTH / 2, topConnectPoint.X), levelLine),
-					new Point(Math.Max(FatherConnectPoint.X + LINE_WIDTH / 2, topConnectPoint.X), levelLine)
-				));
+                #region Connect lines
+                if (!ViewOnly) {
+					Lines.Add(GetLine(topConnectPoint, new Point(topConnectPoint.X, levelLine)));
+					Lines.Add(GetLine(new Point(MotherConnectPoint.X, levelLine + LINE_WIDTH / 2), MotherConnectPoint));
+					Lines.Add(GetLine(new Point(FatherConnectPoint.X, levelLine + LINE_WIDTH / 2), FatherConnectPoint));
+					Lines.Add(GetLine(
+						new Point(Math.Min(MotherConnectPoint.X - LINE_WIDTH / 2, topConnectPoint.X), levelLine),
+						new Point(Math.Max(FatherConnectPoint.X + LINE_WIDTH / 2, topConnectPoint.X), levelLine)
+					));
+                } else {
+                    if (item.Mother != null || item.Father != null) {
+                        Lines.Add(GetLine(topConnectPoint, new Point(topConnectPoint.X, levelLine)));
+                    }
+                    if (item.Mother != null) {
+                        Lines.Add(GetLine(new Point(MotherConnectPoint.X, levelLine + LINE_WIDTH / 2), MotherConnectPoint));
+                        Lines.Add(GetLine(new Point(MotherConnectPoint.X, levelLine + LINE_WIDTH / 2), new Point(topConnectPoint.X, levelLine)));
+                    }
+                    if (item.Father != null) {
+                        Lines.Add(GetLine(new Point(FatherConnectPoint.X, levelLine + LINE_WIDTH / 2), FatherConnectPoint));
+                        Lines.Add(GetLine(new Point(FatherConnectPoint.X, levelLine + LINE_WIDTH / 2), new Point(topConnectPoint.X, levelLine)));
+                    }
+                }
+				
 				#endregion
 
 				#region Siblings
@@ -326,19 +346,24 @@ namespace Libmemo.Helpers
 					x += TREE_ITEM_WIDTH / 2;
 					#endregion
 				}
-				#endregion
+                #endregion
 
-				#region Add button
+                #region Add button
 
-				#region Line
-				Lines.Add(GetLine(new Point(x, y), new Point(x + SPACE_BETWEEN_ITEMS + ADD_BUTTON_WIDTH / 2, y)));
+                #region Line
+                if (!ViewOnly) {
+                    Lines.Add(GetLine(new Point(x, y), new Point(x + SPACE_BETWEEN_ITEMS + ADD_BUTTON_WIDTH / 2, y)));
+                }				
 				x += SPACE_BETWEEN_ITEMS;
 				#endregion
 
 				#region Button
 				x += ADD_BUTTON_WIDTH / 2;
-                element = GetAddNewButton(new Point(x, y), GetSelectPersonAction(item, AddPersonType.Sibling));
-				Views.Add(element);
+                if (!ViewOnly) {
+					element = GetAddNewButton(new Point(x, y), GetSelectPersonAction(item, AddPersonType.Sibling));
+					Views.Add(element);
+                }
+
 				#endregion
 
 				#endregion
@@ -406,10 +431,12 @@ namespace Libmemo.Helpers
 
         private Action GetOnElementClickAction(Item item) => async () => {
 			var actions = new Dictionary<string, TreeItemAction> {
-				{ "Просмотреть", TreeItemAction.Details },
-				{ "Заменить", TreeItemAction.Replace },
-				{ "Удалить", TreeItemAction.Delete }
+				{ "Просмотреть", TreeItemAction.Details }
 			};
+            if (!ViewOnly) {
+                actions.Add("Заменить", TreeItemAction.Replace);
+                actions.Add("Удалить", TreeItemAction.Delete);
+            }
 			var cancel = new KeyValuePair<string, TreeItemAction>("Отмена", TreeItemAction.Cancel);
 
 			var action = (await App.Current.MainPage.DisplayActionSheet(
