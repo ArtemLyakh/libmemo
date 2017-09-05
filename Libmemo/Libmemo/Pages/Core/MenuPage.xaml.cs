@@ -60,15 +60,13 @@ namespace Libmemo {
                 };
             } else {
                 if (AuthHelper.IsAdmin) {
-					yield return new MenuItem {
-						Text = "Список пользователей",
-						Image = ImageSource.FromFile("menu_login"),
-						Action = () => {
-							var page = new UserListPage();
-							page.ItemSelected += async (sender, el) =>
-								await App.GlobalPage.Push(new PersonalDataPageAdmin(el.Id));
-							return App.GlobalPage.Push(page);
-						}
+                    yield return new MenuItem
+                    {
+                        Text = "Список пользователей",
+                        Image = ImageSource.FromFile("menu_login"),
+                        Action = () => App.GlobalPage.Push(new Pages.Admin.Account.List(id => {
+                            throw new NotImplementedException();
+                        }))
 					};
                     yield return new MenuItem {
                         Text = "Родственники пользователей",
