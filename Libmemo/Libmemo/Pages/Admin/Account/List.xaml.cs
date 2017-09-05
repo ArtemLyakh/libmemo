@@ -88,8 +88,8 @@ namespace Libmemo.Pages.Admin.Account
 				}
 			}
 
-            public ICommand AddCommand => new Command(() => {
-                throw new NotImplementedException();
+            public ICommand AddCommand => new Command(async () => {
+                await App.GlobalPage.Push(new Pages.Admin.Account.Add());
             });
 
 			public ICommand ResetCommand => new Command(async () =>

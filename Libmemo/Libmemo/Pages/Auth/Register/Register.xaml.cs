@@ -195,13 +195,23 @@ namespace Libmemo.Pages {
 				}
 
 
+				Json.Auth data;
+				try
+				{
+					data = Newtonsoft.Json.JsonConvert.DeserializeObject<Json.Auth>(str);
+				}
+				catch
+				{
+					App.ToastNotificator.Show("Ошибка ответа сервера");
+					return;
+				}
 
-				var authJson = JsonConvert.DeserializeObject<Json.Auth>(str);
+
 				var authInfo = new AuthInfo(
-					IsAdmin: authJson.is_admin,
-					UserId: authJson.id,
-					Email: authJson.email,
-					Fio: authJson.fio,
+					IsAdmin: data.is_admin,
+					UserId: data.id,
+					Email: data.email,
+					Fio: data.fio,
 					CookieContainer: Settings.Cookies
 				);
 				var authCredentials = new AuthCredentials(
