@@ -21,10 +21,21 @@ namespace Libmemo {
         }
 
         public async Task PopToRootPage() => await NavStack.Navigation.PopToRootAsync();
+        public async Task SetRootPage(Page page) {
+            foreach (var item in NavStack.Navigation.NavigationStack) {
+                NavStack.Navigation.RemovePage(item);
+            }
+
+        }
         public async Task Pop() => await NavStack.Navigation.PopAsync();
         public async Task Push(Page page) => await NavStack.Navigation.PushAsync(page);
         public async Task PushRoot(Page page) {
-            await PopToRootPage();
+            var root = NavStack.Navigation.NavigationStack.First();
+
+            foreach (var item in NavStack.Navigation.NavigationStack.Where(i => i != root)) {
+				NavStack.Navigation.RemovePage(item);
+			}
+
             await NavStack.Navigation.PushAsync(page);
         }
         public Task ReplaceCurrentPage(Page page) {

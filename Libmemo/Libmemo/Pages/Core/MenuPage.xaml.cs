@@ -46,14 +46,6 @@ namespace Libmemo {
                 Image = ImageSource.FromFile("menu_map"),
                 Action = () => App.GlobalPage.PopToRootPage()
             };
-            yield return new MenuItem {
-                Text = "Синхронизация",
-                Image = ImageSource.FromFile("menu_sync"),
-                Action = () => Task.Run(() => Device.BeginInvokeOnMainThread(() => {
-                    App.ToastNotificator.Show("Скачивание данных");
-                    App.Database.Load(true);
-                }))
-            };
 
             if (!AuthHelper.IsLogged) {
                 yield return new MenuItem {
@@ -68,20 +60,20 @@ namespace Libmemo {
                 };
             } else {
                 if (AuthHelper.IsAdmin) {
+					yield return new MenuItem {
+						Text = "Список пользователей",
+						Image = ImageSource.FromFile("menu_login"),
+						Action = () => {
+							var page = new UserListPage();
+							page.ItemSelected += async (sender, el) =>
+								await App.GlobalPage.Push(new PersonalDataPageAdmin(el.Id));
+							return App.GlobalPage.Push(page);
+						}
+					};
                     yield return new MenuItem {
                         Text = "Родственники пользователей",
                         Image = ImageSource.FromFile("menu_rel"),
                         Action = () => App.GlobalPage.PushRoot(new PersonCollectionAdminPage())
-                    };
-                    yield return new MenuItem {
-                        Text = "Список пользователей",
-                        Image = ImageSource.FromFile("menu_login"),
-                        Action = () => {
-                            var page = new UserListPage();
-                            page.ItemSelected += async (sender, el) =>
-                                await App.GlobalPage.Push(new PersonalDataPageAdmin(el.Id));
-                            return App.GlobalPage.Push(page);
-                        }
                     };
                     yield return new MenuItem {
                         Text = "Деревья пользователей",
@@ -103,11 +95,6 @@ namespace Libmemo {
                         Text = "Древо",
                         Image = ImageSource.FromFile("menu_tree"),
                         Action = () => App.GlobalPage.PushRoot(new Pages.Tree())
-                    };
-                    yield return new MenuItem {
-                        Text = "Фильтр",
-                        Image = ImageSource.FromFile("menu_map"),
-                        Action = () => App.GlobalPage.PushRoot(new Pages.Map.Filter())
                     };
                 }
 
