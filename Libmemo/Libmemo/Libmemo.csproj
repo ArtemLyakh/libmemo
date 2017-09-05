@@ -82,7 +82,6 @@
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Helpers\UtilsFunctions.cs" />
     <Compile Include="Helpers\WebClient.cs" />
-    <Compile Include="Models\Json.cs" />
     <Compile Include="Models\PersonType.cs" />
     <Compile Include="Pages\Account\Account.xaml.cs">
       <DependentUpon>Account.xaml</DependentUpon>
@@ -202,6 +201,12 @@
     <Compile Include="Pages\Admin\Relatives\List.xaml.cs">
       <DependentUpon>List.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Admin\Relatives\Add.xaml.cs">
+      <DependentUpon>Add.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin\Relatives\UserSelect.xaml.cs">
+      <DependentUpon>UserSelect.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml">
@@ -240,6 +245,12 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\Admin\Relatives\List.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Admin\Relatives\Add.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Admin\Relatives\UserSelect.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

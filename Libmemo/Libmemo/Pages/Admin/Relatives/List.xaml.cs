@@ -84,8 +84,8 @@ namespace Libmemo.Pages.Admin.Relatives
 			}
 
 
-            public ICommand AddCommand => new Command(() => {
-                throw new NotImplementedException();
+            public ICommand AddCommand => new Command(async () => {
+                await App.GlobalPage.Push(new Pages.Admin.Relatives.Add());
             });
 
 
