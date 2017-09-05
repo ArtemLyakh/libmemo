@@ -71,7 +71,9 @@ namespace Libmemo {
                     yield return new MenuItem {
                         Text = "Родственники пользователей",
                         Image = ImageSource.FromFile("menu_rel"),
-                        Action = () => App.GlobalPage.PushRoot(new PersonCollectionAdminPage())
+                        Action = () => App.GlobalPage.PushRoot(new Pages.Admin.Relatives.List(id => {
+                            throw new NotImplementedException();
+                        }))
                     };
                     yield return new MenuItem {
                         Text = "Деревья пользователей",

@@ -47,6 +47,7 @@ namespace Libmemo {
         public const string MAP_URL = SERVER_URL + "/api2/map/";
 
         public const string ADMIN_USERS_URL = SERVER_URL + "/api2/admin/users/";
+        public const string ADMIN_RELATIVES_URL = SERVER_URL + "/api2/admin/relatives/";
         #endregion
 
 
