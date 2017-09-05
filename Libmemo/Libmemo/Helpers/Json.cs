@@ -126,4 +126,9 @@ namespace Libmemo.Json.Admin
         public string fio { get; set; }
         public string email { get; set; }
     }
+
+    public class AccountData : Json.AccountData
+    {
+        public string email { get; set; }
+    }
 }
