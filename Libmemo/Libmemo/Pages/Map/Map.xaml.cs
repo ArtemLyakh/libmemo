@@ -427,23 +427,18 @@ namespace Libmemo.Pages.Map
             #endregion
 
 
-            public ICommand SearchCommand => new Command(() => {
-                throw new NotImplementedException();
-                //var page = new MapSearchPage();
-
-                ////page.SearchTextChanged += (sender, text) => this.SearchText = text;
-                //page.ItemSelected += async (sender, person) => {
-                //    await App.GlobalPage.Pop();
-                //    var pin = _customPins.FirstOrDefault(e => e.Id == person.Person.Id.ToString());
-                //    if (pin != null) {
-                //        ShowAllPins();
-                //        this.SelectedPin = pin;
-                //        this.FollowUser = false;
-                //        MoveCameraToPosition(pin.Position);
-                //    }
-                //};
-
-                //await App.GlobalPage.Push(page);
+            public ICommand SearchCommand => new Command(async () => {
+                await App.GlobalPage.Push(new Pages.Map.Search(
+                    Data.Select(i => i.Value).ToList(),
+                    async id => {
+                        await App.GlobalPage.Pop();
+                        var pin = CustomPins.First(i => i.Id == id.ToString());
+                        ShowAllPins();
+                        this.SelectedPin = pin;
+                        this.FollowUser = false;
+                        MoveCameraToPosition(pin.Position);
+                    }
+                ));
             });
 
 

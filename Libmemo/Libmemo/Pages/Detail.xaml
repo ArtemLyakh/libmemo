@@ -45,14 +45,21 @@
                             <TapGestureRecognizer Command="{Binding BackCommand}" />
                         </ffi:CachedImage.GestureRecognizers>
                     </ffi:CachedImage>
-                    <Label Text="{Binding Fio}"
+                    <Entry Text="{Binding Search}"
                            VerticalOptions="CenterAndExpand"
-                           HorizontalOptions="StartAndExpand"
+                           HorizontalOptions="FillAndExpand"
+                           Placeholder="Поиск"
                            TextColor="White"
+                           PlaceholderColor="White"
                            FontSize="Medium"
                            HorizontalTextAlignment="Start"
                            Margin="10,0"
-                           />
+                           >
+                        <Entry.Behaviors>
+                            <local:EntrySelectedBehavior SelectedCommand="{Binding SearchSelectedCommand}" />
+                            <local:EntryChangedBehavior ChangedCommand="{Binding SearchChangedCommand}" />
+                        </Entry.Behaviors>
+                    </Entry>
                 </StackLayout>
                 <ScrollView Grid.Row="1"
                             Grid.Column="0"
