@@ -86,6 +86,7 @@ namespace Libmemo.Helpers
 
         private void LoadFromJson(Json.Tree data)
         {
+            var decoded = new HashSet<int>();
 
             Item.NormalItem DecodeItem(int id)
             {
@@ -93,9 +94,10 @@ namespace Libmemo.Helpers
                 var person = data.persons[id];
 
                 var item = new Item.NormalItem(person.id, ConstructFioFromPerson(person), person.type == "alive" || person.type == "user", person.preview_image_url);
+                decoded.Add(id);
 
-                if (structure.mother.HasValue) item.Mother = DecodeItem(structure.mother.Value);
-                if (structure.father.HasValue) item.Father = DecodeItem(structure.father.Value);
+                if (structure.mother.HasValue && !decoded.Contains(structure.mother.Value)) item.Mother = DecodeItem(structure.mother.Value);
+                if (structure.father.HasValue && !decoded.Contains(structure.father.Value)) item.Father = DecodeItem(structure.father.Value);
 
                 foreach (var sibling in structure.siblings)
                 {

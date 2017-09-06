@@ -169,7 +169,7 @@ namespace Libmemo.Pages.Admin.Tree
 				try
 				{
 					cancelTokenSource = new CancellationTokenSource();
-					response = await WebClient.Instance.SendAsync(HttpMethod.Post, new Uri(Settings.TREE_URL), content, 60, cancelTokenSource.Token);
+					response = await WebClient.Instance.SendAsync(HttpMethod.Post, new Uri($"{Settings.ADMIN_TREE_URL}{Id}/"), content, 60, cancelTokenSource.Token);
 				}
 				catch (TimeoutException)
 				{
