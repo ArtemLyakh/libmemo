@@ -56,6 +56,12 @@ namespace Libmemo.Pages.Admin.Relatives
 				}
 			}
 
+            public override void OnAppearing()
+            {
+                base.OnAppearing();
+                SearchCommand.Execute(null);
+            }
+
 			private Dictionary<int, Json.UserListEntry> RawJsonData;
 
 			private List<Entry> _data;

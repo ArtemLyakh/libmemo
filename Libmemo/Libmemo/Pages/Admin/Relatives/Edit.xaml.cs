@@ -802,7 +802,7 @@ namespace Libmemo.Pages.Admin.Relatives
 				try
 				{
 					cancelTokenSource = new CancellationTokenSource();
-					response = await WebClient.Instance.SendAsync(HttpMethod.Delete, new Uri($"{Settings.RELATIVES_URL}{Id}/"), null, 30, cancelTokenSource.Token);
+                    response = await WebClient.Instance.SendAsync(HttpMethod.Delete, new Uri($"{Settings.ADMIN_RELATIVES_URL}{Id}/"), null, 30, cancelTokenSource.Token);
 				}
 				catch (TimeoutException)
 				{
