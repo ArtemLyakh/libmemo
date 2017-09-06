@@ -78,12 +78,9 @@ namespace Libmemo {
                     yield return new MenuItem {
                         Text = "Деревья пользователей",
                         Image = ImageSource.FromFile("menu_tree"),
-                        Action = () => {
-                            var page = new UserListPage();
-                            page.ItemSelected += async (sender, el) =>
-                                await App.GlobalPage.Push(new TreePageAdmin(el.Id));
-                            return App.GlobalPage.Push(page);
-                        }
+                        Action = () => App.GlobalPage.PushRoot(new Pages.Admin.Account.List(async id => {
+                            await App.GlobalPage.Push(new Pages.Admin.Tree.Tree(id));
+						}))
                     };
                 } else {
                     yield return new MenuItem {
