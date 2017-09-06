@@ -308,12 +308,12 @@ namespace Libmemo.Droid {
             //}
         }
 
-        private async Task SetLinearRoute(Position from, Position to) {        
+        private Task SetLinearRoute(Position from, Position to) => Task.Run(() => {
             _routePoints = new List<LatLng>() {
                 new LatLng(from.Latitude, from.Longitude),
                 new LatLng(to.Latitude, to.Longitude)
             };
-        }
+        });
         private async Task DrawCalculatedRoute(Position from, Position to) {
             var routeData = await TK.CustomMap.Api.Google.GmsDirection.Instance.CalculateRoute(from, to, TK.CustomMap.Api.Google.GmsDirectionTravelMode.Walking);
             if (routeData != null && routeData.Status == TK.CustomMap.Api.Google.GmsDirectionResultStatus.Ok) {
