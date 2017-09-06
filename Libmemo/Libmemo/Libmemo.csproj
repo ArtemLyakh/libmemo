@@ -207,6 +207,9 @@
     <Compile Include="Pages\Admin\Relatives\UserSelect.xaml.cs">
       <DependentUpon>UserSelect.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Admin\Relatives\Edit.xaml.cs">
+      <DependentUpon>Edit.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml">
@@ -251,6 +254,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\Admin\Relatives\UserSelect.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Admin\Relatives\Edit.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

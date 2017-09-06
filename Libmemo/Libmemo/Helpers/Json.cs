@@ -168,4 +168,10 @@ namespace Libmemo.Json.Admin
         public string email { get; set; }
     }
 
+    public class Realtive
+    {
+        public Json.Person person { get; set; }
+        public User owner { get; set; }
+    }
+
 }
