@@ -413,6 +413,10 @@ namespace Libmemo.Pages
 
             private void SetData(Models.Person person)
             {
+                this.Type = person is Models.DeadPerson
+                    ? Models.PersonType.Dead
+                    : Models.PersonType.Alive;
+
                 this.FirstName = person.FirstName;
                 this.LastName = person.LastName;
                 this.SecondName = person.SecondName;

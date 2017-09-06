@@ -10,9 +10,11 @@ using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
+using Xamarin.Forms.Xaml;
 
 namespace Libmemo.Pages.Admin.Relatives
 {
+    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Add : ContentPage
     {
 		private ViewModel Model
