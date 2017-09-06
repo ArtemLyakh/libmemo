@@ -52,24 +52,18 @@
     </Compile>
     <Compile Include="Behaviors\EntryChangedBehavior.cs" />
     <Compile Include="Behaviors\EntrySelectedBehavior.cs" />
-    <Compile Include="Converters\IsNullToColorConverter.cs" />
-    <Compile Include="Converters\IsPinSpeakableConverter.cs" />
     <Compile Include="Converters\IsPropertyNullConverter.cs" />
     <Compile Include="Converters\NullableDateConverter.cs" />
     <Compile Include="Converters\NullableDoubleConverter.cs" />
+    <Compile Include="Converters\IsPinSpeakableConverter.cs" />
     <Compile Include="CustomElements\CustomListView\ListView.cs" />
     <Compile Include="CustomElements\CustomMap\CustomMap.cs" />
     <Compile Include="CustomElements\CustomMap\CustomPin.cs" />
     <Compile Include="CustomElements\CustomMap\IMapFunctions.cs" />
     <Compile Include="CustomElements\CustomMap\INativeMapFunctions.cs" />
     <Compile Include="CustomElements\CustomMap\PinImageEnum.cs" />
-    <Compile Include="CustomElements\CustomViewCell\CustomImageViewCell.cs" />
-    <Compile Include="Database\JsonData.cs" />
-    <Compile Include="Database\Classes.cs" />
-    <Compile Include="Database\PersonRepository.cs" />
     <Compile Include="Dependencies\ICloseApplication.cs" />
     <Compile Include="Dependencies\IFileStreamPicker.cs" />
-    <Compile Include="Dependencies\ISQLite.cs" />
     <Compile Include="Dependencies\ITextToSpeech.cs" />
     <Compile Include="Dependencies\IToastNotification.cs" />
     <Compile Include="Helpers\Auth\AuthCredentials.cs" />
@@ -98,21 +92,6 @@
     <Compile Include="Pages\Relatives\EditRelative.xaml.cs">
       <DependentUpon>EditRelative.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\UserListPage.xaml.cs">
-      <DependentUpon>UserListPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\PersonsManage\Add\AddPage.xaml.cs">
-      <DependentUpon>AddPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\PersonsManage\Add\AddPageAdmin.xaml.cs">
-      <DependentUpon>AddPageAdmin.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\PersonsManage\Edit\EditPersonPage.xaml.cs">
-      <DependentUpon>EditPersonPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\PersonsManage\Edit\EditPersonPageAdmin.xaml.cs">
-      <DependentUpon>EditPersonPageAdmin.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\Auth\Login\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
@@ -122,27 +101,12 @@
     <Compile Include="Pages\Core\MenuPage.xaml.cs">
       <DependentUpon>MenuPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Auth\Register\RegisterAdminPage.xaml.cs">
-      <DependentUpon>RegisterAdminPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\Auth\Register\Register.xaml.cs">
       <DependentUpon>Register.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextToSpeech\TextToSpeech.cs" />
     <Compile Include="ToastNotificator\ToastNotificator.cs" />
-    <Compile Include="ViewModels\BaseViewModel.cs" />
-    <Compile Include="ViewModels\List\PersonCollectionAdminPageViewModel.cs" />
-    <Compile Include="ViewModels\List\PersonCollectionPageViewModel.cs" />
-    <Compile Include="ViewModels\List\SelectPersonExceptPageViewModel.cs" />
-    <Compile Include="ViewModels\PersonsManage\BaseAddViewModel.cs" />
-    <Compile Include="ViewModels\PersonsManage\BaseManagePersonViewModel.cs" />
-    <Compile Include="ViewModels\PersonsManage\BaseEditPersonViewModel.cs" />
-    <Compile Include="ViewModels\BaseRegisterViewModel.cs" />
-    <Compile Include="ViewModels\BasePersonalDataViewModel.cs" />
-    <Compile Include="ViewModels\DetailPageViewModel.cs" />
-    <Compile Include="ViewModels\MapSearchPageViewModel.cs" />
-    <Compile Include="ViewModels\List\BaseListViewModel.cs" />
     <Compile Include="Pages\Relatives\Relatives.xaml.cs">
       <DependentUpon>Relatives.xaml</DependentUpon>
     </Compile>
@@ -156,9 +120,6 @@
     </Compile>
     <Compile Include="Pages\Detail.xaml.cs">
       <DependentUpon>Detail.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\TreeList.xaml.cs">
-      <DependentUpon>TreeList.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Tree\ViewTree.xaml.cs">
       <DependentUpon>ViewTree.xaml</DependentUpon>
@@ -190,6 +151,10 @@
     <Compile Include="Pages\Admin\Tree\Tree.xaml.cs">
       <DependentUpon>Tree.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Tree\TreeList.xaml.cs">
+      <DependentUpon>TreeList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\BaseViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml">
@@ -207,9 +172,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\Detail.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Pages\TreeList.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\Tree\ViewTree.xaml">
@@ -240,6 +202,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="Pages\Admin\Tree\Tree.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pages\Tree\TreeList.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
@@ -318,12 +283,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\PersonsManage\Add\AddPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Pages\Core\MainPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
@@ -343,36 +302,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Pages\Auth\Register\Register.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Pages\PersonsManage\Add\AddPageAdmin.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Pages\PersonsManage\Edit\EditPersonPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Pages\Auth\Register\RegisterAdminPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Pages\PersonsManage\Edit\EditPersonPageAdmin.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Pages\UserListPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

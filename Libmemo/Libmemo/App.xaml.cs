@@ -10,16 +10,6 @@ namespace Libmemo {
     public partial class App : Application {
 
         #region Services
-        private static PersonRepository _database;
-        public static PersonRepository Database {
-            get {
-                if (_database == null) {
-                    _database = new PersonRepository();
-                }
-                return _database;
-            }
-        }
-
         private static TextToSpeechSpeaker _textToSpeech;
         public static TextToSpeechSpeaker TextToSpeech {
             get {
@@ -66,7 +56,7 @@ namespace Libmemo {
         }
 
         protected override void OnStart() {
-            App.Database.Load();
+
         }
 
         protected override void OnSleep() {

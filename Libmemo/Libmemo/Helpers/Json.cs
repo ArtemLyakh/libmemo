@@ -19,12 +19,6 @@ namespace Libmemo.Json
         public string message { get; set; }
     }
 
-    public class Register
-    {
-        public Auth auth { get; set; }
-        public PersonJson.Update person { get; set; }
-    }
-
     public class User
     {
         public int id { get; set; }
