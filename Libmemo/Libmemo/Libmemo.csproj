@@ -101,17 +101,11 @@
     <Compile Include="Pages\UserListPage.xaml.cs">
       <DependentUpon>UserListPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\PersonCollectionAdminPage.xaml.cs">
-      <DependentUpon>PersonCollectionAdminPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\PersonsManage\Add\AddPage.xaml.cs">
       <DependentUpon>AddPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\PersonsManage\Add\AddPageAdmin.xaml.cs">
       <DependentUpon>AddPageAdmin.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\DetailPage.xaml.cs">
-      <DependentUpon>DetailPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\PersonsManage\Edit\EditPersonPage.xaml.cs">
       <DependentUpon>EditPersonPage.xaml</DependentUpon>
@@ -128,31 +122,15 @@
     <Compile Include="Pages\Core\MenuPage.xaml.cs">
       <DependentUpon>MenuPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\PersonalData\PersonalDataPageAdmin.xaml.cs">
-      <DependentUpon>PersonalDataPageAdmin.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\Auth\Register\RegisterAdminPage.xaml.cs">
       <DependentUpon>RegisterAdminPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Auth\Register\Register.xaml.cs">
       <DependentUpon>Register.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\MapSearchPage.xaml.cs">
-      <DependentUpon>MapSearchPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\SelectPersonExceptPage.xaml.cs">
-      <DependentUpon>SelectPersonExceptPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\Tree\TreePage.xaml.cs">
-      <DependentUpon>TreePage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\Tree\TreePageAdmin.xaml.cs">
-      <DependentUpon>TreePageAdmin.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextToSpeech\TextToSpeech.cs" />
     <Compile Include="ToastNotificator\ToastNotificator.cs" />
-    <Compile Include="Tree\Tree.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\List\PersonCollectionAdminPageViewModel.cs" />
     <Compile Include="ViewModels\List\PersonCollectionPageViewModel.cs" />
@@ -165,7 +143,6 @@
     <Compile Include="ViewModels\DetailPageViewModel.cs" />
     <Compile Include="ViewModels\MapSearchPageViewModel.cs" />
     <Compile Include="ViewModels\List\BaseListViewModel.cs" />
-    <Compile Include="ViewModels\BaseTreeViewModel.cs" />
     <Compile Include="Pages\Relatives\Relatives.xaml.cs">
       <DependentUpon>Relatives.xaml</DependentUpon>
     </Compile>
@@ -341,12 +318,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\MapSearchPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Pages\PersonsManage\Add\AddPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
@@ -383,12 +354,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\DetailPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Pages\PersonsManage\Edit\EditPersonPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
@@ -407,37 +372,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Pages\PersonalData\PersonalDataPageAdmin.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Pages\Tree\TreePage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Pages\PersonCollectionAdminPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Pages\UserListPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Pages\SelectPersonExceptPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Pages\Tree\TreePageAdmin.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
