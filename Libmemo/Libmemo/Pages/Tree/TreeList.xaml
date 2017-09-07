@@ -44,7 +44,7 @@
                         VerticalOptions="CenterAndExpand"
                         HorizontalOptions="FillAndExpand"
                         TextColor="White"
-                        FontSize="20"
+                        FontSize="12"
                         HorizontalTextAlignment="Start"
                         Margin="10,0"
                         />

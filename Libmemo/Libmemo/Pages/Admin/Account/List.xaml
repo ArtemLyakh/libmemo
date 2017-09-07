@@ -46,7 +46,7 @@
                        Placeholder="Поиск"
                        TextColor="White"
                        PlaceholderColor="White"
-                       FontSize="20"
+                       FontSize="12"
                        HorizontalTextAlignment="Start"
                        Margin="10,0"
                        >

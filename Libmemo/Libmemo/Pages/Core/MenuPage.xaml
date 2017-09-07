@@ -87,7 +87,7 @@
                                     <Label Text="{Binding Text}"
                                            VerticalOptions="CenterAndExpand"
                                            HorizontalOptions="FillAndExpand"
-                                           FontSize="24"
+                                           FontSize="20"
                                            TextColor="Black"
                                            HorizontalTextAlignment="Start"
                                            VerticalTextAlignment="Center"
