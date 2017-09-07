@@ -44,7 +44,7 @@
                         VerticalOptions="CenterAndExpand"
                         HorizontalOptions="FillAndExpand"
                         TextColor="White"
-                        FontSize="Medium"
+                        FontSize="20"
                         HorizontalTextAlignment="Start"
                         Margin="10,0"
                         />
@@ -86,7 +86,7 @@
                     <Label TextColor="Black"
                            HorizontalOptions="End"
                            VerticalOptions="CenterAndExpand"
-                           FontSize="Medium"
+                           FontSize="32"
                            Text="{Binding LoadingString}"
                            />
                 </StackLayout>

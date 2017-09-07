@@ -5,9 +5,11 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace Libmemo.Pages.Admin.Account
 {
+    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Add : ContentPage
     {
 		private ViewModel Model

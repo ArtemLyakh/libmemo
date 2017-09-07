@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace Libmemo.Pages.Map
 {
+    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Search : ContentPage
     {
 		private ViewModel Model

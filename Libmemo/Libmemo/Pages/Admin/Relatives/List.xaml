@@ -46,7 +46,7 @@
                        Placeholder="Поиск"
                        TextColor="White"
                        PlaceholderColor="White"
-                       FontSize="Medium"
+                       FontSize="20"
                        HorizontalTextAlignment="Start"
                        Margin="10,0"
                        >
@@ -105,7 +105,7 @@
                                         <Label Text="{Binding Text}"
                                            VerticalOptions="CenterAndExpand"
                                            HorizontalOptions="FillAndExpand"
-                                           FontSize="Medium"
+                                           FontSize="24"
                                            TextColor="Black"
                                            HorizontalTextAlignment="Start"
                                            VerticalTextAlignment="Center"

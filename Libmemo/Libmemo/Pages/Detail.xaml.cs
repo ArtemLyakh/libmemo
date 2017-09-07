@@ -5,9 +5,11 @@ using System.Net.Http;
 using System.Threading;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace Libmemo.Pages
 {
+    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Detail : ContentPage
     {
 		private ViewModel Model

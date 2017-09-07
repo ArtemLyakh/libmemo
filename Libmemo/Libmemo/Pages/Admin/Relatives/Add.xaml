@@ -52,7 +52,7 @@
                            VerticalOptions="CenterAndExpand"
                            HorizontalOptions="FillAndExpand"
                            TextColor="White"
-                           FontSize="Medium"
+                           FontSize="20"
                            HorizontalTextAlignment="Start"
                            Margin="10,0"
                            />
@@ -144,11 +144,11 @@
                                                  Spacing="0"
                                                  >
                                         <Label Text="Широта:"
-                                               FontSize="Medium"
+                                               FontSize="Small"
                                                HorizontalOptions="CenterAndExpand"
                                                />
                                         <Label Text="{Binding Latitude}"
-                                               FontSize="Default"
+                                               FontSize="Small"
                                                HorizontalOptions="CenterAndExpand"
                                                />
                                     </StackLayout>
@@ -156,11 +156,11 @@
                                                  Spacing="0"
                                                  >
                                         <Label Text="Долгота:"
-                                               FontSize="Medium"
+                                               FontSize="Small"
                                                HorizontalOptions="CenterAndExpand"
                                                />
                                         <Label Text="{Binding Longitude}"
-                                               FontSize="Default"
+                                               FontSize="Small"
                                                HorizontalOptions="CenterAndExpand"
                                                />
                                     </StackLayout>

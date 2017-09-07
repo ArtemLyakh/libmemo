@@ -5,9 +5,11 @@ using System.Text;
 using System.Threading;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace Libmemo.Pages.Admin.Tree
 {
+    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Tree : ContentPage
     {
 		private ViewModel Model

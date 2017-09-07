@@ -298,24 +298,32 @@ namespace Libmemo.Pages
                 SchemeStream?.Dispose();
                 SchemeStream = null;
             }
-            public ICommand SelectSchemeCommand => new Command(async () => {
-                var file = await Plugin.FilePicker.CrossFilePicker.Current.PickFile();
-                if (file == null) return;
+			public ICommand SelectSchemeCommand => new Command(async () => {
+				var file = await Plugin.FilePicker.CrossFilePicker.Current.PickFile();
+				if (file == null) return;
 
-                Stream stream;
-                try {
-                    stream = DependencyService.Get<IFileStreamPicker>().GetStream(file.FilePath);
-                } catch {
-                    App.ToastNotificator.Show("Ошибка выбора файла");
-                    return;
-                }
+				var fileName = !string.IsNullOrWhiteSpace(file.FileName)
+									  ? file.FileName
+									  : "Файл";
 
-                if (stream.Length > 2 * 1024 * 1024) {
-                    App.ToastNotificator.Show($"Размер файла не должен превышать 2 МБ ({stream.Length / 1024 / 1024} МБ)");
-                    return;
-                }
-                SetScheme(file.FileName, stream);
-            });
+				Stream stream;
+				try
+				{
+					stream = DependencyService.Get<IFileStreamPicker>().GetStream(file.FilePath);
+				}
+				catch
+				{
+					App.ToastNotificator.Show("Ошибка выбора файла");
+					return;
+				}
+
+				if (stream.Length > 2 * 1024 * 1024)
+				{
+					App.ToastNotificator.Show($"Размер файла не должен превышать 2 МБ ({stream.Length / 1024 / 1024} МБ)");
+					return;
+				}
+				SetScheme(fileName, stream);
+			});
 
             private string _section;
             public string Section {

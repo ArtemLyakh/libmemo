@@ -6,9 +6,11 @@ using System.Windows.Input;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace Libmemo.Pages.Admin.Account
 {
+    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Account : ContentPage
     {
 		private ViewModel Model

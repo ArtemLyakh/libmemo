@@ -5,9 +5,11 @@ using System.Net.Http;
 using System.Threading;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace Libmemo.Pages.Admin.Relatives
 {
+    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class UserSelect : ContentPage
     {
 		private ViewModel Model

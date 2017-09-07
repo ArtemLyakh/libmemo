@@ -448,6 +448,10 @@ namespace Libmemo.Pages.Admin.Relatives
 				var file = await Plugin.FilePicker.CrossFilePicker.Current.PickFile();
 				if (file == null) return;
 
+                var fileName = !string.IsNullOrWhiteSpace(file.FileName)
+                                      ? file.FileName
+                                      : "Файл";
+
 				Stream stream;
 				try
 				{
@@ -464,7 +468,7 @@ namespace Libmemo.Pages.Admin.Relatives
 					App.ToastNotificator.Show($"Размер файла не должен превышать 2 МБ ({stream.Length / 1024 / 1024} МБ)");
 					return;
 				}
-				SetScheme(file.FileName, stream);
+				SetScheme(fileName, stream);
 			});
 
 			private Uri _schemeUrl = null;

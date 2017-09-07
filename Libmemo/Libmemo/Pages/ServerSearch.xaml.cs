@@ -5,9 +5,11 @@ using System.Net.Http;
 using System.Threading;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace Libmemo.Pages
 {
+    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ServerSearch : ContentPage
     {
 		private ViewModel Model
@@ -40,6 +42,12 @@ namespace Libmemo.Pages
 
             public ViewModel(Action<Json.UserListEntry> cb) : base() {
                 Callback = cb;
+            }
+
+            public override void OnAppearing()
+            {
+                base.OnAppearing();
+                SearchCommand.Execute(null);
             }
 
 			public class Entry
