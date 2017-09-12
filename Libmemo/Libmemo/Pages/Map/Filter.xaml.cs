@@ -71,8 +71,8 @@ namespace Libmemo.Pages.Map
                     IsSectionShow = false;
                     IsGraveNumberShow = false;
 
-                    CityList = Data?.DefaultIfEmpty()
-                        .Where(i => !string.IsNullOrWhiteSpace(i.City))
+                    CityList = Data
+                        ?.Where(i => !string.IsNullOrWhiteSpace(i.City))
                         .Where(i => i != null)
                         .Select(i => i.City)
                         .Distinct()
@@ -83,8 +83,8 @@ namespace Libmemo.Pages.Map
                     IsSectionShow = false;
                     IsGraveNumberShow = false;
 
-                    AddressList = Data?.DefaultIfEmpty()
-                        .Where(i => i.City == City)
+                    AddressList = Data
+                        ?.Where(i => i.City == City)
                         .Where(i => !string.IsNullOrWhiteSpace(i.Address))
                         .Where(i => i != null)
                         .Select(i => i.Address)
@@ -95,8 +95,8 @@ namespace Libmemo.Pages.Map
                     IsSectionShow = true;
                     IsGraveNumberShow = false;
 
-                    SectionList = Data?.DefaultIfEmpty()
-                        .Where(i => i.City == City)
+                    SectionList = Data
+                        ?.Where(i => i.City == City)
                         .Where(i => i.Address == Address)
                         .Where(i => !string.IsNullOrWhiteSpace(i.Section))
                         .Where(i => i != null)
@@ -107,8 +107,8 @@ namespace Libmemo.Pages.Map
                 SectionChanged += (sender, e) => {
                     IsGraveNumberShow = true;
 
-                    GraveNumberList = Data?.DefaultIfEmpty()
-                        .Where(i => i.City == City)
+                    GraveNumberList = Data
+                        ?.Where(i => i.City == City)
                         .Where(i => i.Address == Address)
                         .Where(i => i.Section == Section)
                         .Where(i => i.GraveNumber.HasValue)
