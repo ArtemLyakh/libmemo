@@ -314,6 +314,7 @@ namespace Libmemo.Pages.Map
 
             private Position? RouteFrom { get; set; }
             private Position? RouteTo { get; set; }
+            private CustomPin RouteToPin { get; set; }
 
             private bool _routeProcessing = false;
 
@@ -323,6 +324,8 @@ namespace Libmemo.Pages.Map
                 DeleteRouteCommand.Execute(null);
 
                 if (this.UserPosition != default(Position) && this.SelectedPin != null) {
+                    RouteToPin = SelectedPin;
+
                     var from = this.UserPosition;
                     var to = this.SelectedPin.Position;
 
@@ -346,9 +349,18 @@ namespace Libmemo.Pages.Map
 
                     UserPositionChanged -= OnUserPositionChangedUpdateLinearRoute;
                     UserPositionChanged += OnUserPositionChangedUpdateLinearRoute;
+
+                    UserPositionChanged += OnUserPositionCloseToRouteEnd;
                 }
             });
-
+            private void OnUserPositionCloseToRouteEnd(object sender, Position position)
+            {
+                if (!RouteTo.HasValue || RouteToPin == null || CurrentRoute != RouteType.Linear) return;
+                if (CalculateDistance(position, RouteTo.Value) <= 15) {
+                    SelectedPin = RouteToPin;
+                    UserPositionChanged -= OnUserPositionCloseToRouteEnd;
+                }
+            }
             private void OnUserPositionChangedUpdateLinearRoute(object sender, Position position)
             {
                 UpdateLinearRoute.Execute(position);
@@ -396,6 +408,8 @@ namespace Libmemo.Pages.Map
                 DeleteRouteCommand.Execute(null);
 
                 if (this.UserPosition != default(Position) && this.SelectedPin != null) {
+                    RouteToPin = SelectedPin;
+
                     var from = this.UserPosition;
                     var to = this.SelectedPin.Position;
 
@@ -420,6 +434,8 @@ namespace Libmemo.Pages.Map
                 this.MapFunctions.DeleteRoute();
                 this.CurrentRoute = RouteType.None;
 
+                RouteToPin = null;
+                UserPositionChanged -= OnUserPositionCloseToRouteEnd;
                 UserPositionChanged -= OnUserPositionChangedUpdateLinearRoute;
                 SetDefaultTitle();
             });
