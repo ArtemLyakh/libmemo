@@ -71,6 +71,7 @@
     <Compile Include="Helpers\Auth\AuthInfo.cs" />
     <Compile Include="Helpers\Auth\AuthJson.cs" />
     <Compile Include="Helpers\Exceptions.cs" />
+    <Compile Include="Helpers\ImageCarouselModel.cs" />
     <Compile Include="Helpers\ImageResourseExtension.cs" />
     <Compile Include="Helpers\Json.cs" />
     <Compile Include="Helpers\Settings.cs" />
@@ -345,12 +346,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Pages\Admin\" />
-    <Folder Include="Pages\Admin\Account\" />
-    <Folder Include="Pages\Admin\Relatives\" />
-    <Folder Include="Pages\Admin\Tree\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Forms.2.3.4.231\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.3.4.231\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
