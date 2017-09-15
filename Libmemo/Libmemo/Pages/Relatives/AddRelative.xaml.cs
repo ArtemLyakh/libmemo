@@ -525,9 +525,5 @@ namespace Libmemo.Pages
 
         }
 
-        private void CarouselView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
-        {
-            
-        }
     }
 }

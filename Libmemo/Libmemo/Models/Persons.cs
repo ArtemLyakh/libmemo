@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace Libmemo.Models
@@ -19,6 +20,7 @@ namespace Libmemo.Models
         public Uri Image{ get; set; }
         public Uri PreviewImage { get; set; }
 
+        public Dictionary<int, Uri> Images { get; set; } = new Dictionary<int, Uri>();
 
         public Person(int id, int owner, string firstName)
         {
@@ -104,6 +106,14 @@ namespace Libmemo.Models
                 person.Image = image;
             if (!string.IsNullOrWhiteSpace(json.small_photo_url) && Uri.TryCreate(json.small_photo_url, UriKind.Absolute, out Uri previewImage))
                 person.PreviewImage = previewImage;
+            if (json.photos != null && json.photos.Count > 0)
+			{
+				foreach (var img in json.photos)
+				{
+                    if (!string.IsNullOrWhiteSpace(img.Value) && Uri.TryCreate(img.Value, UriKind.Absolute, out Uri imgUri))
+                        person.Images[img.Key] = imgUri;
+				}
+			}
 
             if (!string.IsNullOrWhiteSpace(json.text))
                 person.Text = json.text;
@@ -168,7 +178,14 @@ namespace Libmemo.Models
                 person.Image = image;
             if (!string.IsNullOrWhiteSpace(json.small_photo_url) && Uri.TryCreate(json.small_photo_url, UriKind.Absolute, out Uri previewImage))
                 person.PreviewImage = previewImage;
-
+			if (json.photos.Count > 0)
+			{
+				foreach (var img in json.photos)
+				{
+					if (!string.IsNullOrWhiteSpace(img.Value) && Uri.TryCreate(img.Value, UriKind.Absolute, out Uri imgUri))
+						person.Images[img.Key] = imgUri;
+				}
+			}
 
 
             return person;
@@ -212,7 +229,14 @@ namespace Libmemo.Models
                 person.Image = image;
             if (!string.IsNullOrWhiteSpace(json.small_photo_url) && Uri.TryCreate(json.small_photo_url, UriKind.Absolute, out Uri previewImage))
                 person.PreviewImage = previewImage;
-
+			if (json.photos.Count > 0)
+			{
+				foreach (var img in json.photos)
+				{
+					if (!string.IsNullOrWhiteSpace(img.Value) && Uri.TryCreate(img.Value, UriKind.Absolute, out Uri imgUri))
+						person.Images[img.Key] = imgUri;
+				}
+			}
 
 
             return person;

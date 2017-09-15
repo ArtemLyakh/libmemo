@@ -123,10 +123,12 @@ namespace Libmemo.Json
 		public string second_name { get; set; }
 		public string last_name { get; set; }
 		public string date_birth { get; set; }
+
 		public string icon_url { get; set; }
 		public string photo_url { get; set; }
 		public string small_photo_url { get; set; }
-
+        public Dictionary<int, string> photos { get; set; }
+ 
 		public string latitude { get; set; }
 		public string longitude { get; set; }
 		public string date_death { get; set; }
