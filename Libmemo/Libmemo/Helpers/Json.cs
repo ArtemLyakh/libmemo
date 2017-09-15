@@ -126,7 +126,7 @@ namespace Libmemo.Json
 
 		public string icon_url { get; set; }
 		public string photo_url { get; set; }
-		public string small_photo_url { get; set; }
+		public string preview_image_url { get; set; }
         public Dictionary<int, string> photos { get; set; }
  
 		public string latitude { get; set; }

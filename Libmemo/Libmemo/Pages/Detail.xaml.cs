@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Windows.Input;
@@ -81,16 +82,31 @@ namespace Libmemo.Pages
                 }
             }
 
-			private ImageSource _imageUri;
-            public ImageSource ImageUri {
-				get => _imageUri; 
-				set {
-					if (_imageUri != value) {
-						_imageUri = value;
-						OnPropertyChanged(nameof(ImageUri));
+			private List<ImageSource> _photos = new List<ImageSource>();
+			private List<ImageSource> Photos
+			{
+				get => _photos;
+				set
+				{
+					if (_photos != value)
+					{
+						_photos = value;
+						OnPropertyChanged(nameof(ImageCollection));
 					}
 				}
 			}
+			public class Image
+			{
+				public ImageSource PhotoSource { get; set; }
+				public ICommand PickPhotoCommand { get; set; }
+				public ICommand MakePhotoCommand { get; set; }
+			}
+			public List<Image> ImageCollection => Photos.Select(i => new Image
+			{
+				PhotoSource = i
+			}).ToList();
+
+
 
 			private string _text;
 			public string Text {
@@ -293,10 +309,7 @@ namespace Libmemo.Pages
                 if (!string.IsNullOrWhiteSpace(person.SecondName)) fio.Add(person.SecondName);
                 this.Fio = string.Join(" ", fio);
 
-                if (person.Image != null) {
-                    this.ImageUri = ImageSource.FromUri(person.Image);
-                }
-
+                Photos = person.Images.Select(i => ImageSource.FromUri(i.Value)).ToList();
 
 
 				if (person is Models.DeadPerson)

@@ -104,7 +104,7 @@ namespace Libmemo.Models
                 person.Icon = icon;
             if (!string.IsNullOrWhiteSpace(json.photo_url) && Uri.TryCreate(json.photo_url, UriKind.Absolute, out Uri image))
                 person.Image = image;
-            if (!string.IsNullOrWhiteSpace(json.small_photo_url) && Uri.TryCreate(json.small_photo_url, UriKind.Absolute, out Uri previewImage))
+            if (!string.IsNullOrWhiteSpace(json.preview_image_url) && Uri.TryCreate(json.preview_image_url, UriKind.Absolute, out Uri previewImage))
                 person.PreviewImage = previewImage;
             if (json.photos != null && json.photos.Count > 0)
 			{
@@ -176,7 +176,7 @@ namespace Libmemo.Models
                 person.Icon = icon;
             if (!string.IsNullOrWhiteSpace(json.photo_url) && Uri.TryCreate(json.photo_url, UriKind.Absolute, out Uri image))
                 person.Image = image;
-            if (!string.IsNullOrWhiteSpace(json.small_photo_url) && Uri.TryCreate(json.small_photo_url, UriKind.Absolute, out Uri previewImage))
+            if (!string.IsNullOrWhiteSpace(json.preview_image_url) && Uri.TryCreate(json.preview_image_url, UriKind.Absolute, out Uri previewImage))
                 person.PreviewImage = previewImage;
 			if (json.photos.Count > 0)
 			{
@@ -227,7 +227,7 @@ namespace Libmemo.Models
                 person.Icon = icon;
             if (!string.IsNullOrWhiteSpace(json.photo_url) && Uri.TryCreate(json.photo_url, UriKind.Absolute, out Uri image))
                 person.Image = image;
-            if (!string.IsNullOrWhiteSpace(json.small_photo_url) && Uri.TryCreate(json.small_photo_url, UriKind.Absolute, out Uri previewImage))
+            if (!string.IsNullOrWhiteSpace(json.preview_image_url) && Uri.TryCreate(json.preview_image_url, UriKind.Absolute, out Uri previewImage))
                 person.PreviewImage = previewImage;
 			if (json.photos.Count > 0)
 			{
