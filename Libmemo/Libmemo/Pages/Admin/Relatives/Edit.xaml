@@ -4,6 +4,7 @@
     x:Class="Libmemo.Pages.Admin.Relatives.Edit"
     xmlns:local="clr-namespace:Libmemo"
     xmlns:ffi="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:cv="clr-namespace:Xamarin.Forms;assembly=Xamarin.Forms.CarouselView"
     NavigationPage.HasNavigationBar="False"
     >
     <ContentPage.Resources>
@@ -209,23 +210,53 @@
                             </StackLayout>
                         </StackLayout>
 
-                        <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" Padding="10">
-                            <StackLayout Orientation="Horizontal">
-                                <Button Text="Выбрать фото"
-                                        Command="{Binding PickPhotoCommand}"
-                                        HorizontalOptions="FillAndExpand"
-                                        />
-                                <Button Text="Сделать фото"
-                                        Command="{Binding MakePhotoCommand}"
-                                        HorizontalOptions="FillAndExpand"
-                                        />
-                            </StackLayout>
-                            <ffi:CachedImage HorizontalOptions="Fill"
-                                                DownsampleToViewSize="True"
-                                                Source="{Binding PhotoSource}"
-                                                IsVisible="{Binding Path=PhotoSource, Mode=OneWay, Converter={StaticResource IsPropertyNullConverter}}"
+                        <cv:CarouselView ItemsSource="{Binding ImageCollection}" HeightRequest="500">
+                            <cv:CarouselView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid HorizontalOptions="FillAndExpand">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <ffi:CachedImage Grid.RowSpan="2"
+                                             HorizontalOptions="Fill"
+                                             DownsampleToViewSize="True"
+                                             Source="{Binding PhotoSource}"
+                                             >
+                                        </ffi:CachedImage>
+
+                                            
+
+                                        <StackLayout Grid.Row="1"
+                                                     BackgroundColor="#80000000"
+                                                     Spacing="10"
+                                                     Padding="10"
+                                                     Orientation="Horizontal"
+                                                     >
+                                            <Button Text="Выбрать фото"
+                                                Command="{Binding PickPhotoCommand}"
+                                                HorizontalOptions="FillAndExpand"
                                                 />
-                        </StackLayout>
+                                            <Button Text="Сделать фото"
+                                                Command="{Binding MakePhotoCommand}"
+                                                HorizontalOptions="FillAndExpand"
+                                                />
+                                            <ffi:CachedImage Source="delete.png"
+                                                 HorizontalOptions="FillAndExpand"
+                                                 WidthRequest="40"
+                                                 HeightRequest="40"
+                                                 Aspect="AspectFill"
+                                                IsVisible="{Binding IsDeleteAviliable}"
+                                                 >
+                                                <ffi:CachedImage.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding DeletePhotoCommand}" />
+                                                </ffi:CachedImage.GestureRecognizers>
+                                            </ffi:CachedImage>
+                                        </StackLayout>
+                                    </Grid>
+                                </DataTemplate>
+                            </cv:CarouselView.ItemTemplate>
+                        </cv:CarouselView>
 
                         <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" IsVisible="{Binding IsDeadPerson}">
                             <Label Text="Биография"
