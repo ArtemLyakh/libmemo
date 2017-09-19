@@ -345,7 +345,7 @@ namespace Libmemo.Pages
                 })
 			}).Concat(new List<Image> {
 				new Image {
-					PhotoSource = ImageSource.FromFile("no_img"),
+					PhotoSource = ImageSource.FromFile("placeholder"),
 					PickPhotoCommand = new Command(async () => {
                         if (CrossMedia.Current.IsPickPhotoSupported) {
                             var photo = await CrossMedia.Current.PickPhotoAsync();
