@@ -141,9 +141,11 @@
                                    HorizontalOptions="Start"
                                    VerticalOptions="CenterAndExpand"
                                    />
-                            <Button Text="Скачать"
+                            <local:FixedButton Text="Скачать"
                                     Command="{Binding SchemeDownloadCommand}"
                                     HorizontalOptions="CenterAndExpand"
+                                    BackgroundColor="#333333"
+                                    TextColor="White"
                                     />
                         </StackLayout>
 
@@ -183,9 +185,11 @@
                                    HorizontalOptions="Start"
                                    VerticalOptions="CenterAndExpand"
                                    />
-                            <Button Text="Показать"
+                            <local:FixedButton Text="Показать"
                                     Command="{Binding TreeShowCommand}"
                                     HorizontalOptions="CenterAndExpand"
+                                    BackgroundColor="#333333"
+                                    TextColor="White"
                                     />
                         </StackLayout>
                         

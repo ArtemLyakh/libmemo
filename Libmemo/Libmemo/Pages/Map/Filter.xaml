@@ -120,15 +120,19 @@
                                     HorizontalOptions="FillAndExpand"
                                     />
                         </StackLayout>
-                        <Button Text="Найти"
+                        <local:FixedButton Text="Найти"
                                 HorizontalOptions="FillAndExpand"
                                 Command="{Binding SearchCommand}"
                                 IsVisible="{Binding IsSearchButtonShow}"
+                                BackgroundColor="#333333"
+                                TextColor="White" 
                                 />
-                        <Button Text="Показать"
+                        <local:FixedButton Text="Показать"
                                 HorizontalOptions="FillAndExpand"
                                 Command="{Binding ShowCommand}"
                                 IsVisible="{Binding IsShowButtonShow}"
+                                BackgroundColor="#333333"
+                                TextColor="White" 
                                 />
                     </StackLayout>
                 </ScrollView>

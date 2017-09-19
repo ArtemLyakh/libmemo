@@ -137,13 +137,17 @@
 
                         <StackLayout HorizontalOptions="FillAndExpand" Spacing="10" Padding="10">
                             <StackLayout Orientation="Horizontal">
-                                <Button Text="Выбрать фото"
+                                <local:FixedButton Text="Выбрать фото"
                                         Command="{Binding PickPhotoCommand}"
                                         HorizontalOptions="FillAndExpand"
+                                        BackgroundColor="#333333"
+                                        TextColor="White"
                                         />
-                                <Button Text="Сделать фото"
+                                <local:FixedButton Text="Сделать фото"
                                         Command="{Binding MakePhotoCommand}"
                                         HorizontalOptions="FillAndExpand"
+                                        BackgroundColor="#333333"
+                                        TextColor="White"
                                         />
                             </StackLayout>
                             <ffi:CachedImage HorizontalOptions="Fill"

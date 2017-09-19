@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
     x:Class="Libmemo.Pages.Admin.Account.Add"
+    xmlns:local="clr-namespace:Libmemo"
     xmlns:ffi="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     NavigationPage.HasNavigationBar="False"
     >
@@ -99,9 +100,11 @@
                                      HorizontalOptions="CenterAndExpand"
                                      Spacing="10"
                                      >
-                            <Button Text="Зарегистрировать"
+                            <local:FixedButton Text="Зарегистрировать"
                                 Command="{Binding RegisterCommand}"
                                 HorizontalOptions="FillAndExpand"
+                                BackgroundColor="#333333"
+                                TextColor="White"
                                 />
                         </StackLayout>
                     </StackLayout>

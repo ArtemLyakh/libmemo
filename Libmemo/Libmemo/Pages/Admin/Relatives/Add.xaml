@@ -97,10 +97,12 @@
                                          Spacing="10"
                                          HorizontalOptions="FillAndExpand"
                                          >
-                                <Button Text="Выбрать"
+                                <local:FixedButton Text="Выбрать"
                                         Command="{Binding SelectOwnerCommand}"
                                         VerticalOptions="CenterAndExpand"
                                         HorizontalOptions="Start"
+                                        BackgroundColor="#333333"
+                                        TextColor="White" 
                                         />
                                 <Label Text="{Binding OwnerText}"
                                        VerticalOptions="CenterAndExpand"
@@ -286,18 +288,26 @@
                                             
 
                                         <StackLayout Grid.Row="1"
-                                                     BackgroundColor="#80000000"
+                                                     BackgroundColor="#80333333"
                                                      Spacing="10"
                                                      Padding="10"
                                                      Orientation="Horizontal"
                                                      >
-                                            <Button Text="Выбрать фото"
+                                            <local:FixedButton Text="Выбрать фото"
                                                 Command="{Binding PickPhotoCommand}"
                                                 HorizontalOptions="FillAndExpand"
-                                                />
-                                            <Button Text="Сделать фото"
+                                                BackgroundColor="#333333"
+                                                TextColor="White" 
+                                                BorderWidth="5"
+                                                BorderColor="White"
+                                            />
+                                            <local:FixedButton Text="Сделать фото"
                                                 Command="{Binding MakePhotoCommand}"
                                                 HorizontalOptions="FillAndExpand"
+                                                BackgroundColor="#333333"
+                                                TextColor="White" 
+                                                BorderWidth="5"
+                                                BorderColor="White"
                                                 />
                                         </StackLayout>
                                     </Grid>
@@ -401,10 +411,12 @@
                                          Spacing="10"
                                          HorizontalOptions="FillAndExpand"
                                          >
-                                <Button Text="Выбрать"
+                                <local:FixedButton Text="Выбрать"
                                         Command="{Binding SelectSchemeCommand}"
                                         VerticalOptions="CenterAndExpand"
                                         HorizontalOptions="Start"
+                                        BackgroundColor="#333333"
+                                        TextColor="White" 
                                         />
                                 <Label Text="{Binding SchemeName}"
                                        VerticalOptions="CenterAndExpand"
