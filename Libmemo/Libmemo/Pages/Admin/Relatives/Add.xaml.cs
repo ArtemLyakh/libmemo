@@ -291,44 +291,84 @@ namespace Libmemo.Pages.Admin.Relatives
 				}
 			}
 
-			private ImageSource _photoSource;
-			public ImageSource PhotoSource
+			private List<ImageSource> _photos = new List<ImageSource>();
+			private List<ImageSource> Photos
 			{
-				get => _photoSource;
+				get => _photos;
 				set
 				{
-					if (_photoSource != value)
+					if (_photos != value)
 					{
-						_photoSource = value;
-						this.OnPropertyChanged(nameof(PhotoSource));
+						_photos = value;
+						OnPropertyChanged(nameof(ImageCollection));
 					}
 				}
 			}
+			public class Image
+			{
+				public ImageSource PhotoSource { get; set; }
+				public ICommand PickPhotoCommand { get; set; }
+				public ICommand MakePhotoCommand { get; set; }
+			}
+			public List<Image> ImageCollection => Photos.Select(i => new Image
+			{
+				PhotoSource = i,
+				PickPhotoCommand = new Command(async () => {
+					if (CrossMedia.Current.IsPickPhotoSupported)
+					{
+						var photo = await CrossMedia.Current.PickPhotoAsync();
+						if (photo == null) return;
 
-			public ICommand PickPhotoCommand => new Command(async () => {
-				if (CrossMedia.Current.IsPickPhotoSupported)
-				{
-					var photo = await CrossMedia.Current.PickPhotoAsync();
-					if (photo == null) return;
-					this.PhotoSource = ImageSource.FromFile(photo.Path);
+						Photos[Photos.FindIndex(j => i == j)] = ImageSource.FromFile(photo.Path);
+						OnPropertyChanged(nameof(ImageCollection));
+					}
+					else
+					{
+						App.ToastNotificator.Show("Выбор фото невозможен");
+					}
+				}),
+				MakePhotoCommand = new Command(async () => {
+					if (CrossMedia.Current.IsCameraAvailable && CrossMedia.Current.IsTakePhotoSupported)
+					{
+						var file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions { SaveToAlbum = false });
+						if (file == null) return;
+
+						Photos[Photos.FindIndex(j => i == j)] = ImageSource.FromFile(file.Path);
+						OnPropertyChanged(nameof(ImageCollection));
+					}
+					else
+					{
+						App.ToastNotificator.Show("Сделать фото невозможно");
+					}
+				})
+			}).Concat(new List<Image> {
+				new Image {
+					PhotoSource = ImageSource.FromFile("placeholder"),
+					PickPhotoCommand = new Command(async () => {
+						if (CrossMedia.Current.IsPickPhotoSupported) {
+							var photo = await CrossMedia.Current.PickPhotoAsync();
+							if (photo == null) return;
+
+							Photos.Add(ImageSource.FromFile(photo.Path));
+							OnPropertyChanged(nameof(ImageCollection));
+						} else {
+							App.ToastNotificator.Show("Сделать фото невозможно");
+						}
+					}),
+					MakePhotoCommand = new Command(async () => {
+						if (CrossMedia.Current.IsCameraAvailable && CrossMedia.Current.IsTakePhotoSupported) {
+							var file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions { SaveToAlbum = false });
+							if (file == null) return;
+
+							Photos.Add(ImageSource.FromFile(file.Path));
+							OnPropertyChanged(nameof(ImageCollection));
+						} else {
+							App.ToastNotificator.Show("Сделать фото невозможно");
+						}
+					})
 				}
-				else
-				{
-					App.ToastNotificator.Show("Выбор фото невозможен");
-				}
-			});
-			public ICommand MakePhotoCommand => new Command(async () => {
-				if (CrossMedia.Current.IsCameraAvailable && CrossMedia.Current.IsTakePhotoSupported)
-				{
-					var file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions { SaveToAlbum = false });
-					if (file == null) return;
-					PhotoSource = ImageSource.FromFile(file.Path);
-				}
-				else
-				{
-					App.ToastNotificator.Show("Сделать фото невозможно");
-				}
-			});
+			}).ToList();
+
 
 
 			private double? _height;
@@ -454,7 +494,7 @@ namespace Libmemo.Pages.Admin.Relatives
 				this.DateDeath = null;
 
 				this.Text = null;
-				this.PhotoSource = null;
+				this.Photos = new List<ImageSource>();
 
 				this.Height = null;
 				this.Width = null;
@@ -498,10 +538,11 @@ namespace Libmemo.Pages.Admin.Relatives
 					content.Add(new StringContent(this.LastName), "last_name");
 				if (this.DateBirth.HasValue)
 					content.Add(new StringContent(this.DateBirth.Value.ToString("yyyy-MM-dd")), "date_birth");
-				if (this.PhotoSource != null && this.PhotoSource is FileImageSource)
+
+				foreach (var photo in Photos)
 				{
-					var result = await DependencyService.Get<IFileStreamPicker>().GetResizedJpegAsync((PhotoSource as FileImageSource).File, 1000, 1000);
-					content.Add(new ByteArrayContent(result), "photo", "photo.jpg");
+					var result = await DependencyService.Get<IFileStreamPicker>().GetResizedJpegAsync((photo as FileImageSource).File, 1000, 1000);
+					content.Add(new ByteArrayContent(result), "photos[]", "photo.jpg");
 				}
 
 				if (this.IsDeadPerson)
