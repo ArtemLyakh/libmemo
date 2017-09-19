@@ -309,7 +309,9 @@ namespace Libmemo.Pages
                 if (!string.IsNullOrWhiteSpace(person.SecondName)) fio.Add(person.SecondName);
                 this.Fio = string.Join(" ", fio);
 
-                Photos = person.Images.Select(i => ImageSource.FromUri(i.Value)).ToList();
+                Photos = person.Images.Count > 0
+                               ? person.Images.Select(i => ImageSource.FromUri(i.Value)).ToList()
+                               : new List<ImageSource>() { ImageSource.FromFile("placeholder") };
 
 
 				if (person is Models.DeadPerson)

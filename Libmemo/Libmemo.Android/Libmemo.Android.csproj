@@ -17,7 +17,7 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <AndroidUseLatestPlatformSdk>true</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v6.0</TargetFrameworkVersion>
     <AndroidStoreUncompressedFileExtensions />
     <MandroidI18n />
     <JavaMaximumHeapSize />
@@ -197,6 +197,11 @@
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <AndroidResource Include="Resources\layout\MapInfoWindow.axml" />
+    <AndroidResource Include="Resources\drawable-xxxhdpi\placeholder.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\placeholder.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\placeholder.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\placeholder.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\placeholder.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />

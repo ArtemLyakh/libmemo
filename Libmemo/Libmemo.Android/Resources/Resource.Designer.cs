@@ -2524,8 +2524,8 @@ namespace Libmemo.Droid
 			// aapt resource value: 0x7f0200e0
 			public const int no_tree_img = 2130837728;
 			
-			// aapt resource value: 0x7f0200f2
-			public const int notification_template_icon_bg = 2130837746;
+			// aapt resource value: 0x7f0200f3
+			public const int notification_template_icon_bg = 2130837747;
 			
 			// aapt resource value: 0x7f0200e1
 			public const int pin_hide = 2130837729;
@@ -2534,49 +2534,52 @@ namespace Libmemo.Droid
 			public const int pin_show = 2130837730;
 			
 			// aapt resource value: 0x7f0200e3
-			public const int reload = 2130837731;
+			public const int placeholder = 2130837731;
 			
 			// aapt resource value: 0x7f0200e4
-			public const int route_delete = 2130837732;
+			public const int reload = 2130837732;
 			
 			// aapt resource value: 0x7f0200e5
-			public const int save = 2130837733;
+			public const int route_delete = 2130837733;
 			
 			// aapt resource value: 0x7f0200e6
-			public const int search = 2130837734;
+			public const int save = 2130837734;
 			
 			// aapt resource value: 0x7f0200e7
-			public const int sound_play = 2130837735;
+			public const int search = 2130837735;
 			
 			// aapt resource value: 0x7f0200e8
-			public const int sound_stop = 2130837736;
+			public const int sound_play = 2130837736;
 			
 			// aapt resource value: 0x7f0200e9
-			public const int space_view = 2130837737;
+			public const int sound_stop = 2130837737;
 			
 			// aapt resource value: 0x7f0200ea
-			public const int speaker_pin = 2130837738;
+			public const int space_view = 2130837738;
 			
 			// aapt resource value: 0x7f0200eb
-			public const int splash_logo = 2130837739;
+			public const int speaker_pin = 2130837739;
 			
 			// aapt resource value: 0x7f0200ec
-			public const int splash_screen = 2130837740;
+			public const int splash_logo = 2130837740;
 			
 			// aapt resource value: 0x7f0200ed
-			public const int street_view = 2130837741;
+			public const int splash_screen = 2130837741;
 			
 			// aapt resource value: 0x7f0200ee
-			public const int tree_add_button = 2130837742;
+			public const int street_view = 2130837742;
 			
 			// aapt resource value: 0x7f0200ef
-			public const int user = 2130837743;
+			public const int tree_add_button = 2130837743;
 			
 			// aapt resource value: 0x7f0200f0
-			public const int zoom_in = 2130837744;
+			public const int user = 2130837744;
 			
 			// aapt resource value: 0x7f0200f1
-			public const int zoom_out = 2130837745;
+			public const int zoom_in = 2130837745;
+			
+			// aapt resource value: 0x7f0200f2
+			public const int zoom_out = 2130837746;
 			
 			static Drawable()
 			{
